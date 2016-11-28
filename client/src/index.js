@@ -1,11 +1,43 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
-import './css/App.css';
-import './css/grails.css';
-import './css/main.css';
+import {Router, Route, IndexRedirect, browserHistory} from 'react-router';
+import './css/stickey-footer.css';
 
+import { TopLevel, SecondLevel, NotFound } from './components/navi/navi';
+import BookIndexPage from './components/BookIndexPage';
+import Page1 from './components/Page1';
+import Page2 from './components/Page2';
+import Page3 from './components/Page3';
+import Page4 from './components/Page4';
+import Page5 from './components/Page5';
+
+/**
+ * Structure of menu/pages.
+ */
 ReactDOM.render(
-  <App />,
-  document.getElementById('root')
-);
+    <Router history={browserHistory}>
+      <Route name="TOP" path="/" component={TopLevel}>
+        <IndexRedirect from="*" to="book" />
+        <Route path="book" name="booktable" component={SecondLevel}>
+          <IndexRedirect from="*" to="list" />
+          <Route path="list" name="list" component={BookIndexPage} />
+          <Route path="p1" name="page1" component={Page1} />
+          <Route path="p2" name="page2" component={Page2} />
+          <Route path="p3" name="page3" component={Page3} />
+        </Route>
+        <Route path="m1" name="MenuItem1" component={SecondLevel}>
+          <IndexRedirect from="*" to="p1" />
+          <Route path="p1" name="page1" component={Page1} />
+          <Route path="p2" name="page2" component={Page2} />
+          <Route path="p3" name="page3" component={Page3} />
+        </Route>
+        <Route path="m2" name="MenuItem2" component={SecondLevel}>
+          <IndexRedirect from="*" to="p4" />
+          <Route path="p4" name="page4" component={Page4} />
+          <Route path="p5" name="page2" component={Page5} />
+        </Route>
+        <Route path="p1" name="page1" component={Page1} />
+      </Route>
+      <Route path="*" component={NotFound} />
+    </Router>
+  , document.getElementById('root'));
