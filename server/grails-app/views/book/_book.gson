@@ -1,0 +1,7 @@
+import sample.Book
+
+model {
+	Book book
+}
+
+json g.render(book)

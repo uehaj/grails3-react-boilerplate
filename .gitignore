@@ -10,5 +10,4 @@ build/
 .settings
 .classpath
 client/node_modules/*
-
-
+*.bak
