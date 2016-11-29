@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Button, FormControl, Form, FormGroup, ControlLabel } from 'react-bootstrap';
-import ModalDialog from './ModalDialog';
-import * as api from '../util/api';
+import ModalDialog from '../ModalDialog';
+import * as api from '../../util/api';
 
 /**
- * Form for edit existing Book Domain class on a modal dialog.
+ * Form for edit existing Domain class on a modal dialog.
  */
-export default class BookEditDialog extends Component {
+export default class EditDialog extends Component {
   constructor(props) {
     super(props);
     this.state = {

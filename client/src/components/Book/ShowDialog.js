@@ -3,13 +3,13 @@ import { Button } from 'react-bootstrap';
 import { FormControl, Form, ControlLabel, FormGroup } from 'react-bootstrap';
 import 'react-bootstrap-table/css/react-bootstrap-table.css';
 
-import ModalDialog from './ModalDialog';
-import * as api from '../util/api';
+import ModalDialog from '../ModalDialog';
+import * as api from '../../util/api';
 
 /**
- * Show Book Domain class on a modal dialog.
+ * Show Domain class on a modal dialog.
  */
-export default class BookShowDialog extends Component {
+export default class ShowDialog extends Component {
 
   constructor(props) {
     super(props);
