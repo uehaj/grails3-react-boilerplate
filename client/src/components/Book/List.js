@@ -3,16 +3,16 @@ import { Button } from 'react-bootstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/css/react-bootstrap-table.css';
 
-import BookNewDialog from './BookNewDialog';
-import BookShowDialog from './BookShowDialog';
-import BookEditDialog from './BookEditDialog';
-import ModalDialog from './ModalDialog';
-import * as api from '../util/api';
+import NewDialog from './NewDialog';
+import ShowDialog from './ShowDialog';
+import EditDialog from './EditDialog';
+import ModalDialog from '../ModalDialog';
+import * as api from '../../util/api';
 
 /**
- * List Book Domain class instances.
+ * List Domain class instances.
  */
-export default class BookList extends Component {
+export default class List extends Component {
   constructor(props) {
     super(props);
     this.state = { bookList:[],
@@ -54,7 +54,6 @@ export default class BookList extends Component {
   }
 
   updateBook(updatedBook) {
-    console.log('UPDATEBOOK(updatedBook)',updatedBook);
     this.setState({showEditDialog: false});
     api.updateBook(this.state.selectedBookId, updatedBook).then(() => {
       // Locally update data.
@@ -105,16 +104,16 @@ export default class BookList extends Component {
           <TableHeaderColumn dataField="title" dataSort={true}>Title</TableHeaderColumn>
           <TableHeaderColumn dataField="price" dataSort={true}>Price</TableHeaderColumn>
         </BootstrapTable>
-        <BookNewDialog
+        <NewDialog
           show={this.state.showNewDialog}
           close={()=>this.setState({showNewDialog:false})}
           submitButtonAction={this.createBook.bind(this)} />
-        <BookShowDialog
+        <ShowDialog
           show={this.state.showShowDialog}
           selectedBookId={this.state.selectedBookId}
           close={()=>this.setState({showShowDialog:false})}
           editButtonAction={this.showEditDialog.bind(this)}/>
-        <BookEditDialog
+        <EditDialog
           show={this.state.showEditDialog}
           selectedBookId={this.state.selectedBookId}
           close={()=>this.setState({showEditDialog:false})}

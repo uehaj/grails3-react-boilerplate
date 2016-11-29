@@ -1,7 +1,7 @@
 import React from 'react';
 import { Router, Route, IndexRedirect, browserHistory } from 'react-router';
 import { TopLevel, SecondLevel, NotFound } from './navi/navi';
-import BookIndexPage from './BookIndexPage';
+import BookIndexPage from './Book/IndexPage';
 import Page1 from './Page1';
 import Page2 from './Page2';
 import Page3 from './Page3';

@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Button, FormControl, Form, FormGroup, ControlLabel } from 'react-bootstrap';
-import ModalDialog from './ModalDialog';
+import ModalDialog from '../ModalDialog';
 
 /**
- * Form for create Book Domain class on a modal dialog.
+ * Form for create Domain class on a modal dialog.
  */
-export default class BookNewDialog extends Component {
+export default class NewDialog extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -23,10 +23,11 @@ export default class BookNewDialog extends Component {
 
   render() {
     return (
-      <ModalDialog title="New Book"
-                   show={this.props.show}
-                   close={this.props.close}
-                   additionalButton={<Button bsStyle="primary" onClick={this.callbackSubmitButtonAction.bind(this)}>Create</Button>}>
+      <ModalDialog
+        title="New Book"
+        show={this.props.show}
+        close={this.props.close}
+        additionalButton={<Button bsStyle="primary" onClick={this.callbackSubmitButtonAction.bind(this)}>Create</Button>}>
         <Form>
           <FormGroup controlId="formTitle">
             <ControlLabel>Title</ControlLabel>
