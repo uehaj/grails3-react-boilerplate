@@ -17,8 +17,8 @@ export default class ModalDialog extends Component {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button bsStyle="primary" onClick={this.props.close}>Close</Button>
           {this.props.additionalButton}
+          <Button onClick={this.props.close}>Cancel</Button>
         </Modal.Footer>
       </Modal>
     );

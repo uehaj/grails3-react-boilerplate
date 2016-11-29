@@ -3,46 +3,24 @@ import $ from 'jquery';
 const urlBase = 'http://localhost:8080/'
 
 /**
- * Ajax functions.
- * TODO: rewrite with fetch APIs.
+ * APIs
  */
-
-export function getBooks(callback, callbackError) {
-  $.ajax({
-    type: 'GET',
-    url: urlBase + 'book?max=100',
-    contentType: 'application/json',
-    dataType: 'json',
-    cache: false,
-    success: (data) => {
-      callback(data)
-    },
-    error: (xhr, status, err) => {
-      console.error(xhr, status, err.toString())
-      if (callbackError !== undefined) {
-        callbackError(err)
-      }
-    }
+export async function getBooks() {
+  const url = urlBase + 'book?max=100';
+  const resp = await fetch(url, {
+    method: 'GET',
+    contentType: 'text/plain'
   });
+  return Promise.resolve(await resp.json());
 }
 
-export function getBook(id, callback, callbackError) {
-  $.ajax({
-    type: 'GET',
-    url: urlBase + `book/${id}.json`,
-    contentType: 'application/json',
-    dataType: 'json',
-    cache: false,
-    success: (data) => {
-      callback(data)
-    },
-    error: (xhr, status, err) => {
-      console.error(xhr, status, err.toString())
-      if (callbackError !== undefined) {
-        callbackError(err)
-      }
-    }
+export async function getBook(id) {
+  const url = urlBase + `book/${id}.json`;
+  const resp = await fetch(url, {
+    method: 'GET',
+    contentType: 'application/json'
   });
+  return Promise.resolve(await resp.json());
 }
 
 export function updateBook(id, book, callback, callbackError) {
