@@ -37,7 +37,7 @@ export default class BookEditDialog extends Component {
         title={'Edit Book: ' + (this.state.book && this.state.book.title)}
         show={this.props.show}
         close={this.props.close}
-        additionalButton={<Button bsStyle="primary" onClick={this.callbackSubmitButtonAction.bind(this)}>Update</Button>}>
+        additionalButton={<span><Button bsStyle="primary" onClick={this.callbackSubmitButtonAction.bind(this)}>Update</Button></span>}>
         <Form>
           <FormGroup controlId="formTitle">
             <ControlLabel>Title</ControlLabel>

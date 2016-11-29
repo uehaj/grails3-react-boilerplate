@@ -42,41 +42,52 @@ export default class BookList extends Component {
     this.setState({ showEditDialog: true,
                     showShowDialog: false});
   }
+
   createBook(creatingBook) {
     this.setState({showNewDialog: false});
-    api.createBook(creatingBook, (_)=>{
+    api.createBook(creatingBook).then(()=>{
       this.reloadData();
-    }, (err)=>{
+    }).catch(err => {
       this.setState({errorMessage: err,
                      showErrorDialog: true});
     });
   }
+
   updateBook(updatedBook) {
+    console.log('UPDATEBOOK(updatedBook)',updatedBook);
     this.setState({showEditDialog: false});
-    api.updateBook(this.state.selectedBookId, updatedBook, ()=>{
+    api.updateBook(this.state.selectedBookId, updatedBook).then(() => {
       // Locally update data.
-      this.setState({bookList: this.state.bookList.map((book)=>(book.id === this.state.selectedBookId) ?
-                                                       {id:this.state.selectedBookId, ...updatedBook} : book) });
-    }, (err)=>{
+      this.setState(
+        {
+          bookList: this.state.bookList.map(
+            (book) => (book.id === this.state.selectedBookId)
+              ? {id:this.state.selectedBookId, ...updatedBook}
+              : book)
+        }
+      );
+    }).catch(err => {
       this.setState({errorMessage: err,
                      showErrorDialog: true});
     });
   }
+
   deleteBook(rowKeys) {
-    rowKeys.forEach((it)=>{
-      api.deleteBook(it, ()=>{
+    rowKeys.forEach(bookId=>{
+      api.deleteBook(bookId).then(()=>{
         this.reloadData();
-      }, (err)=>{
+      }).catch(err=>{
         this.setState({errorMessage: err,
                        showErrorDialog: true});
       });
     });
   }
+
   render() {
     return (
       <div>
         <h1>Books</h1>
-        <Button onClick={()=>this.setState({showNewDialog:true})}>New</Button>
+        <Button className="btn btn-success react-bs-table-del-btn" onClick={()=>this.setState({showNewDialog:true})}><i class="glyphicon glyphicon-plus"></i>New</Button>
         <BootstrapTable
           data={this.state.bookList}
           height={430}
