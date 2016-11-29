@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import { Col, Button, FormControl, Form, FormGroup, ControlLabel } from 'react-bootstrap';
-import 'react-bootstrap-table/css/react-bootstrap-table.css';
+import { Button, FormControl, Form, FormGroup, ControlLabel } from 'react-bootstrap';
 import ModalDialog from './ModalDialog';
 
 /**
@@ -11,9 +10,7 @@ export default class BookNewDialog extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      book: null,
-      title: null,
-      price: null
+      book: null
     };
   }
 
@@ -29,27 +26,19 @@ export default class BookNewDialog extends Component {
       <ModalDialog title="New Book"
                    show={this.props.show}
                    close={this.props.close}
-                   additionalButton={<Button bsStyle="success" onClick={this.callbackSubmitButtonAction.bind(this)}>Create</Button>}>
-        <Form horizontal>
-          <FormGroup controlId="formHorizontalTitle">
-            <Col componentClass={ControlLabel} sm={2}>
-              Title
-            </Col>
-            <Col sm={10}>
-              <FormControl ref='title'
-                componentClass='input'
-                placeholder="Title" defaultValue={this.state.book && this.state.book.title}/>
-            </Col>
+                   additionalButton={<Button bsStyle="primary" onClick={this.callbackSubmitButtonAction.bind(this)}>Create</Button>}>
+        <Form>
+          <FormGroup controlId="formTitle">
+            <ControlLabel>Title</ControlLabel>
+            <FormControl ref='title'
+              componentClass='input'
+              placeholder="Title" defaultValue={this.state.book && this.state.book.title} />
           </FormGroup>
           <FormGroup controlId="formHorizontalPrice">
-              <Col componentClass={ControlLabel} sm={2}>
-                Price
-              </Col>
-              <Col sm={10}>
-                <FormControl ref='price'
-                  componentClass='input'
-                  placeholder="Price" defaultValue={this.state.book && this.state.book.price}/>
-              </Col>
+              <ControlLabel>Price</ControlLabel>
+              <FormControl ref='price'
+                componentClass='input'
+                placeholder="Price" defaultValue={this.state.book && this.state.book.price} />
           </FormGroup>
         </Form>
       </ModalDialog>

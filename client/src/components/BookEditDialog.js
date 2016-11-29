@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Button, FormControl } from 'react-bootstrap';
-import 'react-bootstrap-table/css/react-bootstrap-table.css';
+import ReactDOM from 'react-dom';
+import { Button, FormControl, Form, FormGroup, ControlLabel } from 'react-bootstrap';
 import ModalDialog from './ModalDialog';
-import * as ajax from '../ajax';
+import * as api from '../util/api';
 
 /**
  * Form for edit existing Book Domain class on a modal dialog.
@@ -10,12 +10,15 @@ import * as ajax from '../ajax';
 export default class BookEditDialog extends Component {
   constructor(props) {
     super(props);
-    this.state = { book:null };
+    this.state = {
+      book: null
+    };
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.selectedBookId) {
-      ajax.getBook(nextProps.selectedBookId, (data) => {
+      api.getBook(nextProps.selectedBookId).then(data => {
+        console.log(data);
         this.setState({ book: data });
       });
     }
@@ -23,21 +26,34 @@ export default class BookEditDialog extends Component {
 
   callbackSubmitButtonAction() {
     this.props.submitButtonAction({
-      title: this.refs.title.getValue(),
-      price: this.refs.price.getValue()
+      title: ReactDOM.findDOMNode(this.refs.title).value,
+      price: ReactDOM.findDOMNode(this.refs.price).value
     });
   }
 
   render() {
     return (
-      <ModalDialog title={'Edit: ' + (this.state.book && this.state.book.title)}
-                   show={this.props.show}
-                   close={this.props.close}
-                   additionalButton={<Button bsStyle="success" onClick={this.callbackSubmitButtonAction.bind(this)}>Update</Button>}>
-        <form ref='form' className="form-horizontal">
-          <FormControl ref="title" type="text" label="Title:" labelClassName="key col-xs-2" wrapperClassName="col-xs-10" defaultValue={this.state.book && this.state.book.title} />
-          <FormControl ref="price" type="text" label="Price:" labelClassName="key col-xs-2" wrapperClassName="col-xs-10" defaultValue={this.state.book && this.state.book.price} />
-        </form>
+      <ModalDialog
+        title={'Edit Book: ' + (this.state.book && this.state.book.title)}
+        show={this.props.show}
+        close={this.props.close}
+        additionalButton={<Button bsStyle="primary" onClick={this.callbackSubmitButtonAction.bind(this)}>Update</Button>}>
+        <Form>
+          <FormGroup controlId="formTitle">
+            <ControlLabel>Title</ControlLabel>
+            <FormControl
+              ref='title'
+              componentClass='input'
+              placeholder="Title" defaultValue={this.state.book && this.state.book.title} />
+          </FormGroup>
+          <FormGroup controlId="formPrice">
+            <ControlLabel>Price</ControlLabel>
+            <FormControl
+              ref='price'
+              componentClass='input'
+              placeholder="Price" defaultValue={this.state.book && this.state.book.price} />
+          </FormGroup>
+        </Form>
       </ModalDialog>
     );
   }
