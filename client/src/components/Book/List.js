@@ -15,13 +15,15 @@ import * as api from '../../util/api';
 export default class List extends Component {
   constructor(props) {
     super(props);
-    this.state = { bookList:[],
-                   selectedBookId:null,
-                   showNewDialog:false,
-                   showShowDialog:false,
-                   showEditDialog:false,
-                   showErrorDialog:false,
-                   errorMessage:''};
+    this.state = {
+      bookList:[],
+      selectedBookId: null,
+      showNewDialog: false,
+      showShowDialog: false,
+      showEditDialog: false,
+      showErrorDialog: false,
+      errorMessage: ''
+    };
   }
   reloadData() {
     api.getBooks().then(data => {
@@ -86,7 +88,7 @@ export default class List extends Component {
     return (
       <div>
         <h1>Books</h1>
-        <Button className="btn btn-success react-bs-table-del-btn" onClick={()=>this.setState({showNewDialog:true})}><i class="glyphicon glyphicon-plus"></i>New</Button>
+        <Button className="btn btn-success react-bs-table-del-btn" onClick={()=>this.setState({showNewDialog:true})}><i className="glyphicon glyphicon-plus"></i>New</Button>
         <BootstrapTable
           data={this.state.bookList}
           height={430}
