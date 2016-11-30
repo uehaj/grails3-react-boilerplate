@@ -11,6 +11,7 @@ ReactDOM.render(
 
 
 if (module.hot) {
+  console.log("--------------------");
   module.hot.accept('./components/Routing', () => {
     const NextApp = require('./components/Routing').default;
     ReactDOM.render(
