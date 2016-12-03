@@ -8,11 +8,11 @@ export default class ModalForm extends Component {
 
     const CustomTitleField = ({title}) => {
       return (
-          <div style={{ marginTop: '-10pt', marginLeft: '-10pt', marginRight: '-10pt', marginBottom: '15pt' }}>
-            <Modal.Header closeButton>
-              <Modal.Title>{title}</Modal.Title>
-            </Modal.Header>
-          </div>
+        <div style={{ marginTop: '-10pt', marginLeft: '-10pt', marginRight: '-10pt', marginBottom: '15pt' }}>
+          <Modal.Header closeButton>
+            <Modal.Title>{title}</Modal.Title>
+          </Modal.Header>
+        </div>
       );
     };
 
@@ -23,17 +23,15 @@ export default class ModalForm extends Component {
     const { onClose, show, children, ...formProps} = this.props;
 
     return (
-        <Modal show={show} onHide={onClose}>
-        <div style={{ padding:'0' }}>
-          <div style={{ padding: '15px' }}>
-            <Form fields={fields} {...formProps}>
-              <div style={{ borderTop: "1px solid #e5e5e5", textAlign: "right", marginLeft:'-15px', marginRight:'-15px', paddingTop: '15px' }}>
-                <div style={{ marginRight: '15px' }}>
-                  {children}
-                </div>
+      <Modal show={show} onHide={onClose}>
+        <div style={{ padding: '15px' }}>
+          <Form fields={fields} {...formProps}>
+            <div style={{ borderTop: "1px solid #e5e5e5", textAlign: "right", marginLeft:'-15px', marginRight:'-15px', paddingTop: '15px' }}>
+              <div style={{ marginRight: '15px' }}>
+                {children}
               </div>
-            </Form>
-          </div>
+            </div>
+          </Form>
         </div>
       </Modal>
     );

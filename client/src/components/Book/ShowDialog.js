@@ -33,8 +33,16 @@ export default class ShowDialog extends Component {
       },
     };
 
+    /* replace input tag to normal text */
+    const func = (props) => <div>{props.value}</div>;
+
     const uiSchema = {
-      "ui:readonly": true,
+      ... (Object.keys(schema.properties).reduce((map, key) => {map[key]={"ui:widget":func};return map;},{}))
+      /*
+        title: {"ui:widget": func}
+        price: {"ui:widget": func}
+          :
+       */
     };
 
     return (

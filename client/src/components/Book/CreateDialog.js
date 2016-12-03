@@ -19,7 +19,7 @@ export default class CreateDialog extends Component {
 
   render() {
     const schema = {
-      title: "Edit Book",
+      title: "Create Book",
       type: "object",
       required: ["title", "price"],
       properties: {
