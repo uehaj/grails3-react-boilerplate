@@ -24,7 +24,7 @@ export default function ModalDialog(props) {
 }
 
 ModalDialog.propTypes = {
-  title: PropTypes.string.isRequired,
+  title: PropTypes.string,
   show: PropTypes.func.isRequired,
   close: PropTypes.func.isRequired,
   additionalButton: PropTypes.element.isRequired,

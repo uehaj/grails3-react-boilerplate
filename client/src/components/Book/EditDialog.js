@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
-import { Button, FormControl, Form, FormGroup, ControlLabel } from 'react-bootstrap';
-import ModalDialog from '../ModalDialog';
+import { Modal, Button } from 'react-bootstrap';
+import Form from "react-jsonschema-form";
 import * as api from '../../util/api';
 
 /**
@@ -45,34 +45,28 @@ export default class EditDialog extends Component {
         </Button>
       </span>);
 
+    const schema = {
+      title: "Book",
+      type: "object",
+      required: ["title", "price"],
+      properties: {
+        title: {type: "string", title: "Title", default: "no title"},
+        price: {type: "number", title: "Price", default: 0},
+      },
+    };
+
+    const CustomTitleField = ({title, required}) => {
+      const legend = required ? title + '*' : title;
+      return <div id="custom">{legend}</div>;
+    };
+
     return (
-      <ModalDialog
-        title={title}
-        show={this.props.show}
-        close={this.props.close}
-        additionalButton={additionalButton}
-      >
-        <Form>
-          <FormGroup controlId="formTitle">
-            <ControlLabel>Title</ControlLabel>
-            <FormControl
-              // eslint-disable-next-line
-              ref="title"
-              componentClass="input"
-              placeholder="Title" defaultValue={this.state.book && this.state.book.title}
-            />
-          </FormGroup>
-          <FormGroup controlId="formPrice">
-            <ControlLabel>Price</ControlLabel>
-            <FormControl
-              // eslint-disable-next-line
-              ref="price"
-              componentClass="input"
-              placeholder="Price" defaultValue={this.state.book && this.state.book.price}
-            />
-          </FormGroup>
+      <Modal show={this.props.show} onHide={this.props.close}>
+        <Modal.Body>
+        <Form schema={schema}>
         </Form>
-      </ModalDialog>
+        </Modal.Body>
+      </Modal>
     );
   }
 }

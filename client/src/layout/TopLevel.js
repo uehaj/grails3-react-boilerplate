@@ -1,6 +1,8 @@
 import React, { PropTypes } from 'react';
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
+import './stickey-footer.css';
+import logo from '../images/favicon48.png';
 
 /**
  * Application top level structure.
@@ -42,7 +44,12 @@ function TopLevelNavbar(props) {
   return (
     <Navbar fixedTop>
       <Navbar.Header>
-        <Navbar.Brand><a href="#dummy">React/Grails Boilerplate</a></Navbar.Brand>
+        <Navbar.Brand>
+          <img src={logo} />
+        </Navbar.Brand>
+        <Navbar.Brand>
+        <a href="#dummy">React/Grails Boilerplate</a>
+        </Navbar.Brand>
         <Navbar.Toggle />
       </Navbar.Header>
       <Navbar.Collapse>
