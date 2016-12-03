@@ -3,7 +3,7 @@ import { Button } from 'react-bootstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/css/react-bootstrap-table.css';
 
-import NewDialog from './NewDialog';
+import CreateDialog from './CreateDialog';
 import ShowDialog from './ShowDialog';
 import EditDialog from './EditDialog';
 import ModalDialog from '../ModalDialog';
@@ -54,6 +54,7 @@ export default class List extends Component {
 
   createBook(creatingBook) {
     this.setState({ newDialogVisible: false });
+
     api.createBook(creatingBook).then(() => {
       this.reloadData();
     }).catch(err =>
@@ -129,7 +130,7 @@ export default class List extends Component {
           <TableHeaderColumn dataField="title" dataSort>Title</TableHeaderColumn>
           <TableHeaderColumn dataField="price" dataSort>Price</TableHeaderColumn>
         </BootstrapTable>
-        <NewDialog
+        <CreateDialog
           show={this.state.newDialogVisible}
           onClose={() => this.setState({ newDialogVisible: false })}
           onSubmit={this.createBook.bind(this)}
@@ -138,7 +139,7 @@ export default class List extends Component {
           show={this.state.showDialogVisible}
           selectedBookId={this.state.selectedBookId}
           onClose={() => this.setState({ showDialogVisible: false })}
-          editButtonAction={this.showEditDialog.bind(this)}
+          onEditButtonClicked={this.showEditDialog.bind(this)}
         />
         <EditDialog
           show={this.state.editDialogVisible}

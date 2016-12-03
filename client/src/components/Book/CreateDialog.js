@@ -1,12 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { Button } from 'react-bootstrap';
 import ModalForm from './ModalForm';
-import * as api from '../../util/api';
 
 /**
- * Show Domain class on a modal dialog.
+ * Form for create Domain class on a modal dialog.
  */
-export default class ShowDialog extends Component {
+export default class CreateDialog extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,17 +13,13 @@ export default class ShowDialog extends Component {
     };
   }
 
-  async componentWillReceiveProps(nextProps) {
-    if (nextProps.selectedBookId !== this.props.selectedBookId) {
-      const resp = await api.getBook(nextProps.selectedBookId);
-      const json = await resp.json();
-      this.setState({ formData: json });
-    }
+  handleSubmit({formData}) {
+    this.props.onSubmit(formData);
   }
 
   render() {
     const schema = {
-      title: "Show Book",
+      title: "Edit Book",
       type: "object",
       required: ["title", "price"],
       properties: {
@@ -34,27 +29,26 @@ export default class ShowDialog extends Component {
     };
 
     const uiSchema = {
-      "ui:readonly": true,
     };
 
     return (
       <ModalForm
         show={this.props.show}
-        formData={this.state.formData}
         onClose={this.props.onClose}
         schema={schema}
-        uiSchema={uiSchema}>
+        uiSchema={uiSchema}
+        onSubmit={this.handleSubmit.bind(this)}>
         <span>
-          <Button bsStyle="primary" onClick={this.props.onEditButtonClicked}>Edit</Button>
-          <Button onClick={this.props.onClose}>Close</Button>
+          <Button bsStyle="primary" type="submit">Create</Button>
+          <Button onClick={this.props.onClose}>Cancel</Button>
         </span>
       </ModalForm>
     );
   }
 }
 
-ShowDialog.propTypes = {
+CreateDialog.propTypes = {
   show: PropTypes.bool.isRequired,
-  selectedBookId: PropTypes.number,
   onClose: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };
