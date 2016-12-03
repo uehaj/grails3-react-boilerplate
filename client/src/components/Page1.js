@@ -1,15 +1,23 @@
-import React, { Component } from 'react';
+import React from 'react';
 import Breadcrumbs from 'react-breadcrumbs';
 
-export default class Page1 extends Component {
-  render() {
-    return (
-      <div>
-        <Breadcrumbs wrapperElement="ol" itemElement="li" customClass="breadcrumb" separator="" routes={this.props.routes} />
-        <div style={{paddingLeft: '1em'}}>
+export default function Page1({ routes }) {
+  return (
+    <div>
+      <Breadcrumbs
+        wrapperElement="ol"
+        itemElement="li"
+        customClass="breadcrumb"
+        separator=""
+        routes={routes}
+      />
+      <div style={{ paddingLeft: '1em' }}>
         Page1.
-        </div>
       </div>
-    );
-  }
+    </div>
+  );
 }
+
+Page1.propTypes = {
+  routes: React.PropTypes.arrayOf(React.PropTypes.object).isRequired,
+};

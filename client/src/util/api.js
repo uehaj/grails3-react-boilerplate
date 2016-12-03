@@ -1,42 +1,46 @@
-const urlBase = 'http://localhost:8080/'
+const urlBase = 'http://localhost:8080/';
 
 export async function getBooks() {
-  const url = urlBase + 'book?max=100';
+  const url = `${urlBase}book?max=100`;
   const resp = await fetch(url, {
-    method: 'GET'
+    method: 'GET',
   });
-  return Promise.resolve(await resp.json());
+  return Promise.resolve(resp);
 }
 
 export async function getBook(id) {
-  const url = urlBase + `book/${id}.json`;
+  const url = `${urlBase}book/${id}`;
   const resp = await fetch(url, {
-    method: 'GET'
+    method: 'GET',
   });
-  return Promise.resolve(await resp.json());
+  return Promise.resolve(resp);
 }
 
-export async function updateBook(id, book) {
-  console.log('book=',book);
-  const url = urlBase + `book/${id}.json`;
+export async function updateBook(book) {
+  const url = `${urlBase}book/${book.id}`;
   const resp = await fetch(url, {
     method: 'PUT',
-    body: book
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(book),
   });
+  return Promise.resolve(resp);
 }
 
 export async function createBook(book) {
-  const url = urlBase + `book.json`;
+  const url = `${urlBase}book`;
   const resp = await fetch(url, {
     method: 'POST',
-    body: book
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(book),
   });
+  return Promise.resolve(resp);
 }
 
-export async function deleteBook(id, callback, callbackError) {
-  const url = urlBase + `book/${id}.json`;
+export async function deleteBook(id) {
+  const url = `${urlBase}book/${id}.json`;
   const resp = await fetch(url, {
-    method: 'DELETE'
+    method: 'DELETE',
   });
+  return Promise.resolve(resp);
 }
 

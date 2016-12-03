@@ -16,71 +16,88 @@ export default class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      bookList:[],
+      bookList: [],
       selectedBookId: null,
       showNewDialog: false,
       showShowDialog: false,
       showEditDialog: false,
       showErrorDialog: false,
-      errorMessage: ''
+      errorMessage: '',
     };
   }
-  reloadData() {
-    api.getBooks().then(data => {
-      console.log(data);
-      this.setState({ bookList: data });
-    });
-  }
+
   componentDidMount() {
-    api.getBooks().then(data =>
-      this.setState({ bookList: data })
-    );
+    this.reloadData();
   }
+
+  async reloadData() {
+    const resp = await api.getBooks();
+    const json = await resp.json();
+    this.setState({ bookList: json });
+  }
+
   handleRowClicked(row) {
-    this.setState({ selectedBookId: row.id,
-                    showShowDialog: true});
+    this.setState(
+      {
+        selectedBookId: row.id,
+        showShowDialog: true,
+      });
   }
+
   showEditDialog() {
-    this.setState({ showEditDialog: true,
-                    showShowDialog: false});
+    this.setState(
+      {
+        showEditDialog: true,
+        showShowDialog: false,
+      });
   }
 
   createBook(creatingBook) {
-    this.setState({showNewDialog: false});
-    api.createBook(creatingBook).then(()=>{
+    this.setState({ showNewDialog: false });
+    api.createBook(creatingBook).then(() => {
       this.reloadData();
-    }).catch(err => {
-      this.setState({errorMessage: err,
-                     showErrorDialog: true});
-    });
+    }).catch(err =>
+      this.setState(
+        {
+          errorMessage: err,
+          showErrorDialog: true,
+        }));
   }
 
   updateBook(updatedBook) {
-    this.setState({showEditDialog: false});
-    api.updateBook(this.state.selectedBookId, updatedBook).then(() => {
+    this.setState({ showEditDialog: false });
+
+    function isSelectedBook(book) {
+      if (book.id === this.state.selectedBookId) {
+        return { id: this.state.selectedBookId, ...updatedBook };
+      }
+      return book;
+    }
+
+    api.updateBook(updatedBook).then(() => {
       // Locally update data.
       this.setState(
         {
-          bookList: this.state.bookList.map(
-            (book) => (book.id === this.state.selectedBookId)
-              ? {id:this.state.selectedBookId, ...updatedBook}
-              : book)
-        }
-      );
-    }).catch(err => {
-      this.setState({errorMessage: err,
-                     showErrorDialog: true});
-    });
+          bookList: this.state.bookList.map(isSelectedBook.bind(this)),
+        });
+    }).catch(err =>
+      this.setState(
+        {
+          errorMessage: err,
+          showErrorDialog: true,
+        }));
   }
 
   deleteBook(rowKeys) {
-    rowKeys.forEach(bookId=>{
-      api.deleteBook(bookId).then(()=>{
+    rowKeys.forEach((bookId) => {
+      api.deleteBook(bookId).then(() => {
         this.reloadData();
-      }).catch(err=>{
-        this.setState({errorMessage: err,
-                       showErrorDialog: true});
-      });
+      }).catch(err =>
+        this.setState(
+          {
+            errorMessage: err,
+            showErrorDialog: true,
+          }));
     });
   }
 
@@ -88,42 +105,52 @@ export default class List extends Component {
     return (
       <div>
         <h1>Books</h1>
-        <Button className="btn btn-success react-bs-table-del-btn" onClick={()=>this.setState({showNewDialog:true})}><i className="glyphicon glyphicon-plus"></i>New</Button>
+        <Button
+          className="btn btn-success react-bs-table-del-btn"
+          onClick={() => this.setState({ showNewDialog: true })}
+        >
+          <i className="glyphicon glyphicon-plus" />
+          New
+        </Button>
         <BootstrapTable
           data={this.state.bookList}
           height={430}
           hover condensed pagination deleteRow
           selectRow={{
             mode: 'checkbox',
-            bgColor: "rgb(238, 193, 213)",
+            bgColor: 'rgb(238, 193, 213)',
           }}
           options={{
             onRowClick: this.handleRowClicked.bind(this),
-            afterDeleteRow: this.deleteBook.bind(this)
+            afterDeleteRow: this.deleteBook.bind(this),
           }}
-          >
-          <TableHeaderColumn dataField="id" dataSort={true} isKey={true} width="150">ID</TableHeaderColumn>
-          <TableHeaderColumn dataField="title" dataSort={true}>Title</TableHeaderColumn>
-          <TableHeaderColumn dataField="price" dataSort={true}>Price</TableHeaderColumn>
+        >
+          <TableHeaderColumn dataField="id" dataSort isKey width="150">ID</TableHeaderColumn>
+          <TableHeaderColumn dataField="title" dataSort>Title</TableHeaderColumn>
+          <TableHeaderColumn dataField="price" dataSort>Price</TableHeaderColumn>
         </BootstrapTable>
         <NewDialog
           show={this.state.showNewDialog}
-          close={()=>this.setState({showNewDialog:false})}
-          submitButtonAction={this.createBook.bind(this)} />
+          close={() => this.setState({ showNewDialog: false })}
+          submitButtonAction={this.createBook.bind(this)}
+        />
         <ShowDialog
           show={this.state.showShowDialog}
           selectedBookId={this.state.selectedBookId}
-          close={()=>this.setState({showShowDialog:false})}
-          editButtonAction={this.showEditDialog.bind(this)}/>
+          close={() => this.setState({ showShowDialog: false })}
+          editButtonAction={this.showEditDialog.bind(this)}
+        />
         <EditDialog
           show={this.state.showEditDialog}
           selectedBookId={this.state.selectedBookId}
-          close={()=>this.setState({showEditDialog:false})}
-          submitButtonAction={this.updateBook.bind(this)}/>
+          close={() => this.setState({ showEditDialog: false })}
+          submitButtonAction={this.updateBook.bind(this)}
+        />
         <ModalDialog
           title="Error"
           show={this.state.showErrorDialog}
-          close={()=>this.setState({showErrorDialog:false})}>
+          close={() => this.setState({ showErrorDialog: false })}
+        >
           <div>{this.state.errorMessage}</div>
         </ModalDialog>
       </div>

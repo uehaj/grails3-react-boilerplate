@@ -1,12 +1,15 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 /**
  * The page to which can't route.
  */
-export default class NotFound extends Component {
-  render() {
-    return (<div>
-              <h1>Route Not Found</h1>
-           </div>);
-  }
+// eslint-disable-next-line
+export default function NotFound(props) {
+  return (
+    <div>
+      <h1>Route Not Found</h1>
+    </div>);
 }
+
+NotFound.propTypes = {
+};

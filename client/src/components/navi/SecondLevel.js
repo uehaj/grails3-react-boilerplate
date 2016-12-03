@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PropTypes } from 'react';
 import { Navbar, Nav, NavItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 
@@ -14,39 +14,42 @@ import { LinkContainer } from 'react-router-bootstrap';
  * | footer                |
  * +-----------------------+
  */
-export default class SecondLevel extends Component {
-  render() {
-    return (
-      <div>
-        {/* Generate second level menu(Navbar). */}
-        <SecondLevelNavbar route={this.props.route} />
-        {/* Page content. */}
-        <div style={{marginTop:60, paddingTop: 40}}>
-        {this.props.children}
-        </div>
+export default function SecondLevel(props) {
+  return (
+    <div>
+      {/* Generate second level menu(Navbar). */}
+      <SecondLevelNavbar route={props.route} />
+      {/* Page content. */}
+      <div style={{ marginTop: 60, paddingTop: 40 }}>
+        {props.children}
       </div>
-    );
-  }
+    </div>
+  );
 }
+
+SecondLevel.propTypes = {
+  route: PropTypes.arrayOf(PropTypes.object).isRequired,
+  children: PropTypes.element.isRequired,
+};
 
 /**
  * Second level menu navbar.
  */
-class SecondLevelNavbar extends Component {
-  render() {
-    return (
-      <Navbar inverse style={{position:'fixed', marginTop:-9, zIndex:1, width:'100%', marginBottom: 0}}>
-        <Nav navbar>
-        { (this.props.route.childRoutes ? this.props.route.childRoutes : []).map((item)=>{
-            return (
-              <LinkContainer key={item.name} to={'/'+this.props.route.path+'/'+item.path}>
-               <NavItem>{item.name}</NavItem>
-             </LinkContainer>
-            );
-          })
+function SecondLevelNavbar(props) {
+  return (
+    <Navbar inverse style={{ position: 'fixed', marginTop: -9, zIndex: 1, width: '100%', marginBottom: 0 }}>
+      <Nav navbar>
+        {
+          (props.route.childRoutes ? props.route.childRoutes : []).map(item =>
+            <LinkContainer key={item.name} to={`/${props.route.path}/${item.path}`}>
+              <NavItem>{item.name}</NavItem>
+            </LinkContainer>)
         }
-        </Nav>
-      </Navbar>
-    );
-  }
+      </Nav>
+    </Navbar>
+  );
 }
+
+SecondLevelNavbar.propTypes = {
+  route: PropTypes.arrayOf(PropTypes.object).isRequired,
+};

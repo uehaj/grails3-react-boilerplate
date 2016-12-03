@@ -11,12 +11,12 @@ ReactDOM.render(
 
 
 if (module.hot) {
-  console.log("--------------------");
   module.hot.accept('./components/Routing', () => {
+    // eslint-disable-next-line
     const NextApp = require('./components/Routing').default;
     ReactDOM.render(
       <NextApp />,
-      rootEl
+      rootEl,
     );
   });
 }
