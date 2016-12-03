@@ -1,19 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './css/stickey-footer.css';
-import Routing from './components/Routing';
+import App from './App';
 
 const rootEl = document.getElementById('root');
 
 ReactDOM.render(
-  <Routing />,
+  <App />,
   rootEl);
 
 
 if (module.hot) {
-  module.hot.accept('./components/Routing', () => {
+  module.hot.accept('./App', () => {
     // eslint-disable-next-line
-    const NextApp = require('./components/Routing').default;
+    const NextApp = require('./App').default;
     ReactDOM.render(
       <NextApp />,
       rootEl,

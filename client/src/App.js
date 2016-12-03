@@ -1,8 +1,10 @@
 import React from 'react';
 import { Router, Route, IndexRedirect, browserHistory } from 'react-router';
-import { TopLevel, SecondLevel, NotFound } from './navi';
-import Book from './Book';
-import Page1 from './Page1';
+import TopLevel from './layout/TopLevel';
+import SecondLevel from './layout/SecondLevel';
+import NotFound from './layout/NotFound';
+import Book from './components/Book';
+import Page1 from './components/Page1';
 
 export default () => (
   <Router history={browserHistory}>
