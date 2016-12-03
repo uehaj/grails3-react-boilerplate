@@ -28,7 +28,7 @@ export default function SecondLevel(props) {
 }
 
 SecondLevel.propTypes = {
-  route: PropTypes.arrayOf(PropTypes.object).isRequired,
+  route: PropTypes.object.isRequired,
   children: PropTypes.element.isRequired,
 };
 
@@ -51,5 +51,5 @@ function SecondLevelNavbar(props) {
 }
 
 SecondLevelNavbar.propTypes = {
-  route: PropTypes.arrayOf(PropTypes.object).isRequired,
+  route: PropTypes.object.isRequired,
 };
