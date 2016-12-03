@@ -17,16 +17,16 @@ export default function ModalDialog(props) {
 
       <Modal.Footer>
         {props.additionalButton}
-        <Button onClick={props.close}>Cancel</Button>
+        <Button onClick={props.onClose}>Cancel</Button>
       </Modal.Footer>
     </Modal>
   );
 }
 
 ModalDialog.propTypes = {
+  show: PropTypes.bool.isRequired,
   title: PropTypes.string,
-  show: PropTypes.func.isRequired,
-  close: PropTypes.func.isRequired,
-  additionalButton: PropTypes.element.isRequired,
+  onClose: PropTypes.func.isRequired,
+  additionalButton: PropTypes.element,
   children: React.PropTypes.element.isRequired,
 };

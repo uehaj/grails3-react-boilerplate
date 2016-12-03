@@ -1,7 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import ReactDOM from 'react-dom';
-import { Modal, Button } from 'react-bootstrap';
-import Form from "react-jsonschema-form";
+import ModalForm from './ModalForm';
 import * as api from '../../util/api';
 
 /**
@@ -23,28 +21,17 @@ export default class EditDialog extends Component {
     }
   }
 
-  callbackSubmitButtonAction() {
+  handleSubmit({formData}) {
+    console.log('handleSubmit({formData})')
     if (this.props.selectedBookId) {
-      this.props.submitButtonAction({
+      this.props.onSubmit({
         id: this.props.selectedBookId,
-        // eslint-disable-next-line
-        title: ReactDOM.findDOMNode(this.refs.title).value,
-        // eslint-disable-next-line
-        price: ReactDOM.findDOMNode(this.refs.price).value,
+        ...formData
       });
     }
   }
 
   render() {
-    const title = `Edit Book: ${this.state.book && this.state.book.title}`;
-
-    const additionalButton = (
-      <span>
-        <Button bsStyle="primary" onClick={this.callbackSubmitButtonAction.bind(this)}>
-          Update
-        </Button>
-      </span>);
-
     const schema = {
       title: "Book",
       type: "object",
@@ -55,26 +42,25 @@ export default class EditDialog extends Component {
       },
     };
 
-    const CustomTitleField = ({title, required}) => {
-      const legend = required ? title + '*' : title;
-      return <div id="custom">{legend}</div>;
+    const uiSchema = {
     };
 
     return (
-      <Modal show={this.props.show} onHide={this.props.close}>
-        <Modal.Body>
-        <Form schema={schema}>
-        </Form>
-        </Modal.Body>
-      </Modal>
+      <ModalForm
+        show={this.props.show}
+        formData={this.state.book}
+        onClose={this.props.onClose}
+        schema={schema}
+        uiSchema={uiSchema}
+        onSubmit={this.handleSubmit.bind(this)}
+      />
     );
   }
 }
 
 EditDialog.propTypes = {
-  show: PropTypes.string.isRequired,
-  close: PropTypes.string.isRequired,
-  // eslint-disable-next-line
+  show: PropTypes.bool.isRequired,
   selectedBookId: PropTypes.number.isRequired,
-  submitButtonAction: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };

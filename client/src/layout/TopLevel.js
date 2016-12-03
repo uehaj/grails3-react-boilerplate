@@ -45,7 +45,7 @@ function TopLevelNavbar(props) {
     <Navbar fixedTop>
       <Navbar.Header>
         <Navbar.Brand>
-          <img src={logo} />
+          <img src={logo} role="presentation" />
         </Navbar.Brand>
         <Navbar.Brand>
         <a href="#dummy">React/Grails Boilerplate</a>

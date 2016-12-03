@@ -18,6 +18,7 @@ export default class ShowDialog extends Component {
   }
 
   async componentWillReceiveProps(nextProps) {
+    console.log(nextProps)
     if (nextProps.selectedBookId) {
       const resp = await api.getBook(nextProps.selectedBookId);
       const json = await resp.json();
@@ -38,7 +39,7 @@ export default class ShowDialog extends Component {
       <ModalDialog
         title={title}
         show={this.props.show}
-        close={this.props.close}
+        onClose={this.props.onClose}
         additionalButton={additionalButton}
       >
         <Form>
@@ -57,9 +58,8 @@ export default class ShowDialog extends Component {
 }
 
 ShowDialog.propTypes = {
-  show: PropTypes.string.isRequired,
-  close: PropTypes.string.isRequired,
-  // eslint-disable-next-line
-  selectedBookId: PropTypes.number.isRequired,
+  show: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  selectedBookId: PropTypes.number,
   editButtonAction: PropTypes.func.isRequired,
 };
