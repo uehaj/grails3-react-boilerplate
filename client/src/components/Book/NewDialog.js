@@ -14,8 +14,8 @@ export default class NewDialog extends Component {
     };
   }
 
-  callbackSubmitButtonAction() {
-    this.props.submitButtonAction({
+  handleSubmit() {
+    this.props.onSubmit({
       // eslint-disable-next-line
       title: ReactDOM.findDOMNode(this.refs.title).value,
       // eslint-disable-next-line
@@ -25,14 +25,14 @@ export default class NewDialog extends Component {
 
   render() {
     const additionalButton = (
-      <Button bsStyle="primary" onClick={this.callbackSubmitButtonAction.bind(this)}>Create</Button>
+      <Button bsStyle="primary" onClick={this.handleSubmit.bind(this)}>Create</Button>
     );
 
     return (
       <ModalDialog
-        title="New Book"
         show={this.props.show}
-        close={this.props.close}
+        title="New Book"
+        onClose={this.props.onClose}
         additionalButton={additionalButton}
       >
         <Form>
@@ -63,7 +63,7 @@ export default class NewDialog extends Component {
 }
 
 NewDialog.propTypes = {
-  show: PropTypes.string.isRequired,
-  close: PropTypes.string.isRequired,
-  submitButtonAction: PropTypes.func.isRequired,
+  show: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
 };

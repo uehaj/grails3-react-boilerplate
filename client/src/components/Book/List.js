@@ -18,10 +18,10 @@ export default class List extends Component {
     this.state = {
       bookList: [],
       selectedBookId: null,
-      showNewDialog: false,
-      showShowDialog: false,
-      showEditDialog: false,
-      showErrorDialog: false,
+      newDialogVisible: false,
+      showDialogVisible: false,
+      editDialogVisible: false,
+      errorDialogVisible: false,
       errorMessage: '',
     };
   }
@@ -40,32 +40,32 @@ export default class List extends Component {
     this.setState(
       {
         selectedBookId: row.id,
-        showShowDialog: true,
+        showDialogVisible: true,
       });
   }
 
   showEditDialog() {
     this.setState(
       {
-        showEditDialog: true,
-        showShowDialog: false,
+        editDialogVisible: true,
+        showDialogVisible: false,
       });
   }
 
   createBook(creatingBook) {
-    this.setState({ showNewDialog: false });
+    this.setState({ newDialogVisible: false });
     api.createBook(creatingBook).then(() => {
       this.reloadData();
     }).catch(err =>
       this.setState(
         {
           errorMessage: err,
-          showErrorDialog: true,
+          errorDialogVisible: true,
         }));
   }
 
   updateBook(updatedBook) {
-    this.setState({ showEditDialog: false });
+    this.setState({ editDialogVisible: false });
 
     function isSelectedBook(book) {
       if (book.id === this.state.selectedBookId) {
@@ -84,7 +84,7 @@ export default class List extends Component {
       this.setState(
         {
           errorMessage: err,
-          showErrorDialog: true,
+          errorDialogVisible: true,
         }));
   }
 
@@ -96,7 +96,7 @@ export default class List extends Component {
         this.setState(
           {
             errorMessage: err,
-            showErrorDialog: true,
+            errorDialogVisible: true,
           }));
     });
   }
@@ -107,7 +107,7 @@ export default class List extends Component {
         <h1>Books</h1>
         <Button
           className="btn btn-success react-bs-table-del-btn"
-          onClick={() => this.setState({ showNewDialog: true })}
+          onClick={() => this.setState({ newDialogVisible: true })}
         >
           <i className="glyphicon glyphicon-plus" />
           New
@@ -130,26 +130,26 @@ export default class List extends Component {
           <TableHeaderColumn dataField="price" dataSort>Price</TableHeaderColumn>
         </BootstrapTable>
         <NewDialog
-          show={this.state.showNewDialog}
-          close={() => this.setState({ showNewDialog: false })}
-          submitButtonAction={this.createBook.bind(this)}
+          show={this.state.newDialogVisible}
+          onClose={() => this.setState({ newDialogVisible: false })}
+          onSubmit={this.createBook.bind(this)}
         />
         <ShowDialog
-          show={this.state.showShowDialog}
+          show={this.state.showDialogVisible}
           selectedBookId={this.state.selectedBookId}
-          close={() => this.setState({ showShowDialog: false })}
+          onClose={() => this.setState({ showDialogVisible: false })}
           editButtonAction={this.showEditDialog.bind(this)}
         />
         <EditDialog
-          show={this.state.showEditDialog}
+          show={this.state.editDialogVisible}
           selectedBookId={this.state.selectedBookId}
-          close={() => this.setState({ showEditDialog: false })}
-          submitButtonAction={this.updateBook.bind(this)}
+          onClose={() => this.setState({ editDialogVisible: false })}
+          onSubmit={this.updateBook.bind(this)}
         />
         <ModalDialog
-          title="Error"
-          show={this.state.showErrorDialog}
-          close={() => this.setState({ showErrorDialog: false })}
+           title="Error"
+           show={this.state.errorDialogVisible}
+           onClose={() => this.setState({ errorDialogVisible: false })}
         >
           <div>{this.state.errorMessage}</div>
         </ModalDialog>
