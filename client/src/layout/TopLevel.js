@@ -33,7 +33,7 @@ export default function TopLevel(props) {
 }
 
 TopLevel.propTypes = {
-  route: PropTypes.arrayOf(PropTypes.object).isRequired,
+  route: PropTypes.object.isRequired,
   children: PropTypes.element.isRequired,
 };
 
@@ -80,5 +80,5 @@ function TopLevelNavbar(props) {
 }
 
 TopLevelNavbar.propTypes = {
-  route: PropTypes.arrayOf(PropTypes.object).isRequired,
+  route: PropTypes.object.isRequired,
 };

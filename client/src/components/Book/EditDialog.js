@@ -22,7 +22,6 @@ export default class EditDialog extends Component {
   }
 
   handleSubmit({formData}) {
-    console.log('handleSubmit({formData})')
     if (this.props.selectedBookId) {
       this.props.onSubmit({
         id: this.props.selectedBookId,
@@ -60,7 +59,7 @@ export default class EditDialog extends Component {
 
 EditDialog.propTypes = {
   show: PropTypes.bool.isRequired,
-  selectedBookId: PropTypes.number.isRequired,
+  selectedBookId: PropTypes.number,
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
 };
