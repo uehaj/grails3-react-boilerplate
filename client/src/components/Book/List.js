@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
-import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/css/react-bootstrap-table.css';
 
 import CreateDialog from './CreateDialog';
 import ShowDialog from './ShowDialog';
 import EditDialog from './EditDialog';
 import ModalDialog from '../ModalDialog';
+import Table from '../Table';
 import * as api from '../../util/api';
 
 /**
@@ -89,7 +89,7 @@ export default class List extends Component {
         }));
   }
 
-  deleteBook(rowKeys) {
+  handleDeleted(rowKeys) {
     rowKeys.forEach((bookId) => {
       api.deleteBook(bookId).then(() => {
         this.reloadData();
@@ -113,23 +113,11 @@ export default class List extends Component {
           <i className="glyphicon glyphicon-plus" />
           New
         </Button>
-        <BootstrapTable
-          data={this.state.bookList}
-          height={430}
-          hover condensed pagination deleteRow
-          selectRow={{
-            mode: 'checkbox',
-            bgColor: 'rgb(238, 193, 213)',
-          }}
-          options={{
-            onRowClick: this.handleRowClicked.bind(this),
-            afterDeleteRow: this.deleteBook.bind(this),
-          }}
-        >
-          <TableHeaderColumn dataField="id" dataSort isKey width="150">ID</TableHeaderColumn>
-          <TableHeaderColumn dataField="title" dataSort>Title</TableHeaderColumn>
-          <TableHeaderColumn dataField="price" dataSort>Price</TableHeaderColumn>
-        </BootstrapTable>
+        <Table
+          tableData={this.state.bookList}
+          onRowClicked={this.handleRowClicked.bind(this)}
+          onDeleted={this.handleDeleted.bind(this)}
+        />
         <CreateDialog
           show={this.state.newDialogVisible}
           onClose={() => this.setState({ newDialogVisible: false })}
