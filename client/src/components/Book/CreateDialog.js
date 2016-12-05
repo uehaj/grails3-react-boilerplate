@@ -13,18 +13,18 @@ export default class CreateDialog extends Component {
     };
   }
 
-  handleSubmit({formData}) {
+  handleSubmit({ formData }) {
     this.props.onSubmit(formData);
   }
 
   render() {
     const schema = {
-      title: "Create Book",
-      type: "object",
-      required: ["title", "price"],
+      title: 'Create Book',
+      type: 'object',
+      required: ['title', 'price'],
       properties: {
-        title: {type: "string", title: "Title", default: "no title"},
-        price: {type: "number", title: "Price", default: 0},
+        title: { type: 'string', title: 'Title', default: 'no title' },
+        price: { type: 'number', title: 'Price', default: 0 },
       },
     };
 
@@ -37,7 +37,8 @@ export default class CreateDialog extends Component {
         onClose={this.props.onClose}
         schema={schema}
         uiSchema={uiSchema}
-        onSubmit={this.handleSubmit.bind(this)}>
+        onSubmit={this.handleSubmit.bind(this)}
+      >
         <span>
           <Button bsStyle="primary" type="submit">Create</Button>
           <Button onClick={this.props.onClose}>Cancel</Button>

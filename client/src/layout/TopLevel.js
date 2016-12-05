@@ -35,6 +35,7 @@ export default function TopLevel(props) {
 }
 
 TopLevel.propTypes = {
+  // eslint-disable-next-line
   route: PropTypes.object.isRequired,
   children: PropTypes.element.isRequired,
 };
@@ -53,7 +54,7 @@ function TopLevelNavbar(props) {
           <img src={reactLogo} className="App-logo" role="presentation" />
         </Navbar.Brand>
         <Navbar.Brand>
-        <a href="#dummy">React/Grails Scaffold</a>
+          <a href="#dummy">React/Grails Scaffold</a>
         </Navbar.Brand>
         <Navbar.Toggle />
       </Navbar.Header>
@@ -85,5 +86,6 @@ function TopLevelNavbar(props) {
 }
 
 TopLevelNavbar.propTypes = {
+  // eslint-disable-next-line
   route: PropTypes.object.isRequired,
 };

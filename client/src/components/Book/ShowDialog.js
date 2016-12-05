@@ -24,25 +24,30 @@ export default class ShowDialog extends Component {
 
   render() {
     const schema = {
-      title: "Show Book",
-      type: "object",
-      required: ["title", "price"],
+      title: 'Show Book',
+      type: 'object',
+      required: ['title', 'price'],
       properties: {
-        title: {type: "string", title: "Title", default: "no title"},
-        price: {type: "number", title: "Price", default: 0},
+        title: { type: 'string', title: 'Title', default: 'no title' },
+        price: { type: 'number', title: 'Price', default: 0 },
       },
     };
 
     /* replace input tag to normal text */
-    const func = (props) => <div>{props.value}</div>;
+    const func = props => <div>{props.value}</div>;
 
     const uiSchema = {
-      ... (Object.keys(schema.properties).reduce((map, key) => {map[key]={"ui:widget":func};return map;},{}))
       /*
-        title: {"ui:widget": func}
-        price: {"ui:widget": func}
-          :
-       */
+        Generate entries for each property like:
+        title: {'ui:widget': func}
+        price: {'ui:widget': func}
+        :
+      */
+      ...(Object.keys(schema.properties)
+          .reduce(
+            (map, key) =>
+              ({ [key]: { 'ui:widget': func }, ...map }),
+            {})),
     };
 
     return (
@@ -51,10 +56,20 @@ export default class ShowDialog extends Component {
         formData={this.state.formData}
         onClose={this.props.onClose}
         schema={schema}
-        uiSchema={uiSchema}>
+        uiSchema={uiSchema}
+      >
         <span>
-          <Button bsStyle="primary" onClick={this.props.onEditButtonClicked}>Edit</Button>
-          <Button onClick={this.props.onClose}>Close</Button>
+          <Button
+            bsStyle="primary"
+            onClick={this.props.onEditButtonClicked}
+          >
+            Edit
+          </Button>
+          <Button
+            onClick={this.props.onClose}
+          >
+            Close
+          </Button>
         </span>
       </ModalForm>
     );
@@ -65,4 +80,5 @@ ShowDialog.propTypes = {
   show: PropTypes.bool.isRequired,
   selectedBookId: PropTypes.number,
   onClose: PropTypes.func.isRequired,
+  onEditButtonClicked: PropTypes.func.isRequired,
 };

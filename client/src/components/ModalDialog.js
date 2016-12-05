@@ -6,7 +6,7 @@ import { Modal, Button } from 'react-bootstrap';
  */
 export default function ModalDialog(props) {
   return (
-    <Modal show={props.show} onHide={props.close}>
+    <Modal show={props.show} onHide={props.onClose}>
       <Modal.Header closeButton>
         <Modal.Title>{props.title}</Modal.Title>
       </Modal.Header>

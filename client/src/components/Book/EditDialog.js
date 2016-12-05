@@ -22,23 +22,23 @@ export default class EditDialog extends Component {
     }
   }
 
-  handleSubmit({formData}) {
+  handleSubmit({ formData }) {
     if (this.props.selectedBookId) {
       this.props.onSubmit({
         id: this.props.selectedBookId,
-        ...formData
+        ...formData,
       });
     }
   }
 
   render() {
     const schema = {
-      title: "Edit Book",
-      type: "object",
-      required: ["title", "price"],
+      title: 'Edit Book',
+      type: 'object',
+      required: ['title', 'price'],
       properties: {
-        title: {type: "string", title: "Title", default: "no title"},
-        price: {type: "number", title: "Price", default: 0},
+        title: { type: 'string', title: 'Title', default: 'no title' },
+        price: { type: 'number', title: 'Price', default: 0 },
       },
     };
 
@@ -52,7 +52,8 @@ export default class EditDialog extends Component {
         onClose={this.props.onClose}
         schema={schema}
         uiSchema={uiSchema}
-        onSubmit={this.handleSubmit.bind(this)}>
+        onSubmit={this.handleSubmit.bind(this)}
+      >
         <span>
           <Button bsStyle="primary" type="submit">Update</Button>
           <Button onClick={this.props.onClose}>Cancel</Button>

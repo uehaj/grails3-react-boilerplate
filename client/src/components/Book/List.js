@@ -148,9 +148,9 @@ export default class List extends Component {
           onSubmit={this.updateBook.bind(this)}
         />
         <ModalDialog
-           title="Error"
-           show={this.state.errorDialogVisible}
-           onClose={() => this.setState({ errorDialogVisible: false })}
+          title="Error"
+          show={this.state.errorDialogVisible}
+          onClose={() => this.setState({ errorDialogVisible: false })}
         >
           <div>{this.state.errorMessage}</div>
         </ModalDialog>
