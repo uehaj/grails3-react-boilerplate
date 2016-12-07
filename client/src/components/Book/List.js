@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Button } from 'react-bootstrap';
 import 'react-bootstrap-table/css/react-bootstrap-table.css';
 
 import CreateDialog from './CreateDialog';
@@ -89,7 +88,7 @@ export default class List extends Component {
         }));
   }
 
-  handleDeleted(rowKeys) {
+  handleDeleteButtonClicked(rowKeys) {
     rowKeys.forEach((bookId) => {
       api.deleteBook(bookId).then(() => {
         this.reloadData();
@@ -106,17 +105,11 @@ export default class List extends Component {
     return (
       <div>
         <h1>Books</h1>
-        <Button
-          className="btn btn-success react-bs-table-del-btn"
-          onClick={() => this.setState({ newDialogVisible: true })}
-        >
-          <i className="glyphicon glyphicon-plus" />
-          New
-        </Button>
         <Table
           tableData={this.state.bookList}
           onRowClicked={this.handleRowClicked.bind(this)}
-          onDeleted={this.handleDeleted.bind(this)}
+          onCreateButtonClicked={()=>this.setState({ newDialogVisible: true })}
+          onDeleteButtonClicked={this.handleDeleteButtonClicked.bind(this)}
         />
         <CreateDialog
           show={this.state.newDialogVisible}

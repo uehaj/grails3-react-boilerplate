@@ -6,6 +6,8 @@ import NotFound from './layout/NotFound';
 import Book from './components/Book';
 import Page1 from './components/Page1';
 
+import "bootstrap/dist/css/bootstrap.css";
+
 export default () => (
   <Router history={browserHistory}>
     <Route name="TOP" path="/" component={TopLevel}>
