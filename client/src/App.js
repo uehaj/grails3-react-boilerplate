@@ -3,7 +3,7 @@ import { Router, Route, IndexRedirect, browserHistory } from 'react-router';
 import TopLevel from './layout/TopLevel';
 import SecondLevel from './layout/SecondLevel';
 import NotFound from './layout/NotFound';
-import Book from './components/Book';
+import IndexPage from './crud/IndexPage';
 import Page1 from './components/Page1';
 
 import "bootstrap/dist/css/bootstrap.css";
@@ -14,7 +14,7 @@ export default () => (
       <IndexRedirect from="*" to="book" />
       <Route path="book" name="booktable" component={SecondLevel}>
         <IndexRedirect from="*" to="list" />
-        <Route path="list" name="list" component={Book} />
+        <Route path="list" name="list" component={IndexPage} />
       </Route>
       <Route path="m1" name="MenuItem1" component={SecondLevel}>
         <IndexRedirect from="*" to="p1" />

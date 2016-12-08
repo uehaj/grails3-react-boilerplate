@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import 'react-bootstrap-table/css/react-bootstrap-table.css';
-import CreateDialog from './CreateDialog';
-import ShowDialog from './ShowDialog';
-import EditDialog from './EditDialog';
-import AlertBox from '../AlertBox';
-import Table from '../Table';
-import * as api from '../../util/api';
+import AlertBox from '../components/AlertBox';
+import Table from '../components/Table';
+import * as api from '../util/api';
 
 /**
  * List Domain class instances.
@@ -120,6 +117,9 @@ export default class List extends Component {
   }
 
   render() {
+    const CreateDialog = this.props.CreateDialog;
+    const ShowDialog = this.props.ShowDialog;
+    const EditDialog = this.props.EditDialog;
 
     return (
       <div>

@@ -1,11 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import { Button } from 'react-bootstrap';
-import ModalForm from '../ModalForm';
+import ModalForm from '../components/ModalForm';
+import * as api from '../util/api';
 
 /**
- * Form for create Domain class on a modal dialog.
+ * Form for edit existing Domain class on a modal dialog.
  */
-export default class CreateDialog extends Component {
+export default class EditDialog extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -13,13 +14,26 @@ export default class CreateDialog extends Component {
     };
   }
 
+  async componentWillReceiveProps(nextProps) {
+    if (nextProps.selectedBookId) {
+      const resp = await api.getBook(nextProps.selectedBookId);
+      const json = await resp.json();
+      this.setState({ formData: json });
+    }
+  }
+
   handleSubmit({ formData }) {
-    this.props.onSubmit(formData);
+    if (this.props.selectedBookId) {
+      this.props.onSubmit({
+        id: this.props.selectedBookId,
+        ...formData,
+      });
+    }
   }
 
   render() {
     const schema = {
-      title: 'Create Book',
+      title: 'Edit Book',
       type: 'object',
       required: ['title', 'price'],
       properties: {
@@ -34,13 +48,14 @@ export default class CreateDialog extends Component {
     return (
       <ModalForm
         show={this.props.show}
+        formData={this.state.formData}
         onClose={this.props.onClose}
         schema={schema}
         uiSchema={uiSchema}
         onSubmit={this.handleSubmit.bind(this)}
       >
         <span>
-          <Button bsStyle="primary" type="submit">Create</Button>
+          <Button bsStyle="primary" type="submit">Update</Button>
           <Button onClick={this.props.onClose}>Cancel</Button>
         </span>
       </ModalForm>
@@ -48,8 +63,9 @@ export default class CreateDialog extends Component {
   }
 }
 
-CreateDialog.propTypes = {
+EditDialog.propTypes = {
   show: PropTypes.bool.isRequired,
+  selectedBookId: PropTypes.number,
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
 };

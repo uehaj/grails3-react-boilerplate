@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Button } from 'react-bootstrap';
-import ModalForm from '../ModalForm';
-import * as api from '../../util/api';
+import ModalForm from '../components/ModalForm';
+import * as api from '../util/api';
 
 /**
  * Show Domain class on a modal dialog.
