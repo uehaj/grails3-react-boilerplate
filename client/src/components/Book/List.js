@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import {Button} from 'react-bootstrap';
+import {modalify} from 'react-modalify';
 import 'react-bootstrap-table/css/react-bootstrap-table.css';
-
 import CreateDialog from './CreateDialog';
 import ShowDialog from './ShowDialog';
 import EditDialog from './EditDialog';
 import ModalDialog from '../ModalDialog';
+import AlertBox from '../AlertBox';
 import Table from '../Table';
 import * as api from '../../util/api';
 
@@ -16,11 +18,10 @@ export default class List extends Component {
     super(props);
     this.state = {
       bookList: [],
-      selectedBookId: null,
-      newDialogVisible: false,
+      selectedId: null,
+      createDialogVisible: false,
       showDialogVisible: false,
       editDialogVisible: false,
-      errorDialogVisible: false,
       errorMessage: '',
     };
   }
@@ -30,111 +31,117 @@ export default class List extends Component {
   }
 
   async reloadData() {
-    const resp = await api.getBooks();
-    const json = await resp.json();
-    this.setState({ bookList: json });
+    try {
+      const resp = await api.getBooks();
+      const json = await resp.json();
+      this.setState({ bookList: json });
+    }
+    catch (err) {
+      AlertBox.error(err);
+    }
   }
 
   handleRowClicked(row) {
-    this.setState(
-      {
-        selectedBookId: row.id,
-        showDialogVisible: true,
-      });
+    this.setState({
+      selectedId: row.id,
+      showDialogVisible: true,
+    });
   }
 
   showEditDialog() {
-    this.setState(
-      {
-        editDialogVisible: true,
-        showDialogVisible: false,
-      });
+    this.setState({
+      editDialogVisible: true,
+      showDialogVisible: false,
+    });
   }
 
-  createBook(creatingBook) {
-    this.setState({ newDialogVisible: false });
-
-    api.createBook(creatingBook).then(() => {
+  async createBook(creatingBook) {
+    this.setState({ createDialogVisible: false });
+    try {
+      const resp= await api.createBook(creatingBook);
+      const json = await resp.json();
       this.reloadData();
-    }).catch(err =>
-      this.setState(
-        {
-          errorMessage: err,
-          errorDialogVisible: true,
-        }));
+      const result = await AlertBox.askYesNo({
+        title: "Created",
+        body: `Created ${json.id}`,
+        yes: "Ok",
+      });
+    }
+    catch(err) {
+      AlertBox.error(err);
+    }
   }
 
-  updateBook(updatedBook) {
+  async updateBook(updatedBook) {
     this.setState({ editDialogVisible: false });
 
     function isSelectedBook(book) {
-      if (book.id === this.state.selectedBookId) {
-        return { id: this.state.selectedBookId, ...updatedBook };
+      if (book.id === this.state.selectedId) {
+        return { id: this.state.selectedId, ...updatedBook };
       }
       return book;
     }
 
-    api.updateBook(updatedBook).then(() => {
+    try {
+      await api.updateBook(updatedBook);
       // Locally update data.
-      this.setState(
-        {
-          bookList: this.state.bookList.map(isSelectedBook.bind(this)),
-        });
-    }).catch(err =>
-      this.setState(
-        {
-          errorMessage: err,
-          errorDialogVisible: true,
-        }));
+      this.setState({
+        bookList: this.state.bookList.map(isSelectedBook.bind(this)),
+      });
+    }
+    catch(err) {
+      AlertBox.error(err);
+    }
   }
 
-  handleDeleteButtonClicked(rowKeys) {
-    rowKeys.forEach((bookId) => {
-      api.deleteBook(bookId).then(() => {
-        this.reloadData();
-      }).catch(err =>
-        this.setState(
-          {
-            errorMessage: err,
-            errorDialogVisible: true,
-          }));
-    });
+  async handleDeleteButtonClicked(rowKeys) {
+    try {
+      const result = await AlertBox.askYesNo({
+        title: "Delete",
+        body: `Delete? ${rowKeys.join(',')}`,
+        yes: "Delete",
+        no: "Cancel",
+      });
+      if (result === "Delete") {
+        for (const bookId of rowKeys) {
+          await api.deleteBook(bookId);
+          this.reloadData();
+        }
+      }
+    }
+    catch (err) {
+      AlertBox.error(err);
+    }
   }
 
   render() {
+
     return (
       <div>
         <h1>Books</h1>
         <Table
           tableData={this.state.bookList}
           onRowClicked={this.handleRowClicked.bind(this)}
-          onCreateButtonClicked={()=>this.setState({ newDialogVisible: true })}
+          onCreateButtonClicked={()=>this.setState({ createDialogVisible: true })}
           onDeleteButtonClicked={this.handleDeleteButtonClicked.bind(this)}
         />
         <CreateDialog
-          show={this.state.newDialogVisible}
-          onClose={() => this.setState({ newDialogVisible: false })}
+          show={this.state.createDialogVisible}
+          onClose={() => this.setState({ createDialogVisible: false })}
           onSubmit={this.createBook.bind(this)}
         />
         <ShowDialog
           show={this.state.showDialogVisible}
-          selectedBookId={this.state.selectedBookId}
+          selectedId={this.state.selectedId}
           onClose={() => this.setState({ showDialogVisible: false })}
           onEditButtonClicked={this.showEditDialog.bind(this)}
         />
         <EditDialog
           show={this.state.editDialogVisible}
-          selectedBookId={this.state.selectedBookId}
+          selectedId={this.state.selectedId}
           onClose={() => this.setState({ editDialogVisible: false })}
           onSubmit={this.updateBook.bind(this)}
         />
-        <ModalDialog
-          title="Error"
-          show={this.state.errorDialogVisible}
-          onClose={() => this.setState({ errorDialogVisible: false })}
-        >
-          <div>{this.state.errorMessage}</div>
-        </ModalDialog>
       </div>
     );
   }
