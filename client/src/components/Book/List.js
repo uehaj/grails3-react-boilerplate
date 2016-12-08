@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
-import {Button} from 'react-bootstrap';
-import {modalify} from 'react-modalify';
 import 'react-bootstrap-table/css/react-bootstrap-table.css';
 import CreateDialog from './CreateDialog';
 import ShowDialog from './ShowDialog';
 import EditDialog from './EditDialog';
-import ModalDialog from '../ModalDialog';
 import AlertBox from '../AlertBox';
 import Table from '../Table';
 import * as api from '../../util/api';
@@ -17,7 +14,7 @@ export default class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      bookList: [],
+      entityList: [],
       selectedId: null,
       createDialogVisible: false,
       showDialogVisible: false,
@@ -34,7 +31,7 @@ export default class List extends Component {
     try {
       const resp = await api.getBooks();
       const json = await resp.json();
-      this.setState({ bookList: json });
+      this.setState({ entityList: json });
     }
     catch (err) {
       AlertBox.error(err);
@@ -55,13 +52,13 @@ export default class List extends Component {
     });
   }
 
-  async createBook(creatingBook) {
+  async createEntity(creatingEntity) {
     this.setState({ createDialogVisible: false });
     try {
-      const resp= await api.createBook(creatingBook);
+      const resp= await api.createBook(creatingEntity);
       const json = await resp.json();
       this.reloadData();
-      const result = await AlertBox.askYesNo({
+      await AlertBox.askYesNo({
         title: "Created",
         body: `Created ${json.id}`,
         yes: "Ok",
@@ -72,21 +69,21 @@ export default class List extends Component {
     }
   }
 
-  async updateBook(updatedBook) {
+  async updateEntity(updatedEntity) {
     this.setState({ editDialogVisible: false });
 
-    function isSelectedBook(book) {
-      if (book.id === this.state.selectedId) {
-        return { id: this.state.selectedId, ...updatedBook };
+    function isSelectedEntity(entity) {
+      if (entity.id === this.state.selectedId) {
+        return { id: this.state.selectedId, ...updatedEntity };
       }
-      return book;
+      return entity;
     }
 
     try {
-      await api.updateBook(updatedBook);
+      await api.updateBook(updatedEntity);
       // Locally update data.
       this.setState({
-        bookList: this.state.bookList.map(isSelectedBook.bind(this)),
+        entityList: this.state.entityList.map(isSelectedEntity.bind(this)),
       });
     }
     catch(err) {
@@ -95,6 +92,14 @@ export default class List extends Component {
   }
 
   async handleDeleteButtonClicked(rowKeys) {
+    if (rowKeys.length === 0) {
+      AlertBox.askYesNo({
+        title: <span><i className="glyphicon glyphicon-info-sign" />Delete</span>,
+        body: `Select checkboxes to delete.`,
+        yes: "Ok",
+      });
+      return;
+    }
     try {
       const result = await AlertBox.askYesNo({
         title: "Delete",
@@ -103,8 +108,8 @@ export default class List extends Component {
         no: "Cancel",
       });
       if (result === "Delete") {
-        for (const bookId of rowKeys) {
-          await api.deleteBook(bookId);
+        for (const entityId of rowKeys) {
+          await api.deleteBook(entityId);
           this.reloadData();
         }
       }
@@ -120,7 +125,7 @@ export default class List extends Component {
       <div>
         <h1>Books</h1>
         <Table
-          tableData={this.state.bookList}
+          tableData={this.state.entityList}
           onRowClicked={this.handleRowClicked.bind(this)}
           onCreateButtonClicked={()=>this.setState({ createDialogVisible: true })}
           onDeleteButtonClicked={this.handleDeleteButtonClicked.bind(this)}
@@ -128,7 +133,7 @@ export default class List extends Component {
         <CreateDialog
           show={this.state.createDialogVisible}
           onClose={() => this.setState({ createDialogVisible: false })}
-          onSubmit={this.createBook.bind(this)}
+          onSubmit={this.createEntity.bind(this)}
         />
         <ShowDialog
           show={this.state.showDialogVisible}
@@ -140,7 +145,7 @@ export default class List extends Component {
           show={this.state.editDialogVisible}
           selectedId={this.state.selectedId}
           onClose={() => this.setState({ editDialogVisible: false })}
-          onSubmit={this.updateBook.bind(this)}
+          onSubmit={this.updateEntity.bind(this)}
         />
       </div>
     );

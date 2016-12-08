@@ -47,7 +47,7 @@ export default class AlertBox extends Component {
 
   static error(error) {
     return modalify((props) => (
-      <AlertBox title="Error" yes={'ok'} {...props}>
+      <AlertBox title={<i className="glyphicon glyphicon-exclamation-sign">Error</i>} yes={'ok'} {...props}>
         {error}
       </AlertBox>
     ))();
