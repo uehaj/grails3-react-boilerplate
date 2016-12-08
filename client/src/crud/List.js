@@ -3,11 +3,16 @@ import 'react-bootstrap-table/css/react-bootstrap-table.css';
 import AlertBox from '../components/AlertBox';
 import Table from '../components/Table';
 import * as api from '../util/api';
+import _CreateDialog from './CreateDialog';
+import _ShowDialog from './ShowDialog';
+import _EditDialog from './EditDialog';
+import crudFor from './crudFor';
 
 /**
  * List Domain class instances.
  */
 export default class List extends Component {
+
   constructor(props) {
     super(props);
     this.state = {
@@ -18,6 +23,10 @@ export default class List extends Component {
       editDialogVisible: false,
       errorMessage: '',
     };
+
+    this.CreateDialog = crudFor(_CreateDialog, "book", {title: 'Create book', ...this.props.schema});
+    this.ShowDialog = crudFor(_ShowDialog, "book", {title: 'Show book', ...this.props.schema});
+    this.EditDialog = crudFor(_EditDialog, "book", {title: 'Edit book', ...this.props.schema});
   }
 
   componentDidMount() {
@@ -130,18 +139,18 @@ export default class List extends Component {
           onCreateButtonClicked={()=>this.setState({ createDialogVisible: true })}
           onDeleteButtonClicked={this.handleDeleteButtonClicked.bind(this)}
         />
-        <CreateDialog
+        <this.CreateDialog
           show={this.state.createDialogVisible}
           onClose={() => this.setState({ createDialogVisible: false })}
           onSubmit={this.createEntity.bind(this)}
         />
-        <ShowDialog
+        <this.ShowDialog
           show={this.state.showDialogVisible}
           selectedId={this.state.selectedId}
           onClose={() => this.setState({ showDialogVisible: false })}
           onEditButtonClicked={this.showEditDialog.bind(this)}
         />
-        <EditDialog
+        <this.EditDialog
           show={this.state.editDialogVisible}
           selectedId={this.state.selectedId}
           onClose={() => this.setState({ editDialogVisible: false })}

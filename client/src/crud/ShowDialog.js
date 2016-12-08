@@ -15,24 +15,14 @@ export default class ShowDialog extends Component {
   }
 
   async componentWillReceiveProps(nextProps) {
-    if (nextProps.selectedBookId !== this.props.selectedBookId) {
-      const resp = await api.getBook(nextProps.selectedBookId);
+    if (nextProps.selectedId !== this.props.selectedId) {
+      const resp = await api.getBook(nextProps.selectedId);
       const json = await resp.json();
       this.setState({ formData: json });
     }
   }
 
   render() {
-    const schema = {
-      title: 'Show Book',
-      type: 'object',
-      required: ['title', 'price'],
-      properties: {
-        title: { type: 'string', title: 'Title', default: 'no title' },
-        price: { type: 'number', title: 'Price', default: 0 },
-      },
-    };
-
     /* replace input tag to normal text */
     const func = props => <div>{props.value}</div>;
 
@@ -43,7 +33,7 @@ export default class ShowDialog extends Component {
         price: {'ui:widget': func}
         :
       */
-      ...(Object.keys(schema.properties)
+      ...(Object.keys(this.props.schema.properties)
           .reduce(
             (map, key) =>
               ({ [key]: { 'ui:widget': func }, ...map }),
@@ -55,7 +45,7 @@ export default class ShowDialog extends Component {
         show={this.props.show}
         formData={this.state.formData}
         onClose={this.props.onClose}
-        schema={schema}
+        schema={this.props.schema}
         uiSchema={uiSchema}
       >
         <span>
@@ -78,7 +68,7 @@ export default class ShowDialog extends Component {
 
 ShowDialog.propTypes = {
   show: PropTypes.bool.isRequired,
-  selectedBookId: PropTypes.number,
+  selectedId: PropTypes.number,
   onClose: PropTypes.func.isRequired,
   onEditButtonClicked: PropTypes.func.isRequired,
 };

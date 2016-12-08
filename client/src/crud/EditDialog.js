@@ -15,32 +15,23 @@ export default class EditDialog extends Component {
   }
 
   async componentWillReceiveProps(nextProps) {
-    if (nextProps.selectedBookId) {
-      const resp = await api.getBook(nextProps.selectedBookId);
+    if (nextProps.selectedId) {
+      const resp = await api.getBook(nextProps.selectedId);
       const json = await resp.json();
       this.setState({ formData: json });
     }
   }
 
   handleSubmit({ formData }) {
-    if (this.props.selectedBookId) {
+    if (this.props.selectedId) {
       this.props.onSubmit({
-        id: this.props.selectedBookId,
+        id: this.props.selectedId,
         ...formData,
       });
     }
   }
 
   render() {
-    const schema = {
-      title: 'Edit Book',
-      type: 'object',
-      required: ['title', 'price'],
-      properties: {
-        title: { type: 'string', title: 'Title', default: 'no title' },
-        price: { type: 'number', title: 'Price', default: 0 },
-      },
-    };
 
     const uiSchema = {
     };
@@ -50,7 +41,7 @@ export default class EditDialog extends Component {
         show={this.props.show}
         formData={this.state.formData}
         onClose={this.props.onClose}
-        schema={schema}
+        schema={this.props.schema}
         uiSchema={uiSchema}
         onSubmit={this.handleSubmit.bind(this)}
       >
@@ -65,7 +56,7 @@ export default class EditDialog extends Component {
 
 EditDialog.propTypes = {
   show: PropTypes.bool.isRequired,
-  selectedBookId: PropTypes.number,
+  selectedId: PropTypes.number,
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
 };

@@ -18,15 +18,6 @@ export default class CreateDialog extends Component {
   }
 
   render() {
-    const schema = {
-      title: 'Create Book',
-      type: 'object',
-      required: ['title', 'price'],
-      properties: {
-        title: { type: 'string', title: 'Title', default: 'no title' },
-        price: { type: 'number', title: 'Price', default: 0 },
-      },
-    };
 
     const uiSchema = {
     };
@@ -35,7 +26,7 @@ export default class CreateDialog extends Component {
       <ModalForm
         show={this.props.show}
         onClose={this.props.onClose}
-        schema={schema}
+        schema={this.props.schema}
         uiSchema={uiSchema}
         onSubmit={this.handleSubmit.bind(this)}
       >
