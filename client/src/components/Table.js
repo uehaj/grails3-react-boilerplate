@@ -5,13 +5,10 @@ import 'react-bootstrap-table/css/react-bootstrap-table.css';
 
 class ModifiedBootstrapTable extends BootstrapTable {
 
-  constructor(props) {
-    super(props);
-  }
-
-  deleteSelected(apiCall) {
+  deleteSelected(callBack) {
     const selectedIds = this.store.getSelectedRowKeys();
-    apiCall(selectedIds);
+    callBack(selectedIds);
+    this.store.setSelectedRowKey([]);
   }
 
   render() {
@@ -24,29 +21,37 @@ class ModifiedBootstrapTable extends BootstrapTable {
 export default class Table extends Component {
 
   handleDeleteButtonClicked() {
-    const apiCall = this.props.onDeleteButtonClicked;
-    this.refs.table.deleteSelected(apiCall);
-    this.props.onDeleteButtonClicked(); // call delete API
+    this.refs.table.deleteSelected((ids) => {
+      this.props.onDeleteButtonClicked(ids); // call delete API
+    });
   }
 
   render() {
     const { tableData, onRowClicked, onCreateButtonClicked } = this.props;
 
-    const result = (
+    const Buttons = (props) => (
       <div>
         <Button onClick={onCreateButtonClicked}>
           <i className="glyphicon glyphicon-plus" />
-          New
+          Create
         </Button>
         <Button onClick={this.handleDeleteButtonClicked.bind(this)}>
           <i className="glyphicon glyphicon-trash" />
           Delete
         </Button>
+      </div>
+    );
+
+    const result = (
+      <div>
+        <Buttons />
         <ModifiedBootstrapTable
           ref="table"
           data={tableData}
           height={330}
-          hover condensed pagination
+          hover
+          condensed
+          pagination
           selectRow={{
             mode: 'checkbox',
             bgColor: 'rgb(238, 193, 213)',
@@ -54,7 +59,7 @@ export default class Table extends Component {
           options={{
             onRowClick: onRowClicked,
           }}
-          >
+        >
           <TableHeaderColumn dataField="id" dataSort isKey width="150">ID</TableHeaderColumn>
           <TableHeaderColumn dataField="title" dataSort>Title</TableHeaderColumn>
           <TableHeaderColumn dataField="price" dataSort>Price</TableHeaderColumn>
