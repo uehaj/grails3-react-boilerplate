@@ -1,46 +1,56 @@
 const urlBase = 'http://localhost:8080/';
 
-export async function getBooks() {
-  const url = `${urlBase}book?max=100`;
+async function getEntities(entityName) {
+  const url = `${urlBase}${entityName}?max=100`;
   const resp = await fetch(url, {
     method: 'GET',
   });
   return Promise.resolve(resp);
 }
 
-export async function getBook(id) {
-  const url = `${urlBase}book/${id}`;
+async function getEntity(entityName, id) {
+  const url = `${urlBase}${entityName}/${id}`;
   const resp = await fetch(url, {
     method: 'GET',
   });
   return Promise.resolve(resp);
 }
 
-export async function updateBook(book) {
-  const url = `${urlBase}book/${book.id}`;
+async function updateEntity(entityName, entity) {
+  const url = `${urlBase}${entityName}/${entity.id}`;
   const resp = await fetch(url, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(book),
+    body: JSON.stringify(entity),
   });
   return Promise.resolve(resp);
 }
 
-export async function createBook(book) {
-  const url = `${urlBase}book`;
+async function createEntity(entityName, entity) {
+  const url = `${urlBase}${entityName}`;
   const resp = await fetch(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(book),
+    body: JSON.stringify(entity),
   });
   return Promise.resolve(resp);
 }
 
-export async function deleteBook(id) {
-  const url = `${urlBase}book/${id}.json`;
+async function deleteEntity(entityName, id) {
+  const url = `${urlBase}${entityName}/${id}.json`;
   const resp = await fetch(url, {
     method: 'DELETE',
   });
   return Promise.resolve(resp);
+}
+
+export default function createRestApi(entityName) {
+  return {
+    getEntities: getEntities.bind(null, entityName),
+    getEntity: getEntity.bind(null, entityName),
+    updateEntity: updateEntity.bind(null, entityName),
+    createEntity: createEntity.bind(null, entityName),
+    deleteEntity: deleteEntity.bind(null, entityName),
+  };
 }
 

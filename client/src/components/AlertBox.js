@@ -57,7 +57,7 @@ export default class AlertBox extends Component {
 
 AlertBox.propTypes = {
   close: PropTypes.func.isRequired,
-  title: PropTypes.string.isRequired,
+  title: PropTypes.oneOfType([PropTypes.element, PropTypes.string]).isRequired,
   yes: PropTypes.string,
   no: PropTypes.string,
 };

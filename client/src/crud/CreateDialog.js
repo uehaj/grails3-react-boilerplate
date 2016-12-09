@@ -18,7 +18,6 @@ export default class CreateDialog extends Component {
   }
 
   render() {
-
     const uiSchema = {
     };
 

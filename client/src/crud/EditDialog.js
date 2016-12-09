@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { Button } from 'react-bootstrap';
 import ModalForm from '../components/ModalForm';
-import * as api from '../util/api';
 
 /**
  * Form for edit existing Domain class on a modal dialog.
@@ -16,7 +15,7 @@ export default class EditDialog extends Component {
 
   async componentWillReceiveProps(nextProps) {
     if (nextProps.selectedId) {
-      const resp = await api.getBook(nextProps.selectedId);
+      const resp = await this.props.api.getEntity(nextProps.selectedId);
       const json = await resp.json();
       this.setState({ formData: json });
     }

@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { Button } from 'react-bootstrap';
 import ModalForm from '../components/ModalForm';
-import * as api from '../util/api';
 
 /**
  * Show Domain class on a modal dialog.
@@ -16,7 +15,9 @@ export default class ShowDialog extends Component {
 
   async componentWillReceiveProps(nextProps) {
     if (nextProps.selectedId !== this.props.selectedId) {
-      const resp = await api.getBook(nextProps.selectedId);
+      const {api} = this.props;
+      console.log(api);
+      const resp = await api.getEntity(nextProps.selectedId);
       const json = await resp.json();
       this.setState({ formData: json });
     }
@@ -36,7 +37,7 @@ export default class ShowDialog extends Component {
       ...(Object.keys(this.props.schema.properties)
           .reduce(
             (map, key) =>
-              ({ [key]: { 'ui:widget': func }, ...map }),
+              ({ ...map, [key]: { 'ui:widget': func } }),
             {})),
     };
 

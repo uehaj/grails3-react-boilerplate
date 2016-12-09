@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, ButtonGroup } from 'react-bootstrap';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import 'react-bootstrap-table/css/react-bootstrap-table.css';
 
@@ -13,7 +13,6 @@ class ModifiedBootstrapTable extends BootstrapTable {
 
   render() {
     const result = super.render();
-    console.log('iihoc=',result);
     return result;
   }
 }
@@ -27,18 +26,24 @@ export default class Table extends Component {
   }
 
   render() {
-    const { tableData, onRowClicked, onCreateButtonClicked } = this.props;
+    const { tableData, onRowClicked, onCreateButtonClicked, onRefreshButtonClicked } = this.props;
 
     const Buttons = (props) => (
-      <div>
-        <Button onClick={onCreateButtonClicked}>
-          <i className="glyphicon glyphicon-plus" />
-          Create
-        </Button>
-        <Button onClick={this.handleDeleteButtonClicked.bind(this)}>
-          <i className="glyphicon glyphicon-trash" />
-          Delete
-        </Button>
+      <div style={{marginLeft: 10}}>
+        <ButtonGroup>
+          <Button onClick={onCreateButtonClicked}>
+            <i className="glyphicon glyphicon-plus" />
+            Create
+          </Button>
+          <Button onClick={this.handleDeleteButtonClicked.bind(this)}>
+            <i className="glyphicon glyphicon-trash" />
+            Delete
+          </Button>
+          <Button onClick={onRefreshButtonClicked}>
+            <i className="glyphicon glyphicon-refresh" />
+            Refresh
+          </Button>
+        </ButtonGroup>
       </div>
     );
 
@@ -48,7 +53,6 @@ export default class Table extends Component {
         <ModifiedBootstrapTable
           ref="table"
           data={tableData}
-          height={330}
           hover
           condensed
           pagination
@@ -58,6 +62,8 @@ export default class Table extends Component {
           }}
           options={{
             onRowClick: onRowClicked,
+            sizePerPage: 20,
+            sizePerPageList: [ 20, 30, 40 ],
           }}
         >
           <TableHeaderColumn dataField="id" dataSort isKey width="150">ID</TableHeaderColumn>
@@ -66,7 +72,6 @@ export default class Table extends Component {
         </ModifiedBootstrapTable>
       </div>
     );
-    console.log('elem=',result);
     return result;
   }
 }

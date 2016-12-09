@@ -1,15 +1,19 @@
 import React from 'react';
 import { Router, Route, IndexRedirect, browserHistory } from 'react-router';
+
 import TopLevel from './layout/TopLevel';
 import SecondLevel from './layout/SecondLevel';
 import NotFound from './layout/NotFound';
-import crudFor from './crud/crudFor';
 import IndexPage from './crud/IndexPage';
 import Page1 from './components/Page1';
 import "bootstrap/dist/css/bootstrap.css";
+import crudFor from './crud/crudFor';
+import createRestApi from './util/api';
 
+const api = createRestApi("book");
 
 const bookSchema = {
+  title: 'Book',
   type: 'object',
   required: ['title', 'price'],
   properties: {
@@ -18,7 +22,7 @@ const bookSchema = {
   },
 };
 
-const BookIndexPage = crudFor(IndexPage, "book", bookSchema);
+const BookIndexPage = crudFor(IndexPage, bookSchema, api);
 
 export default () => (
   <Router history={browserHistory}>
