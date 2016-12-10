@@ -58,4 +58,6 @@ EditDialog.propTypes = {
   selectedId: PropTypes.number,
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  schema: PropTypes.object.isRequired,
+  api: PropTypes.object.isRequired,
 };

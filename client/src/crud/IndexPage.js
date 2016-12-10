@@ -2,16 +2,17 @@ import React, { Component, PropTypes } from 'react';
 import { Grid, Row, Col } from 'react-bootstrap';
 import Breadcrumbs from 'react-breadcrumbs';
 
-import crudFor from './crudFor';
 import List from './List';
 
 export default class IndexPage extends Component {
   constructor(props) {
     super(props);
-    this.List = crudFor(List, {title: `List ${this.props.schema.title}`, ...this.props.schema}, this.props.api);
   }
 
   render() {
+    const { api, schema } = this.props.route;
+    const { title } = schema;
+
     return (
       <div>
         <Breadcrumbs
@@ -24,7 +25,7 @@ export default class IndexPage extends Component {
         <Grid fluid>
           <Row>
             <Col md={12} style={{ paddingLeft: '1em', paddingRight: '1em' }}>
-              <this.List schema={this.props.schema} {...this.props} />
+              <List schema={schema} api={api} />
             </Col>
           </Row>
         </Grid>
@@ -35,4 +36,6 @@ export default class IndexPage extends Component {
 
 IndexPage.propTypes = {
   routes: PropTypes.arrayOf(PropTypes.object).isRequired,
+  schema: PropTypes.object.isRequired,
+  api: PropTypes.object.isRequired,
 };

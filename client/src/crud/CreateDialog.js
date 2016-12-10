@@ -42,4 +42,6 @@ CreateDialog.propTypes = {
   show: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  schema: PropTypes.object.isRequired,
+  api: PropTypes.object.isRequired,
 };

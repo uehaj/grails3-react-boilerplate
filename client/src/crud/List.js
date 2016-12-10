@@ -3,10 +3,9 @@ import 'react-bootstrap-table/css/react-bootstrap-table.css';
 
 import AlertBox from '../components/AlertBox';
 import Table from '../components/Table';
-import _CreateDialog from './CreateDialog';
-import _ShowDialog from './ShowDialog';
-import _EditDialog from './EditDialog';
-import crudFor from './crudFor';
+import CreateDialog from './CreateDialog';
+import ShowDialog from './ShowDialog';
+import EditDialog from './EditDialog';
 
 /**
  * List Domain class instances.
@@ -24,12 +23,6 @@ export default class List extends Component {
       editDialogVisible: false,
       errorMessage: '',
     };
-
-    const title = this.props.schema.title;
-    const api = this.props.api;
-    this.CreateDialog = crudFor(_CreateDialog, { title: `Create ${title}`, ...this.props.schema }, api);
-    this.ShowDialog = crudFor(_ShowDialog, { title: `Show ${title}`, ...this.props.schema }, api);
-    this.EditDialog = crudFor(_EditDialog, { title: `Edit ${title}`, ...this.props.schema }, api);
   }
 
   componentDidMount() {
@@ -137,33 +130,44 @@ export default class List extends Component {
   }
 
   render() {
+
+    const { api, schema } = this.props;
+    const { title } = schema;
+
     return (
       <div>
-        <h1>{this.props.schema.title}</h1>
+        <h1>{title}</h1>
         <Table
           tableData={this.state.entityList}
           onRowClicked={this.handleRowClicked.bind(this)}
           onCreateButtonClicked={() => this.setState({ createDialogVisible: true })}
           onDeleteButtonClicked={this.handleDeleteButtonClicked.bind(this)}
           onRefreshButtonClicked={this.handleRefreshButtonClicked.bind(this)}
-          schema={this.props.schema}
+          schema={schema}
+          api={api}
         />
-        <this.CreateDialog
+        <CreateDialog
           show={this.state.createDialogVisible}
           onClose={() => this.setState({ createDialogVisible: false })}
           onSubmit={this.createEntity.bind(this)}
+          schema={{ title: `Create ${title}`, ...schema }}
+          api={api}
         />
-        <this.ShowDialog
+        <ShowDialog
           show={this.state.showDialogVisible}
           selectedId={this.state.selectedId}
           onClose={() => this.setState({ showDialogVisible: false })}
           onEditButtonClicked={this.showEditDialog.bind(this)}
+          schema={schema}
+          api={api}
         />
-        <this.EditDialog
+        <EditDialog
           show={this.state.editDialogVisible}
           selectedId={this.state.selectedId}
           onClose={() => this.setState({ editDialogVisible: false })}
           onSubmit={this.updateEntity.bind(this)}
+          schema={{ title: `Edit ${title}`, ...schema }}
+          api={api}
         />
       </div>
     );

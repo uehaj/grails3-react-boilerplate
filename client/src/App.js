@@ -6,7 +6,6 @@ import SecondLevel from './layout/SecondLevel';
 import NotFound from './layout/NotFound';
 import IndexPage from './crud/IndexPage';
 import Page1 from './components/Page1';
-import crudFor from './crud/crudFor';
 import createRestApi from './util/api';
 import "bootstrap/dist/css/bootstrap.css";
 
@@ -22,8 +21,6 @@ const bookSchema = {
   },
 };
 
-const BookIndexPage = crudFor(IndexPage, bookSchema, bookApi);
-
 const authorApi = createRestApi("author");
 
 const authorSchema = {
@@ -36,8 +33,6 @@ const authorSchema = {
   },
 };
 
-const AuthorIndexPage = crudFor(IndexPage, authorSchema, authorApi);
-
 export default () => (
   <Router history={browserHistory}>
     <Route name="TOP" path="/" component={TopLevel}>
@@ -46,13 +41,8 @@ export default () => (
       {/* add crud pages here. */}
       <Route path="resources" name="resources" component={SecondLevel}>
         <IndexRedirect from="*" to="book" />
-        <Route path="book" name="book" component={BookIndexPage} />
-        <Route path="book2" name="book2" component={BookIndexPage} />
-        <Route path="book3" name="book3" component={BookIndexPage} />
-        <Route path="book4" name="book4" component={BookIndexPage} />
-        <Route path="book5" name="book5" component={BookIndexPage} />
-        <Route path="book6" name="book6" component={BookIndexPage} />
-        <Route path="author" name="author" component={AuthorIndexPage} />
+        <Route path="book" name="book" api={bookApi} schema={bookSchema} component={IndexPage} />
+        <Route path="author" name="author" api={authorApi} schema={authorSchema} component={IndexPage} />
       </Route>
       {/*
       <Route path="m1" name="MenuItem1" component={SecondLevel}>
