@@ -2,17 +2,15 @@ import React, { Component, PropTypes } from 'react';
 import { Grid, Row, Col } from 'react-bootstrap';
 import Breadcrumbs from 'react-breadcrumbs';
 
-import _List from './List';
-import _CreateDialog from './CreateDialog';
-import _ShowDialog from './ShowDialog';
-import _EditDialog from './EditDialog';
 import crudFor from './crudFor';
+import List from './List';
 
 export default class IndexPage extends Component {
   constructor(props) {
     super(props);
-    this.List = crudFor(_List, {title: 'List book', ...this.props.schema}, this.props.api);
+    this.List = crudFor(List, {title: `List ${this.props.schema.title}`, ...this.props.schema}, this.props.api);
   }
+
   render() {
     return (
       <div>
@@ -26,7 +24,7 @@ export default class IndexPage extends Component {
         <Grid fluid>
           <Row>
             <Col md={12} style={{ paddingLeft: '1em', paddingRight: '1em' }}>
-              <this.List {...this.props} />
+              <this.List schema={this.props.schema} {...this.props} />
             </Col>
           </Row>
         </Grid>

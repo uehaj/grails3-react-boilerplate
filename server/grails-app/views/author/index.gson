@@ -1,0 +1,8 @@
+import sample.Author
+
+model {
+	Iterable<Author> authorList
+}
+
+json tmpl.author(authorList ?: [])
+

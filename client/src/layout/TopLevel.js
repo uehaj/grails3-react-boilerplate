@@ -2,7 +2,6 @@ import React, { PropTypes } from 'react';
 import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import './App.css';
-import './stickey-footer.css';
 import grailsLogo from '../images/favicon48.png';
 import reactLogo from '../images/logo.svg';
 
@@ -27,7 +26,7 @@ export default function TopLevel(props) {
       {props.children}
       <footer className="footer">
         <div className="container">
-          <p className="text-muted">Place sticky footer content here.</p>
+          <p className="text-muted">Place footer content here.</p>
         </div>
       </footer>
     </div>

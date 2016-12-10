@@ -27,10 +27,9 @@ export default class List extends Component {
 
     const title = this.props.schema.title;
     const api = this.props.api;
-    console.log("<<>>", api);
-    this.CreateDialog = crudFor(_CreateDialog, {title: `Create ${title}`, ...this.props.schema}, api);
-    this.ShowDialog = crudFor(_ShowDialog, {title: `Show ${title}`, ...this.props.schema}, api);
-    this.EditDialog = crudFor(_EditDialog, {title: `Edit ${title}`, ...this.props.schema}, api);
+    this.CreateDialog = crudFor(_CreateDialog, { title: `Create ${title}`, ...this.props.schema }, api);
+    this.ShowDialog = crudFor(_ShowDialog, { title: `Show ${title}`, ...this.props.schema }, api);
+    this.EditDialog = crudFor(_EditDialog, { title: `Edit ${title}`, ...this.props.schema }, api);
   }
 
   componentDidMount() {
@@ -38,13 +37,12 @@ export default class List extends Component {
   }
 
   async reloadData() {
-    const {api} = this.props;
+    const { api } = this.props;
     try {
       const resp = await api.getEntities();
       const json = await resp.json();
       this.setState({ entityList: json });
-    }
-    catch (err) {
+    } catch (err) {
       AlertBox.error(err);
     }
   }
@@ -65,19 +63,18 @@ export default class List extends Component {
 
   async createEntity(creatingEntity) {
     this.setState({ createDialogVisible: false });
-    const {api} = this.props;
+    const { api } = this.props;
 
     try {
       const resp= await api.createEntity(creatingEntity);
       const json = await resp.json();
       this.reloadData();
       await AlertBox.askYesNo({
-        title: "Created",
+        title: 'Created',
         body: `Created ${json.id}`,
-        yes: "Ok",
+        yes: 'Ok',
       });
-    }
-    catch(err) {
+    } catch (err) {
       AlertBox.error(err);
     }
   }
@@ -92,15 +89,14 @@ export default class List extends Component {
       return entity;
     }
 
-    const {api} = this.props;
+    const { api } = this.props;
     try {
       await api.updateEntity(updatedEntity);
       // Locally update data.
       this.setState({
         entityList: this.state.entityList.map(isSelectedEntity.bind(this)),
       });
-    }
-    catch(err) {
+    } catch (err) {
       AlertBox.error(err);
     }
   }
@@ -109,20 +105,20 @@ export default class List extends Component {
     if (rowKeys.length === 0) {
       AlertBox.askYesNo({
         title: <span><i className="glyphicon glyphicon-info-sign" />Delete</span>,
-        body: `Select checkboxes to delete.`,
-        yes: "Ok",
+        body: 'Select at least one checkbox to delete.',
+        yes: 'Ok',
       });
       return;
     }
 
-    const {api} = this.props;
+    const { api } = this.props;
 
     try {
       const result = await AlertBox.askYesNo({
-        title: "Delete",
+        title: 'Delete',
         body: `Delete? ${rowKeys.join(',')}`,
-        yes: "Delete",
-        no: "Cancel",
+        yes: 'Delete',
+        no: 'Cancel',
       });
       if (result === "Delete") {
         for (const entityId of rowKeys) {
@@ -130,8 +126,7 @@ export default class List extends Component {
           this.reloadData();
         }
       }
-    }
-    catch (err) {
+    } catch (err) {
       AlertBox.error(err);
     }
   }
@@ -148,9 +143,10 @@ export default class List extends Component {
         <Table
           tableData={this.state.entityList}
           onRowClicked={this.handleRowClicked.bind(this)}
-          onCreateButtonClicked={()=>this.setState({ createDialogVisible: true })}
+          onCreateButtonClicked={() => this.setState({ createDialogVisible: true })}
           onDeleteButtonClicked={this.handleDeleteButtonClicked.bind(this)}
-          onRfreshButtonClicked={this.handleRefreshButtonClicked.bind(this)}
+          onRefreshButtonClicked={this.handleRefreshButtonClicked.bind(this)}
+          schema={this.props.schema}
         />
         <this.CreateDialog
           show={this.state.createDialogVisible}
@@ -176,7 +172,6 @@ export default class List extends Component {
 
 
 List.propTypes = {
-  title: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
   schema: PropTypes.object.isRequired,
   api: PropTypes.object.isRequired,
 };

@@ -1,0 +1,7 @@
+import sample.Author
+
+model {
+	Author author
+}
+
+json g.render(author)

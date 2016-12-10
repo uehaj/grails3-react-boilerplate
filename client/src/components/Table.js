@@ -28,6 +28,8 @@ export default class Table extends Component {
   render() {
     const { tableData, onRowClicked, onCreateButtonClicked, onRefreshButtonClicked } = this.props;
 
+    console.log("onRefreshButtonClicked=",onRefreshButtonClicked);
+
     const Buttons = (props) => (
       <div style={{marginLeft: 10}}>
         <ButtonGroup>
@@ -66,9 +68,18 @@ export default class Table extends Component {
             sizePerPageList: [ 20, 30, 40 ],
           }}
         >
-          <TableHeaderColumn dataField="id" dataSort isKey width="150">ID</TableHeaderColumn>
-          <TableHeaderColumn dataField="title" dataSort>Title</TableHeaderColumn>
-          <TableHeaderColumn dataField="price" dataSort>Price</TableHeaderColumn>
+          <TableHeaderColumn dataField="id" dataSort isKey width="50">ID</TableHeaderColumn>
+          {
+            Object.keys(this.props.schema.properties).map(
+              (elem) => 
+                <TableHeaderColumn
+                    dataField={elem}
+                    dataSort
+                 >
+                  {elem}
+                </TableHeaderColumn>
+            )
+          }
         </ModifiedBootstrapTable>
       </div>
     );
@@ -81,4 +92,6 @@ Table.propTypes = {
   onRowClicked: PropTypes.func,
   onCreateButtonClicked: PropTypes.func,
   onDeleteButtonClicked: PropTypes.func,
+  schema: PropTypes.object.isRequired,
+  api: PropTypes.object.isRequired,
 };

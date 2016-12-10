@@ -15,8 +15,7 @@ export default class ShowDialog extends Component {
 
   async componentWillReceiveProps(nextProps) {
     if (nextProps.selectedId !== this.props.selectedId) {
-      const {api} = this.props;
-      console.log(api);
+      const { api } = this.props;
       const resp = await api.getEntity(nextProps.selectedId);
       const json = await resp.json();
       this.setState({ formData: json });
@@ -72,4 +71,6 @@ ShowDialog.propTypes = {
   selectedId: PropTypes.number,
   onClose: PropTypes.func.isRequired,
   onEditButtonClicked: PropTypes.func.isRequired,
+  schema: PropTypes.objectOf(PropTypes.object).isRequired,
+  api: PropTypes.objectOf(PropTypes.func).isRequired,
 };
