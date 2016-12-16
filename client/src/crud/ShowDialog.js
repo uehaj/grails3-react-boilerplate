@@ -23,10 +23,6 @@ export default class ShowDialog extends Component {
   }
 
   render() {
-
-
-    console.log("...", this.props.schema.properties);
-
     /* replace input tag to normal text */
     const func = props => <div>{props.value}</div>;
 
@@ -42,7 +38,7 @@ export default class ShowDialog extends Component {
             (map, key) =>
               ({ ...map, [key]: { 'ui:widget': func } }),
             {})),
-      id: {"ui:widget": "hidden"},
+      id: { 'ui:widget': 'hidden' },
     };
 
     return (
@@ -73,6 +69,7 @@ export default class ShowDialog extends Component {
 
 ShowDialog.propTypes = {
   show: PropTypes.bool.isRequired,
+  // eslint-disable-next-line
   selectedId: PropTypes.number,
   onClose: PropTypes.func.isRequired,
   onEditButtonClicked: PropTypes.func.isRequired,

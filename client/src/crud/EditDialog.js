@@ -33,7 +33,7 @@ export default class EditDialog extends Component {
 
   render() {
     const uiSchema = {
-      id: {"ui:widget": "hidden"},
+      id: { 'ui:widget': 'hidden' },
     };
 
     return (

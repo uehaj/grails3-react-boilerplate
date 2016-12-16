@@ -6,7 +6,6 @@ import List from './List';
 
 export default function IndexPage(props) {
   const { api, schema } = props.route;
-  console.log("IndexPage",api);
   return (
     <div>
       <Breadcrumbs

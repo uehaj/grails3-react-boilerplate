@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { Router, Route, IndexRedirect, browserHistory } from 'react-router';
 
+import 'bootstrap/dist/css/bootstrap.css';
 import TopLevel from './layout/TopLevel';
 import SecondLevel from './layout/SecondLevel';
 import NotFound from './layout/NotFound';
 import IndexPage from './crud/IndexPage';
-import Page1 from './components/Page1';
+// import Page1 from './components/Page1';
 import createRestApi from './util/api';
-import "bootstrap/dist/css/bootstrap.css";
 
 export default class App extends Component {
 
@@ -16,7 +16,7 @@ export default class App extends Component {
     this.state = { entitiesInfo: [] };
   }
 
-  async componentDidMount() {
+  async componentWillMount() {
     const entityApi = createRestApi('domainInfo');
     const response = await entityApi.getEntities();
     const entitiesInfo = await response.json();
@@ -28,18 +28,14 @@ export default class App extends Component {
       return <div>loading..</div>;
     }
 
-    const entityRoutes = this.state.entitiesInfo.map(info => {
-      console.log('render2', info);
-      return(
-        <Route
-          path={info.name}
-          name={info.name}
-          api={createRestApi(info.name)}
-          schema={info.schema}
-          component={IndexPage}
-        />
-      );
-    });
+    const entityRoutes = this.state.entitiesInfo.map(info =>
+      <Route
+        path={info.name}
+        name={info.name}
+        api={createRestApi(info.name)}
+        schema={info.schema}
+        component={IndexPage}
+      />);
 
     return (
       <Router history={browserHistory}>

@@ -74,8 +74,8 @@ export default class Table extends Component {
                 <TableHeaderColumn
                   dataField={elem}
                   dataSort
-                  isKey={elem=='id'}
-                  {... ((elem === 'id') ? {width:'50%'} : {}) }
+                  isKey={elem === 'id'}
+                  {... ((elem === 'id') ? { width: '50%' } : {})}
                 >
                   {elem}
                 </TableHeaderColumn>))
