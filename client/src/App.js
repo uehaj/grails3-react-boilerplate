@@ -9,30 +9,6 @@ import Page1 from './components/Page1';
 import createRestApi from './util/api';
 import "bootstrap/dist/css/bootstrap.css";
 
-const bookApi = createRestApi("book");
-
-let bookSchema = {
-  title: 'XXBook',
-  type: 'object',
-  required: ['title', 'price'],
-  properties: {
-    title: { type: 'string', title: 'Title', default: 'no title' },
-    price: { type: 'number', title: 'Price', default: 0 },
-  },
-};
-
-const authorApi = createRestApi("author");
-
-let authorSchema = {
-  title: 'XXAuthor',
-  type: 'object',
-  required: ['name', 'age'],
-  properties: {
-    name: { type: 'string', title: 'Name', default: 'no name' },
-    age: { type: 'number', title: 'Age', default: 0 },
-  },
-};
-
 export default class App extends Component {
 
   constructor(props) {
@@ -48,31 +24,22 @@ export default class App extends Component {
   }
 
   render() {
-    console.log("bookSchema",JSON.stringify(bookSchema));
-    console.log("authorSchema",JSON.stringify(authorSchema));
-    this.state.entitiesInfo.map(info => {
-      console.log('render2', JSON.stringify(info.schema));
-    });
-
     if (this.state.entitiesInfo.length === 0) {
       return <div>loading..</div>;
     }
 
-    if (this.state.entitiesInfo.length !== 0) {
-      console.log(this.state.entitiesInfo)
-      authorSchema = this.state.entitiesInfo[0].schema;
-      bookSchema = this.state.entitiesInfo[1].schema;
-      console.log("bookSchema update",JSON.stringify(bookSchema));
-      console.log("authorSchema update",JSON.stringify(authorSchema));
-    }
-
-    function Wrap(Comp, api, schema) {
-      return class extends Component {
-        render() {
-          return <Comp api={api} schema={schema} {...this.props} />;
-        }
-      };
-    }
+    const entityRoutes = this.state.entitiesInfo.map(info => {
+      console.log('render2', info);
+      return(
+        <Route
+          path={info.name}
+          name={info.name}
+          api={createRestApi(info.name)}
+          schema={info.schema}
+          component={IndexPage}
+        />
+      );
+    });
 
     return (
       <Router history={browserHistory}>
@@ -82,8 +49,7 @@ export default class App extends Component {
           {/* add crud pages here. */}
           <Route path="resources" name="resources" component={SecondLevel}>
             <IndexRedirect from="*" to="book" />
-            <Route path="book" name="book" api={bookApi} schema={bookSchema} component={IndexPage} />
-            <Route path="author" name="author" api={authorApi} schema={authorSchema} component={IndexPage} />
+            {entityRoutes}
           </Route>
           {/*
           <Route path="m1" name="MenuItem1" component={SecondLevel}>
