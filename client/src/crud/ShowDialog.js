@@ -14,7 +14,7 @@ export default class ShowDialog extends Component {
   }
 
   async componentWillReceiveProps(nextProps) {
-    if (nextProps.selectedId !== this.props.selectedId) {
+    if (nextProps.selectedId) {
       const { api } = this.props;
       const resp = await api.getEntity(nextProps.selectedId);
       const json = await resp.json();
@@ -23,6 +23,10 @@ export default class ShowDialog extends Component {
   }
 
   render() {
+
+
+    console.log("...", this.props.schema.properties);
+
     /* replace input tag to normal text */
     const func = props => <div>{props.value}</div>;
 
@@ -38,6 +42,7 @@ export default class ShowDialog extends Component {
             (map, key) =>
               ({ ...map, [key]: { 'ui:widget': func } }),
             {})),
+      id: {"ui:widget": "hidden"},
     };
 
     return (

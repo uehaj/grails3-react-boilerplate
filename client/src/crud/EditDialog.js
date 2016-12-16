@@ -15,7 +15,8 @@ export default class EditDialog extends Component {
 
   async componentWillReceiveProps(nextProps) {
     if (nextProps.selectedId) {
-      const resp = await this.props.api.getEntity(nextProps.selectedId);
+      const { api } = this.props;
+      const resp = await api.getEntity(nextProps.selectedId);
       const json = await resp.json();
       this.setState({ formData: json });
     }
@@ -32,6 +33,7 @@ export default class EditDialog extends Component {
 
   render() {
     const uiSchema = {
+      id: {"ui:widget": "hidden"},
     };
 
     return (

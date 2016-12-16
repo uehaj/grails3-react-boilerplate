@@ -1,20 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Routes from './Routes';
+import App from './App';
 
 const rootEl = document.getElementById('root');
 
 ReactDOM.render(
-  <Routes />,
+  <App />,
   rootEl);
 
 
 if (module.hot) {
-  module.hot.accept('./Routes', () => {
+  module.hot.accept('./App', () => {
     // eslint-disable-next-line
-    const NextRoutes = require('./Routes').default;
+    const NextApp = require('./App').default;
     ReactDOM.render(
-      <NextRoutes />,
+      <NextApp />,
       rootEl,
     );
   });

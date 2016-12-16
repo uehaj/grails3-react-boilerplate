@@ -48,7 +48,7 @@ export default class Table extends Component {
       </div>
     );
 
-    const result = (
+    return (
       <div>
         {Buttons}
         <ModifiedBootstrapTable
@@ -68,13 +68,14 @@ export default class Table extends Component {
             sizePerPageList: [20, 30, 40],
           }}
         >
-          <TableHeaderColumn dataField="id" dataSort isKey width="50">ID</TableHeaderColumn>
           {
             Object.keys(this.props.schema.properties).map(
               elem => (
                 <TableHeaderColumn
                   dataField={elem}
                   dataSort
+                  isKey={elem=='id'}
+                  {... ((elem === 'id') ? {width:'50%'} : {}) }
                 >
                   {elem}
                 </TableHeaderColumn>))
@@ -82,7 +83,6 @@ export default class Table extends Component {
         </ModifiedBootstrapTable>
       </div>
     );
-    return result;
   }
 }
 
