@@ -31,7 +31,6 @@ export default class EditDialog extends Component {
   }
 
   render() {
-
     const uiSchema = {
     };
 
@@ -58,6 +57,6 @@ EditDialog.propTypes = {
   selectedId: PropTypes.number,
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  schema: PropTypes.object.isRequired,
-  api: PropTypes.object.isRequired,
+  schema: PropTypes.objectOf(PropTypes.object).isRequired,
+  api: PropTypes.objectOf(PropTypes.func).isRequired,
 };

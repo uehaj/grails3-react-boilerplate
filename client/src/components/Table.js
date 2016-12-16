@@ -20,18 +20,17 @@ class ModifiedBootstrapTable extends BootstrapTable {
 export default class Table extends Component {
 
   handleDeleteButtonClicked() {
-    this.refs.table.deleteSelected((ids) => {
-      this.props.onDeleteButtonClicked(ids); // call delete API
-    });
+    // eslint-disable-next-line
+    this.refs.table.deleteSelected(
+      ids => this.props.onDeleteButtonClicked(ids), // call delete API
+    );
   }
 
   render() {
     const { tableData, onRowClicked, onCreateButtonClicked, onRefreshButtonClicked } = this.props;
 
-    console.log("onRefreshButtonClicked=",onRefreshButtonClicked);
-
-    const Buttons = (props) => (
-      <div style={{marginLeft: 10}}>
+    const Buttons = (
+      <div style={{ marginLeft: 10 }}>
         <ButtonGroup>
           <Button onClick={onCreateButtonClicked}>
             <i className="glyphicon glyphicon-plus" />
@@ -51,8 +50,9 @@ export default class Table extends Component {
 
     const result = (
       <div>
-        <Buttons />
+        {Buttons}
         <ModifiedBootstrapTable
+          // eslint-disable-next-line
           ref="table"
           data={tableData}
           hover
@@ -65,20 +65,19 @@ export default class Table extends Component {
           options={{
             onRowClick: onRowClicked,
             sizePerPage: 20,
-            sizePerPageList: [ 20, 30, 40 ],
+            sizePerPageList: [20, 30, 40],
           }}
         >
           <TableHeaderColumn dataField="id" dataSort isKey width="50">ID</TableHeaderColumn>
           {
             Object.keys(this.props.schema.properties).map(
-              (elem) => 
+              elem => (
                 <TableHeaderColumn
-                    dataField={elem}
-                    dataSort
-                 >
+                  dataField={elem}
+                  dataSort
+                >
                   {elem}
-                </TableHeaderColumn>
-            )
+                </TableHeaderColumn>))
           }
         </ModifiedBootstrapTable>
       </div>
@@ -92,6 +91,6 @@ Table.propTypes = {
   onRowClicked: PropTypes.func,
   onCreateButtonClicked: PropTypes.func,
   onDeleteButtonClicked: PropTypes.func,
-  schema: PropTypes.object.isRequired,
-  api: PropTypes.object.isRequired,
+  onRefreshButtonClicked: PropTypes.func,
+  schema: PropTypes.objectOf(PropTypes.object).isRequired,
 };

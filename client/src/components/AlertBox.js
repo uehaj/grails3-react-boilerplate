@@ -1,16 +1,32 @@
 import React, { Component, PropTypes } from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import {modalify} from 'react-modalify';
+import { modalify } from 'react-modalify';
 
 export default class AlertBox extends Component {
 
+  static askYesNo({ title, body, yes, no }) {
+    return modalify(props => (
+      <AlertBox title={title} yes={yes} no={no} {...props}>
+        {body}
+      </AlertBox>
+    ))();
+  }
+
+  static error(error) {
+    return modalify(props => (
+      <AlertBox title={<i className="glyphicon glyphicon-exclamation-sign">Error</i>} yes={'ok'} {...props}>
+        {error}
+      </AlertBox>
+    ))();
+  }
+
   constructor(props) {
     super(props);
-    this.state = {show: true};
+    this.state = { show: true };
   }
 
   closeAndReturn(result) {
-    this.setState({show: false});
+    this.setState({ show: false });
     this.props.close(result);
   }
 
@@ -29,28 +45,27 @@ export default class AlertBox extends Component {
           </Modal.Body>
 
           <Modal.Footer>
-            {yes && <Button onClick={this.closeAndReturn.bind(this, yes)} bsStyle="primary">{yes}</Button>}
-            {no  && <Button onClick={this.closeAndReturn.bind(this, no)}>{no}</Button>}
+            {
+              yes &&
+                <Button
+                  onClick={this.closeAndReturn.bind(this, yes)}
+                  bsStyle="primary"
+                >
+                  {yes}
+                </Button>
+            }
+            {
+              no &&
+                <Button
+                  onClick={this.closeAndReturn.bind(this, no)}
+                >
+                  {no}
+                </Button>
+            }
           </Modal.Footer>
         </Modal>
       </div>
     );
-  }
-
-  static askYesNo({title, body, yes, no}) {
-    return modalify((props) => (
-      <AlertBox title={title} yes={yes} no={no} {...props}>
-        {body}
-      </AlertBox>
-    ))();
-  }
-
-  static error(error) {
-    return modalify((props) => (
-      <AlertBox title={<i className="glyphicon glyphicon-exclamation-sign">Error</i>} yes={'ok'} {...props}>
-        {error}
-      </AlertBox>
-    ))();
   }
 
 }
@@ -60,4 +75,5 @@ AlertBox.propTypes = {
   title: PropTypes.oneOfType([PropTypes.element, PropTypes.string]).isRequired,
   yes: PropTypes.string,
   no: PropTypes.string,
+  children: PropTypes.element,
 };

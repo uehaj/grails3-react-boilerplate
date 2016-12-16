@@ -59,7 +59,7 @@ export default class List extends Component {
     const { api } = this.props;
 
     try {
-      const resp= await api.createEntity(creatingEntity);
+      const resp = await api.createEntity(creatingEntity);
       const json = await resp.json();
       this.reloadData();
       await AlertBox.askYesNo({
@@ -113,11 +113,11 @@ export default class List extends Component {
         yes: 'Delete',
         no: 'Cancel',
       });
-      if (result === "Delete") {
-        for (const entityId of rowKeys) {
+      if (result === 'Delete') {
+        rowKeys.forEach(async (entityId) => {
           await api.deleteEntity(entityId);
           this.reloadData();
-        }
+        });
       }
     } catch (err) {
       AlertBox.error(err);
@@ -125,12 +125,10 @@ export default class List extends Component {
   }
 
   async handleRefreshButtonClicked() {
-    console.log("handleRefreshButtonClicked() {");
     this.reloadData();
   }
 
   render() {
-
     const { api, schema } = this.props;
     const { title } = schema;
 
@@ -176,6 +174,6 @@ export default class List extends Component {
 
 
 List.propTypes = {
-  schema: PropTypes.object.isRequired,
-  api: PropTypes.object.isRequired,
+  schema: PropTypes.objectOf(PropTypes.object).isRequired,
+  api: PropTypes.objectOf(PropTypes.func).isRequired,
 };
