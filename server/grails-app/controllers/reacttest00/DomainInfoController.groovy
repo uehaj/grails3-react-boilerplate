@@ -13,8 +13,13 @@ class DomainInfoController {
 
     List<String> excludesProperties = ['version']
 
-    private Object filterProperties(properties) {
+    private List filterProperties(properties) {
         properties.findAll { !(it.name in excludesProperties) }
+    }
+
+    private List reorderProperties(properties) {
+        assert properties.find { it.name == 'id' }
+        properties = [properties.find { it.name == 'id'} ] + properties.findAll { it.name != 'id' }.reverse()
     }
 
     private String mapType(Class type) {
@@ -40,7 +45,8 @@ class DomainInfoController {
     private Object getSchema(domainClassName) {
         def domainClass = grailsApplication.getDomainClass(domainClassName)
         def properties = filterProperties(domainClass.properties)
-        println properties
+        properties = reorderProperties(properties)
+
         def result = [
             title: domainClass.getShortName(),
             type: 'object',

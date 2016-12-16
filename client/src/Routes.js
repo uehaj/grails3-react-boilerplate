@@ -9,7 +9,7 @@ import IndexPage from './crud/IndexPage';
 // import Page1 from './components/Page1';
 import createRestApi from './util/api';
 
-export default class App extends Component {
+export default class Routes extends Component {
 
   constructor(props) {
     super(props);
