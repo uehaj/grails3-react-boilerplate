@@ -11,51 +11,15 @@ class DomainInfoController {
 
     static responseFormats = ['json']
 
-    List<String> excludesProperties = ['version']
-
-    private List filterProperties(properties) {
-        properties.findAll { !(it.name in excludesProperties) }
-    }
-
-    private List reorderProperties(properties) {
-        assert properties.find { it.name == 'id' }
-        properties = [properties.find { it.name == 'id'} ] + properties.findAll { it.name != 'id' }.reverse()
-    }
-
-    private String mapType(Class type) {
-    println type
-        switch (type) {
-        case java.lang.Byte:
-        case java.lang.Character:
-        case java.lang.Short:
-        case java.lang.Integer:
-        case java.lang.Long:
-        case java.lang.Float:
-        case java.lang.Double:
-            return "number"
-        case java.lang.Boolean:
-            return "boolean"
-        case java.lang.String:
-            return "string"
-        default:
-            return "object"
-        }
-    }
-
-    private Object getSchema(domainClassName) {
+    private Object getSchema(String domainClassName) {
         def domainClass = grailsApplication.getDomainClass(domainClassName)
-        def properties = filterProperties(domainClass.properties)
-        properties = reorderProperties(properties)
+        def result = JsonSchemaUtil.genSchema(domainClass)
+        return result
+    }
 
-        def result = [
-            title: domainClass.getShortName(),
-            type: 'object',
-            required: properties.name,
-            properties: properties.collectEntries { property ->
-                return [(property.name): [ type: mapType(property.type),
-                                           title: property.name ]]
-            }
-        ]
+    private Object getUiSchema(String domainClassName) {
+        def domainClass = grailsApplication.getDomainClass(domainClassName)
+        def result = JsonSchemaUtil.genUiSchema(domainClass)
         return result
     }
 
@@ -64,7 +28,8 @@ class DomainInfoController {
         render grailsApplication.getArtefacts("Domain").collect {
             [fullName: it.fullName,
              name: it.name,
-             schema: getSchema(it.fullName),
+             schema: JsonSchemaUtil.getSchema(it.fullName),
+             uiSchema: JsonSchemaUtil.getUiSchema(it.fullName),
             ]
         } as JSON
     }
@@ -74,7 +39,6 @@ class DomainInfoController {
             def className = params.id.replaceAll(/^(.)(.*$)/) { g0, g1, g2 ->
                 g1.toUpperCase() + g2
             }
-            println className
             if (className == domainClass.name) {
                 render getSchema(domainClass.fullName) as JSON
                 return
