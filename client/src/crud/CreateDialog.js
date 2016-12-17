@@ -18,14 +18,27 @@ export default class CreateDialog extends Component {
   }
 
   render() {
+
+    console.log("1",this.props.schema)
+    /* drop id property from schema */
+    //    const schemaProperties = Object.entries(this.props.schema.properties)
+    //          .filter(([key,value]) => key !== 'id')
+    //          .reduce((accum, [key, value])=>({...accum, [key]:value}), {});
+
+    const required = this.props.schema.required.filter(name => name !== 'id');
+
+    const schema = { ...this.props.schema, required };
+
+    console.log("1",schema)
     const uiSchema = {
+      id: { 'ui:widget': 'hidden' },
     };
 
     return (
       <ModalForm
         show={this.props.show}
         onClose={this.props.onClose}
-        schema={this.props.schema}
+        schema={schema}
         uiSchema={uiSchema}
         onSubmit={this.handleSubmit.bind(this)}
       >
