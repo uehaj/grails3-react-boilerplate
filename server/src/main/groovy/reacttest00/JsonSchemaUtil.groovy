@@ -66,7 +66,7 @@ import grails.core.GrailsDomainClassProperty
 
 class JsonSchemaUtil {
 
-  private List<String> excludesProperties = ['version']
+  private static String[] excludesProperties = ['version']
 
   private static String mapType(Class type) {
     switch (type) {
@@ -111,10 +111,10 @@ class JsonSchemaUtil {
       result << ["maxLength": constraint.maxSize]
     }
     else if (constraint instanceof MinConstraint) {
-      result << ["maximum": constraint.minValue]
+      result << ["minimum": constraint.minValue]
     }
     else if (constraint instanceof MinSizeConstraint) {
-      result << ["maxLength": constraint.minSize]
+      result << ["minLength": constraint.minSize]
     }
     else if (constraint instanceof NotEqualConstraint) {
       result << ["not": ["enum": [constraint.notEqualTo]]]
@@ -123,13 +123,13 @@ class JsonSchemaUtil {
       // not supported
     }
     else if (constraint instanceof RangeConstraint) {
-      result << ["minimum": constraint.range.from, "maximum": constraint.range.from ] // TODO check exclusive end
+      result << ["minimum": constraint.range.from, "maximum": constraint.range.to ] // TODO check exclusive end
     }
     else if (constraint instanceof ScaleConstraint) {
       // not supported
     }
     else if (constraint instanceof SizeConstraint) {
-      result << ["minLength": constraint.range.from, "maxLength": constraint.range.from ] // TODO check exclusive end
+      result << ["minLength": constraint.range.from, "maxLength": constraint.range.to ]
     }
     else if (constraint instanceof UrlConstraint) {
       result << ["format": "uri"]
@@ -138,7 +138,7 @@ class JsonSchemaUtil {
       // not supported
     }
     else {
-      throw new Exception("Unknown exception")
+      throw new Exception("Unknown constraint:"+constraint)
     }
     return result
   }
@@ -147,17 +147,19 @@ class JsonSchemaUtil {
     def result = [
       type: mapType(property.type),
       title: property.name,
-      description: "field of "+property.name,
+      //description: "field of "+property.name,
     ]
-    def constraints = domainClass.getConstrainedProperties()
-    if (constraints.containsKey(property.name)) {
-      result = constraintsToSchema(constraints[property.name])
+    def constrainedProperties = domainClass.getConstrainedProperties()
+    if (constrainedProperties.containsKey(property.name)) {
+      constrainedProperties[property.name].appliedConstraints.each { constraint ->
+        result += constraintsToSchema(constraint)
+      }
     }
     return result
   }
 
   private static List filterProperties(properties) {
-      properties.findAll { !(it.name in excludesProperties) }
+    return properties.findAll { !(it.name in excludesProperties) }
   }
 
   private static List reorderProperties(properties) {
@@ -167,18 +169,27 @@ class JsonSchemaUtil {
   }
 
   static Object genSchema(GrailsDomainClass domainClass) {
-    def properties = domainClass.getDomainProperties()
+    def properties = domainClass.properties 
     properties = filterProperties(properties)
     properties = reorderProperties(properties)
+    properties = properties.collectEntries { property ->
+      def value = genPropertySchema(domainClass, property)
+      if (property.name == 'version') {
+        value += ['default':0]
+      }
+      return [(property.name): value]
+    }
+    def requiredProperties = properties.findAll {
+      true
+      // TODO: handle nullable:true as required
+    }
 
     def result = [
       '$schema': "http://json-schema.org/schema#",
       title: domainClass.getShortName(),
       type: 'object',
-      required: properties.name,
-      properties: properties.collectEntries { property ->
-        return [(property.name): genPropertySchema(domainClass, property)]
-      }
+      required: requiredProperties.keySet(),
+      properties: properties
     ]
     return result
   }

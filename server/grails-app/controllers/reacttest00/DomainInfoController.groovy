@@ -28,8 +28,8 @@ class DomainInfoController {
         render grailsApplication.getArtefacts("Domain").collect {
             [fullName: it.fullName,
              name: it.name,
-             schema: JsonSchemaUtil.getSchema(it.fullName),
-             uiSchema: JsonSchemaUtil.getUiSchema(it.fullName),
+             schema: getSchema(it.fullName),
+             uiSchema: getUiSchema(it.fullName),
             ]
         } as JSON
     }
