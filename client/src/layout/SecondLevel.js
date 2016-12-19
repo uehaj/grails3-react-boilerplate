@@ -28,9 +28,8 @@ export default function SecondLevel(props) {
 }
 
 SecondLevel.propTypes = {
-  // eslint-disable-next-line
   route: PropTypes.object.isRequired,
-  children: PropTypes.element.isRequired,
+  children: PropTypes.element,
 };
 
 /**
@@ -52,6 +51,5 @@ function SecondLevelNavbar(props) {
 }
 
 SecondLevelNavbar.propTypes = {
-  // eslint-disable-next-line
-  route: PropTypes.object.isRequired,
+  route: PropTypes.objectOf(PropTypes.object).required,
 };

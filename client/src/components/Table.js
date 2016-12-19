@@ -72,6 +72,7 @@ export default class Table extends Component {
             Object.keys(this.props.schema.properties).map(
               elem => (
                 <TableHeaderColumn
+                  key={elem}
                   dataField={elem}
                   dataSort
                   isKey={elem === 'id'}
@@ -92,5 +93,5 @@ Table.propTypes = {
   onCreateButtonClicked: PropTypes.func,
   onDeleteButtonClicked: PropTypes.func,
   onRefreshButtonClicked: PropTypes.func,
-  schema: PropTypes.objectOf(PropTypes.object).isRequired,
+  schema: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.boolean])).isRequired,
 };

@@ -74,6 +74,6 @@ ShowDialog.propTypes = {
   selectedId: PropTypes.number,
   onClose: PropTypes.func.isRequired,
   onEditButtonClicked: PropTypes.func.isRequired,
-  schema: PropTypes.objectOf(PropTypes.object).isRequired,
+  schema: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.boolean])).isRequired,
   api: PropTypes.objectOf(PropTypes.func).isRequired,
 };

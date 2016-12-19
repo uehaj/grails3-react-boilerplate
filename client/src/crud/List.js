@@ -26,6 +26,7 @@ export default class List extends Component {
   }
 
   componentDidMount() {
+    this.ignoreLastFetch = false;
     this.reloadData();
   }
 
@@ -48,12 +49,15 @@ export default class List extends Component {
     try {
       const resp = await api.getEntities();
       const json = await resp.json();
-        console.log('2>>>>>>>>>>>>>>>>>>>>>---------',json);
       if (!this.ignoreLastFetch) {
         this.setState({ entityList: json });
       }
     } catch (err) {
-      AlertBox.error(err);
+      const json = await err.json();
+      if (json.error !== 404) {
+        AlertBox.error("Error:"+json.message);
+      }
+      this.setState({ entityList: [] });
     }
   }
 
@@ -148,7 +152,7 @@ export default class List extends Component {
   render() {
     const { api, schema } = this.props;
     const { title } = schema;
-      console.log('1>>>>>>>>>>>>>>>>>>>>>---------',this.state.entityList);
+    console.log('1>>>>>>>>>>>>>>>>>>>>>---------',this.state.entityList);
 
     return (
       <div>
@@ -192,6 +196,6 @@ export default class List extends Component {
 
 
 List.propTypes = {
-  schema: PropTypes.objectOf(PropTypes.object).isRequired,
+  schema: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.boolean])).isRequired,
   api: PropTypes.objectOf(PropTypes.func).isRequired,
 };

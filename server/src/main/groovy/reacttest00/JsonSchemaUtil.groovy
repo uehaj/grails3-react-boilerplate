@@ -168,10 +168,25 @@ class JsonSchemaUtil {
     properties = [properties.find { it.name == 'id'} ] + properties.findAll { it.name != 'id' }.reverse()
   }
 
+  private static boolean isNullable(domainClass, property) {
+    def constrainedProperties = domainClass.getConstrainedProperties()
+    if (!constrainedProperties.containsKey(property.name)) {
+      return false
+    }
+    return constrainedProperties[property.name].appliedConstraints.any { constraint ->
+      constraint instanceof NullableConstraint && !constraint.isNullable()
+    }
+  }
+
   static Object genSchema(GrailsDomainClass domainClass) {
     def properties = domainClass.properties 
     properties = filterProperties(properties)
     properties = reorderProperties(properties)
+
+    def requiredProperties = properties.findAll { property ->
+      isNullable(domainClass, property)
+    }
+
     properties = properties.collectEntries { property ->
       def value = genPropertySchema(domainClass, property)
       if (property.name == 'version') {
@@ -179,16 +194,12 @@ class JsonSchemaUtil {
       }
       return [(property.name): value]
     }
-    def requiredProperties = properties.findAll {
-      true
-      // TODO: handle nullable:true as required
-    }
 
     def result = [
       '$schema': "http://json-schema.org/schema#",
       title: domainClass.getShortName(),
       type: 'object',
-      required: requiredProperties.keySet(),
+      required: requiredProperties.name,
       properties: properties
     ]
     return result
