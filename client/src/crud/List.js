@@ -55,7 +55,7 @@ export default class List extends Component {
     } catch (err) {
       const json = await err.json();
       if (json.error !== 404) {
-        AlertBox.error("Error:"+json.message);
+        AlertBox.error("Error: "+json.message);
       }
       this.setState({ entityList: [] });
     }
@@ -89,7 +89,8 @@ export default class List extends Component {
         yes: 'Ok',
       });
     } catch (err) {
-      AlertBox.error(err);
+      const json = await err.json();
+      AlertBox.error('Error: '+json.message);
     }
   }
 
@@ -111,7 +112,8 @@ export default class List extends Component {
         entityList: this.state.entityList.map(isSelectedEntity.bind(this)),
       });
     } catch (err) {
-      AlertBox.error(err);
+      const json = await err.json();
+      AlertBox.error("Error: "+json.message);
     }
   }
 

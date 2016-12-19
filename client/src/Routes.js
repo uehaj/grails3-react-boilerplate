@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Router, Route, IndexRedirect, browserHistory } from 'react-router';
 
 import 'bootstrap/dist/css/bootstrap.css';
+import AlertBox from './components/AlertBox';
 import TopLevel from './layout/TopLevel';
 import SecondLevel from './layout/SecondLevel';
 import NotFound from './layout/NotFound';
@@ -18,33 +19,47 @@ export default class Routes extends Component {
 
   async componentWillMount() {
     const entityApi = createRestApi('domainInfo');
-    const response = await entityApi.getEntities();
-    const entitiesInfo = await response.json();
-    this.setState({ entitiesInfo });
+    try {
+      const resp = await entityApi.getEntities();
+      const entitiesInfo = await resp.json();
+      this.setState({ entitiesInfo });
+    }
+    catch (err) {
+      const json = await err.json();
+      AlertBox.error("Error: "+json.message);
+    }
   }
 
   render() {
-    if (this.state.entitiesInfo.length === 0) {
-      return <div>loading..</div>;
+    if (this.state.entitiesInfo.length == 0) {
+      return (<div>loading...</div>);
     }
 
+    const firstEntity = (this.state.entitiesInfo.length === 0)
+          ? null
+          : <IndexRedirect from="*" to={this.state.entitiesInfo[this.state.entitiesInfo.length-1].name} />;
+
+    if (this.state.entitiesInfo.length !== 0) {
+        console.log(this.state.entitiesInfo[this.state.entitiesInfo.length-1].name);
+    }
     const entityRoutes = this.state.entitiesInfo.map(info =>
       <Route
         path={info.name}
         name={info.name}
+        key={info.name}
         api={createRestApi(info.name)}
         schema={info.schema}
         component={IndexPage}
       />);
-
+      console.log('=',entityRoutes);
     return (
       <Router history={browserHistory}>
         <Route name="TOP" path="/" component={TopLevel}>
           {/* add top level items here.*/}
-          <IndexRedirect from="*" to="resources" />
+          <IndexRedirect from="*" to="entities" />
           {/* add crud pages here. */}
-          <Route path="resources" name="resources" component={SecondLevel}>
-            <IndexRedirect from="*" to="book" />
+          <Route path="entities" name="Entities" component={SecondLevel}>
+            {firstEntity}
             {entityRoutes}
           </Route>
           {/*
