@@ -5,7 +5,7 @@ async function getEntities(entityName) {
   const resp = await fetch(url, {
     method: 'GET',
   });
-  return Promise.resolve(resp);
+  return resp.ok ? Promise.resolve(resp) : Promise.reject(resp);
 }
 
 async function getEntity(entityName, id) {
@@ -13,7 +13,7 @@ async function getEntity(entityName, id) {
   const resp = await fetch(url, {
     method: 'GET',
   });
-  return Promise.resolve(resp);
+  return resp.ok ? Promise.resolve(resp) : Promise.reject(resp);
 }
 
 async function updateEntity(entityName, entity) {
@@ -23,7 +23,7 @@ async function updateEntity(entityName, entity) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(entity),
   });
-  return Promise.resolve(resp);
+  return resp.ok ? Promise.resolve(resp) : Promise.reject(resp);
 }
 
 async function createEntity(entityName, entity) {
@@ -33,7 +33,7 @@ async function createEntity(entityName, entity) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(entity),
   });
-  return Promise.resolve(resp);
+  return resp.ok ? Promise.resolve(resp) : Promise.reject(resp);
 }
 
 async function deleteEntity(entityName, id) {
@@ -41,7 +41,7 @@ async function deleteEntity(entityName, id) {
   const resp = await fetch(url, {
     method: 'DELETE',
   });
-  return Promise.resolve(resp);
+  return resp.ok ? Promise.resolve(resp) : Promise.reject(resp);
 }
 
 export default function createRestApi(entityName) {

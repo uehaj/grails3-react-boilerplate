@@ -48,6 +48,7 @@ export default class ShowDialog extends Component {
         onClose={this.props.onClose}
         schema={this.props.schema}
         uiSchema={uiSchema}
+        liveValidate={true}
       >
         <span>
           <Button

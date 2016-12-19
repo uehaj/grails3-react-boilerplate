@@ -29,12 +29,29 @@ export default class List extends Component {
     this.reloadData();
   }
 
+  componentDidUpdate(prevProps) {
+    // see https://github.com/ReactTraining/react-router/blob/master/docs/guides/ComponentLifecycle.md#fetching-data
+    const prev = prevProps.api;
+    const curr = this.props.api;
+    if (prev !== curr) {
+      this.reloadData();
+    }
+  }
+
+  componentWillUnmount() {
+    // allows us to ignore an inflight request in scenario 4
+    this.ignoreLastFetch = true;
+  }
+
   async reloadData() {
     const { api } = this.props;
     try {
       const resp = await api.getEntities();
       const json = await resp.json();
-      this.setState({ entityList: json });
+        console.log('2>>>>>>>>>>>>>>>>>>>>>---------',json);
+      if (!this.ignoreLastFetch) {
+        this.setState({ entityList: json });
+      }
     } catch (err) {
       AlertBox.error(err);
     }
@@ -131,6 +148,7 @@ export default class List extends Component {
   render() {
     const { api, schema } = this.props;
     const { title } = schema;
+      console.log('1>>>>>>>>>>>>>>>>>>>>>---------',this.state.entityList);
 
     return (
       <div>

@@ -41,6 +41,7 @@ export default class CreateDialog extends Component {
         schema={schema}
         uiSchema={uiSchema}
         onSubmit={this.handleSubmit.bind(this)}
+        liveValidate={true}
       >
         <span>
           <Button bsStyle="primary" type="submit">Create</Button>
