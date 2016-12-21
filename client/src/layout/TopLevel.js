@@ -53,7 +53,7 @@ function TopLevelNavbar(props) {
           <img src={reactLogo} className="App-logo" role="presentation" />
         </Navbar.Brand>
         <Navbar.Brand>
-          <a href="#dummy">React/Grails Scaffold</a>
+          <a href="#top">React/Grails Scaffold</a>
         </Navbar.Brand>
         <Navbar.Toggle />
       </Navbar.Header>

@@ -31,7 +31,7 @@ export default class Routes extends Component {
   }
 
   render() {
-    if (this.state.entitiesInfo.length == 0) {
+    if (this.state.entitiesInfo.length === 0) {
       return (<div>loading...</div>);
     }
 
@@ -49,6 +49,7 @@ export default class Routes extends Component {
         key={info.name}
         api={createRestApi(info.name)}
         schema={info.schema}
+        uiSchema={info.uiSchema}
         component={IndexPage}
       />);
       console.log('=',entityRoutes);

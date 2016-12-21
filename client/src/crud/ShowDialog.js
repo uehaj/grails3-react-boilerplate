@@ -27,6 +27,7 @@ export default class ShowDialog extends Component {
     const func = props => <div>{props.value}</div>;
 
     const uiSchema = {
+      ...this.props.uiSchema,
       /*
         Generate entries for each property like:
         title: {'ui:widget': func}
@@ -75,5 +76,6 @@ ShowDialog.propTypes = {
   onClose: PropTypes.func.isRequired,
   onEditButtonClicked: PropTypes.func.isRequired,
   schema: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.boolean])).isRequired,
+  uiSchema: PropTypes.objectOf(PropTypes.object).isRequired,
   api: PropTypes.objectOf(PropTypes.func).isRequired,
 };

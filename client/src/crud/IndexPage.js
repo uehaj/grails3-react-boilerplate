@@ -5,7 +5,7 @@ import Breadcrumbs from 'react-breadcrumbs';
 import List from './List';
 
 export default function IndexPage(props) {
-  const { api, schema } = props.route;
+  const { api, schema, uiSchema } = props.route;
   return (
     <div>
       <Breadcrumbs
@@ -18,7 +18,7 @@ export default function IndexPage(props) {
       <Grid fluid>
         <Row>
           <Col md={12} style={{ paddingLeft: '1em', paddingRight: '1em' }}>
-            <List schema={schema} api={api} />
+            <List schema={schema} uiSchema={uiSchema} api={api} />
           </Col>
         </Row>
       </Grid>

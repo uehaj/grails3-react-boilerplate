@@ -8,4 +8,3 @@ class Book {
     title blank: false
   }
 }
-

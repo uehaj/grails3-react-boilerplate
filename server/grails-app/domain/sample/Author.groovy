@@ -6,9 +6,8 @@ class Author {
   String email
 
   static constraints = {
-    email email:true
+    email email:true, widget:'textarea'
     name nullable: true
-    email nullable: true
     age nullable: true
   }
 }

@@ -152,9 +152,8 @@ export default class List extends Component {
   }
 
   render() {
-    const { api, schema } = this.props;
+    const { api, schema, uiSchema } = this.props;
     const { title } = schema;
-    console.log('1>>>>>>>>>>>>>>>>>>>>>---------',this.state.entityList);
 
     return (
       <div>
@@ -173,6 +172,7 @@ export default class List extends Component {
           onClose={() => this.setState({ createDialogVisible: false })}
           onSubmit={this.createEntity.bind(this)}
           schema={{ title: `Create ${title}`, ...schema }}
+          uiSchema={uiSchema}
           api={api}
         />
         <ShowDialog
@@ -181,6 +181,7 @@ export default class List extends Component {
           onClose={() => this.setState({ showDialogVisible: false })}
           onEditButtonClicked={this.showEditDialog.bind(this)}
           schema={schema}
+          uiSchema={uiSchema}
           api={api}
         />
         <EditDialog
@@ -189,6 +190,7 @@ export default class List extends Component {
           onClose={() => this.setState({ editDialogVisible: false })}
           onSubmit={this.updateEntity.bind(this)}
           schema={{ title: `Edit ${title}`, ...schema }}
+          uiSchema={uiSchema}
           api={api}
         />
       </div>

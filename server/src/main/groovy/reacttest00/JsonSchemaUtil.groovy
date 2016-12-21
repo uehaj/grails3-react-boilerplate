@@ -4,58 +4,58 @@ import org.grails.validation.*
 
 /**
 
- converter utility.
+Json Schema convert utility.
 
 Grails constraints support:
-  [NA?]attributes
-  [NA]bindable
-  [ ]blank
-  { "minLength": 1 } or { "minLength": 0 }
-  http://json-schema.org/latest/json-schema-validation.html#rfc.section.5.7
-  [NA]creditCard
-  [ ]email
-  { format: "email" }
-  http://json-schema.org/latest/json-schema-validation.html#rfc.section.7.3.2
-  [ ]inList
-  { "enum": ["elem1", "elem2", "elem3"] }
-    http://json-schema.org/latest/json-schema-validation.html#rfc.section.5.20
-  [ ]matches
-  { "pattern": "RE" }
-  http://json-schema.org/latest/json-schema-validation.html#rfc.section.5.8
-  [ ]max
-  { "maximum": val }
-  http://json-schema.org/latest/json-schema-validation.html#rfc.section.5.2
-  [ ]maxSize
-  { "maxLength": val }
-  http://json-schema.org/latest/json-schema-validation.html#rfc.section.5.2
-  [ ]min
-  { "minimum": val }
-  http://json-schema.org/latest/json-schema-validation.html#rfc.section.5.4
-  [ ]minSize
-  { "minLength": val }
-  http://json-schema.org/latest/json-schema-validation.html#rfc.section.5.7
-  [ ]notEqual
-  { "not": { "enum": ["value"]  } }
-  [NA]nullable
-  [ ]range
-  { "minimum": v1, maximum": v2 }
-  [NA]scale
-  [ ]size
-  { "minLength": v1, "maxLength": v2 }
-  [NA]unique
-  [ ]url
-  { format: "uri" }
-  http://json-schema.org/latest/json-schema-validation.html#rfc.section.7.3.6
-  [NA]validator
-  [ ]widget
-  (UIScema) { "ui:widget":"textarea" }
-  
-  --
-  [ ]deafult value
-  { "default": value }
-  http://json-schema.org/latest/json-schema-validation.html#rfc.section.6.2
+  - [NA]attributes
+  - [NA]bindable
+  - [v]blank
+    { "minLength": 1 } or { "minLength": 0 }
+  - [NA]creditCard
+  - [v]email
+    { format: "email" }
+  - [v]inList
+    { "enum": ["elem1", "elem2", "elem3"] }
+  - [v]matches
+    { "pattern": "RE" }
+  - [v]max
+    { "maximum": val }
+  - [v]maxSize
+    { "maxLength": val }
+  - [v]min
+    { "minimum": val }
+  - [v]minSize
+    { "minLength": val }
+  - [v]notEqual
+    { "not": { "enum": ["value"]  } }
+  - [NA]nullable
+  - [v]range
+  - { "minimum": v1, maximum": v2 }
+  - [NA]scale
+  - [v]size
+    { "minLength": v1, "maxLength": v2 }
+  - [NA]unique
+  - [v]url
+    { format: "uri" }
+  - [NA]validator
 
-http://json-schema.org/documentation.html
+Grails constraints for Scaffolding support:
+
+  - [ ]display
+    (UISchema)
+  - [ ]editable
+    (UISchema)
+  - [ ]format
+    (UISchema)
+  - [v]widget
+    (UISchema) { "ui:widget":"textarea" }
+  - [ ]password
+    (UISchema)
+
+Other:
+
+  - [ ]deafult value
+    { "default": value }
 
 @see http://json-schema.org/latest/json-schema-validation.html
 */
@@ -99,7 +99,7 @@ class JsonSchemaUtil {
       result << [format: "email"]
     }
     else if (constraint instanceof InListConstraint) {
-      result << ["enum": constraint.list]
+<      result << ["enum": constraint.list]
     }
     else if (constraint instanceof MatchesConstraint) {
       result << ["pattern": constraint.regex]
@@ -190,7 +190,7 @@ class JsonSchemaUtil {
     properties = properties.collectEntries { property ->
       def value = genPropertySchema(domainClass, property)
       if (property.name == 'version') {
-        value += ['default':0]
+        value += ['default':0] // version fields' default value is 0
       }
       return [(property.name): value]
     }
@@ -205,8 +205,31 @@ class JsonSchemaUtil {
     return result
   }
 
+  static Object genPropertyUiSchema(GrailsDomainClass domainClass, GrailsDomainClassProperty property) {
+    def result = [:]
+    def constrainedProperties = domainClass.getConstrainedProperties()
+    if (constrainedProperties.containsKey(property.name)) {
+      if (constrainedProperties[property.name]?.widget) { // widget constraint
+      println "property.name = ${property.name} "+constrainedProperties[property.name]?.widget
+        result += ['ui:widget':constrainedProperties[property.name]?.widget]
+      }
+      // TODO: password, display, ..
+    }
+    return result
+  }
+
   static Object genUiSchema(GrailsDomainClass domainClass) {
-    return [:]
+    def properties = domainClass.properties 
+    properties = filterProperties(properties)
+    properties = reorderProperties(properties)
+    def result = properties.collectEntries { property ->
+      def value = genPropertyUiSchema(domainClass, property)
+      if (property.name == 'version') {
+        value += ['default':0] // default DomainClass version field for optimistic lock to 0
+      }
+      return value == [:] ? [:] : [(property.name): value]
+    }
+    return result
   }
 
 }

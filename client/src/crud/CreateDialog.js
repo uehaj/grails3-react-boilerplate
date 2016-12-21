@@ -23,6 +23,7 @@ export default class CreateDialog extends Component {
     const schema = { ...this.props.schema, required };
 
     const uiSchema = {
+      ...this.props.uiSchema,
       id: { 'ui:widget': 'hidden' },
     };
 
@@ -49,4 +50,5 @@ CreateDialog.propTypes = {
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   schema: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.boolean])).isRequired,
+  uiSchema: PropTypes.objectOf(PropTypes.object).isRequired,
 };
