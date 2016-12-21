@@ -99,7 +99,7 @@ class JsonSchemaUtil {
       result << [format: "email"]
     }
     else if (constraint instanceof InListConstraint) {
-<      result << ["enum": constraint.list]
+      result << ["enum": constraint.list]
     }
     else if (constraint instanceof MatchesConstraint) {
       result << ["pattern": constraint.regex]
