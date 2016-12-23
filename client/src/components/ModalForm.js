@@ -44,14 +44,16 @@ export default class ModalForm extends Component {
 }
 
 ModalForm.propTypes = {
-  // eslint-disable-next-line
-  formData: PropTypes.object,
+  formData: PropTypes.objectOf(PropTypes.object),
   show: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  // eslint-disable-next-line
-  schema: PropTypes.object.isRequired,
-  // eslint-disable-next-line
-  uiSchema: PropTypes.object,
+  schema: PropTypes.objectOf(
+    PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.object,
+      PropTypes.boolean,
+    ])).isRequired,
+  uiSchema: PropTypes.objectOf(PropTypes.object).isRequired,
   onSubmit: PropTypes.func,
   children: PropTypes.element.isRequired,
 };

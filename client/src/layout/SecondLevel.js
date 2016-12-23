@@ -28,7 +28,7 @@ export default function SecondLevel(props) {
 }
 
 SecondLevel.propTypes = {
-  route: PropTypes.object.isRequired,
+  route: PropTypes.objectOf(PropTypes.object).isRequired,
   children: PropTypes.element,
 };
 

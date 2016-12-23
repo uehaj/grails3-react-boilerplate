@@ -33,7 +33,7 @@ export default class EditDialog extends Component {
 
   render() {
     const uiSchema = {
-      ...this.props.uiChema,
+      ...this.props.uiSchema,
       id: { 'ui:widget': 'hidden' },
     };
 
@@ -60,7 +60,12 @@ EditDialog.propTypes = {
   selectedId: PropTypes.number,
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  schema: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.boolean])).isRequired,
+  schema: PropTypes.objectOf(
+    PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.object,
+      PropTypes.boolean,
+    ])).isRequired,
   uiSchema: PropTypes.objectOf(PropTypes.object).isRequired,
   api: PropTypes.objectOf(PropTypes.func).isRequired,
 };

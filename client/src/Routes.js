@@ -23,25 +23,23 @@ export default class Routes extends Component {
       const resp = await entityApi.getEntities();
       const entitiesInfo = await resp.json();
       this.setState({ entitiesInfo });
-    }
-    catch (err) {
+    } catch (err) {
       const json = await err.json();
-      AlertBox.error("Error: "+json.message);
+      AlertBox.error(`Error: ${json.message}`);
     }
   }
 
   render() {
-    if (this.state.entitiesInfo.length === 0) {
+    const entitiesInfo = this.state.entitiesInfo;
+
+    if (entitiesInfo.length === 0) {
       return (<div>loading...</div>);
     }
 
-    const firstEntity = (this.state.entitiesInfo.length === 0)
-          ? null
-          : <IndexRedirect from="*" to={this.state.entitiesInfo[this.state.entitiesInfo.length-1].name} />;
+    const firstEntity = entitiesInfo.slice(entitiesInfo.length - 1, entitiesInfo.length);
 
-    if (this.state.entitiesInfo.length !== 0) {
-        console.log(this.state.entitiesInfo[this.state.entitiesInfo.length-1].name);
-    }
+    const IndexRoute = firstEntity.map(item => <IndexRedirect from="*" to={item.name} />);
+
     const entityRoutes = this.state.entitiesInfo.map(info =>
       <Route
         path={info.name}
@@ -52,7 +50,6 @@ export default class Routes extends Component {
         uiSchema={info.uiSchema}
         component={IndexPage}
       />);
-      console.log('=',entityRoutes);
     return (
       <Router history={browserHistory}>
         <Route name="TOP" path="/" component={TopLevel}>
@@ -60,7 +57,7 @@ export default class Routes extends Component {
           <IndexRedirect from="*" to="entities" />
           {/* add crud pages here. */}
           <Route path="entities" name="Entities" component={SecondLevel}>
-            {firstEntity}
+            {IndexRoute}
             {entityRoutes}
           </Route>
           {/*

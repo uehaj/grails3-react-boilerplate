@@ -49,7 +49,7 @@ export default class ShowDialog extends Component {
         onClose={this.props.onClose}
         schema={this.props.schema}
         uiSchema={uiSchema}
-        liveValidate={true}
+        liveValidate
       >
         <span>
           <Button
@@ -75,7 +75,13 @@ ShowDialog.propTypes = {
   selectedId: PropTypes.number,
   onClose: PropTypes.func.isRequired,
   onEditButtonClicked: PropTypes.func.isRequired,
-  schema: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.boolean])).isRequired,
+  schema: PropTypes.objectOf(
+    PropTypes.oneOfType(
+      [
+        PropTypes.string,
+        PropTypes.object,
+        PropTypes.boolean,
+      ])).isRequired,
   uiSchema: PropTypes.objectOf(PropTypes.object).isRequired,
   api: PropTypes.objectOf(PropTypes.func).isRequired,
 };

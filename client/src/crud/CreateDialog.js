@@ -34,7 +34,7 @@ export default class CreateDialog extends Component {
         schema={schema}
         uiSchema={uiSchema}
         onSubmit={this.handleSubmit.bind(this)}
-        liveValidate={true}
+        liveValidate
       >
         <span>
           <Button bsStyle="primary" type="submit">Create</Button>
@@ -49,6 +49,11 @@ CreateDialog.propTypes = {
   show: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  schema: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.boolean])).isRequired,
+  schema: PropTypes.objectOf(
+    PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.object,
+      PropTypes.boolean,
+    ])).isRequired,
   uiSchema: PropTypes.objectOf(PropTypes.object).isRequired,
 };

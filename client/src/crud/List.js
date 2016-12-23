@@ -55,7 +55,7 @@ export default class List extends Component {
     } catch (err) {
       const json = await err.json();
       if (json.error !== 404) {
-        AlertBox.error("Error: "+json.message);
+        AlertBox.error(`Error: ${json.message}`);
       }
       this.setState({ entityList: [] });
     }
@@ -90,14 +90,14 @@ export default class List extends Component {
       });
     } catch (err) {
       const json = await err.json();
-      AlertBox.error('Error: '+json.message);
+      AlertBox.error(`Error: ${json.message}`);
     }
   }
 
   async updateEntity(updatedEntity) {
     this.setState({ editDialogVisible: false });
 
-    function isSelectedEntity(entity) {
+    function updateSelectedEntity(entity) {
       if (entity.id === this.state.selectedId) {
         return { id: this.state.selectedId, ...updatedEntity };
       }
@@ -109,11 +109,11 @@ export default class List extends Component {
       await api.updateEntity(updatedEntity);
       // Locally update data.
       this.setState({
-        entityList: this.state.entityList.map(isSelectedEntity.bind(this)),
+        entityList: this.state.entityList.map(updateSelectedEntity.bind(this)),
       });
     } catch (err) {
       const json = await err.json();
-      AlertBox.error("Error: "+json.message);
+      AlertBox.error(`Error: ${json.message}`);
     }
   }
 
@@ -200,6 +200,12 @@ export default class List extends Component {
 
 
 List.propTypes = {
-  schema: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.boolean])).isRequired,
+  schema: PropTypes.objectOf(
+    PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.object,
+      PropTypes.boolean,
+    ])).isRequired,
+  uiSchema: PropTypes.objectOf(PropTypes.object).isRequired,
   api: PropTypes.objectOf(PropTypes.func).isRequired,
 };
