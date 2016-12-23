@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
+    "babel-preset-react-hmre": "^1.1.1",
     "eslint": "^3.11.1",
     "eslint-config-airbnb": "^13.0.0",
     "eslint-plugin-import": "^2.2.0",
@@ -32,6 +33,6 @@
     "flow": "flow; test $? -eq 0 -o $? -eq 2"
   },
   "eslintConfig": {
-    "extends": "./node_modules/react-scripts/config/eslint.js"
+    "extends": "babel"
   }
 }

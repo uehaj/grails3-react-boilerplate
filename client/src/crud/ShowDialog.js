@@ -24,20 +24,20 @@ export default class ShowDialog extends Component {
 
   render() {
     /* replace input tag to normal text */
-    const func = props => <div>{props.value}</div>;
+    const StaticText = props => <div>{props.value}</div>;
 
     const uiSchema = {
       ...this.props.uiSchema,
       /*
-        Generate entries for each property like:
-        title: {'ui:widget': func}
-        price: {'ui:widget': func}
+        Generate additional ui customize entries for each property like:
+        title: {'ui:widget': StaticText}
+        price: {'ui:widget': StaticText}
         :
       */
       ...(Object.keys(this.props.schema.properties)
           .reduce(
             (map, key) =>
-              ({ ...map, [key]: { 'ui:widget': func } }),
+              ({ ...map, [key]: { 'ui:widget': StaticText } }),
             {})),
       id: { 'ui:widget': 'hidden' },
     };
@@ -76,12 +76,11 @@ ShowDialog.propTypes = {
   onClose: PropTypes.func.isRequired,
   onEditButtonClicked: PropTypes.func.isRequired,
   schema: PropTypes.objectOf(
-    PropTypes.oneOfType(
-      [
-        PropTypes.string,
-        PropTypes.object,
-        PropTypes.boolean,
-      ])).isRequired,
+    PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.object,
+      PropTypes.boolean,
+    ])).isRequired,
   uiSchema: PropTypes.objectOf(PropTypes.object).isRequired,
   api: PropTypes.objectOf(PropTypes.func).isRequired,
 };
