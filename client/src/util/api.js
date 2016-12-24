@@ -1,4 +1,6 @@
-const urlBase = 'http://localhost:8080/';
+import { SERVER_URL } from '../config';
+
+const urlBase = SERVER_URL;
 
 async function getEntities(entityName) {
   const url = `${urlBase}${entityName}?max=100`;
