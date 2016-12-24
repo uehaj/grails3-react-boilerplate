@@ -49,8 +49,6 @@ Grails constraints for Scaffolding support:
     (UISchema)
   - [v]widget
     (UISchema) { "ui:widget":"textarea" }
-  - [ ]password
-    (UISchema)
 
 Other:
 
@@ -209,11 +207,21 @@ class JsonSchemaUtil {
     def result = [:]
     def constrainedProperties = domainClass.getConstrainedProperties()
     if (constrainedProperties.containsKey(property.name)) {
-      if (constrainedProperties[property.name]?.widget) { // widget constraint
-      println "property.name = ${property.name} "+constrainedProperties[property.name]?.widget
+      if (constrainedProperties[property.name]?.widget) {
         result += ['ui:widget':constrainedProperties[property.name]?.widget]
       }
-      // TODO: password, display, ..
+      else if (constrainedProperties[property.name]?.display == 'false') {
+        result += ['ui:widget':'hidden']
+      }
+      else if (constrainedProperties[property.name]?.editable) {
+        result += ['ui:readonly':true]
+      }
+      else if (constrainedProperties[property.name]?.format) {
+        result += ['ui:widget':constrainedProperties[property.name]?.widget]
+      }
+      else if (constrainedProperties[property.name]?.password) {
+        result += ['ui:widget':'password']
+      }
     }
     return result
   }
