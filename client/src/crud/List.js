@@ -180,6 +180,7 @@ export default class List extends Component {
           selectedId={this.state.selectedId}
           onClose={() => this.setState({ showDialogVisible: false })}
           onEditButtonClicked={this.showEditDialog.bind(this)}
+          onDeleteButtonClicked={this.handleDeleteButtonClicked.bind(this)}
           schema={schema}
           uiSchema={uiSchema}
           api={api}

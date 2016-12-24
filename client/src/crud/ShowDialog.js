@@ -27,6 +27,11 @@ export default class ShowDialog extends Component {
     AlertBox.viewJson({ json, title });
   }
 
+  handleDeleteButtonClicked() {
+    this.props.onDeleteButtonClicked([this.props.selectedId]);
+    this.props.onClose();
+  }
+
   render() {
     const schema = this.props.schema;
 
@@ -61,6 +66,7 @@ export default class ShowDialog extends Component {
         <span>
           <Button onClick={this.handleViewSchema.bind(this, schema, "JSON Schema")} bsStyle="link" style={{ opacity: 0.2 }}>schema</Button>
           <Button onClick={this.handleViewSchema.bind(this, uiSchema, "UI Schema")} bsStyle="link" style={{ opacity: 0.2 }}>uiSchema</Button>
+          <Button bsStyle="danger" onClick={this.handleDeleteButtonClicked.bind(this)}>Delete</Button>
           <Button bsStyle="primary" onClick={this.props.onEditButtonClicked}>Edit</Button>
           <Button onClick={this.props.onClose}>Close</Button>
         </span>
@@ -75,6 +81,7 @@ ShowDialog.propTypes = {
   selectedId: PropTypes.number,
   onClose: PropTypes.func.isRequired,
   onEditButtonClicked: PropTypes.func.isRequired,
+  onDeleteButtonClicked: PropTypes.func.isRequired,
   schema: PropTypes.objectOf(
     PropTypes.oneOfType([
       PropTypes.string,
