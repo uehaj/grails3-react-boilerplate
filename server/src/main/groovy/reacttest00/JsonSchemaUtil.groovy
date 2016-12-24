@@ -4,56 +4,40 @@ import org.grails.validation.*
 
 /**
 
-Json Schema convert utility.
+GORM constraints to Json Schema convert utility.
 
-Grails constraints support:
+Grails basic constraints support:
   - [NA]attributes
   - [NA]bindable
-  - [v]blank
-    { "minLength": 1 } or { "minLength": 0 }
+  - [v]blank -> JSON Schema { "minLength": 1 } or { "minLength": 0 }
   - [NA]creditCard
-  - [v]email
-    { format: "email" }
-  - [v]inList
-    { "enum": ["elem1", "elem2", "elem3"] }
-  - [v]matches
-    { "pattern": "RE" }
-  - [v]max
-    { "maximum": val }
-  - [v]maxSize
-    { "maxLength": val }
-  - [v]min
-    { "minimum": val }
-  - [v]minSize
-    { "minLength": val }
-  - [v]notEqual
-    { "not": { "enum": ["value"]  } }
+  - [v]email -> JSON Schema { format: "email" }
+  - [v]inList -> JSON Schema { "enum": ["elem1", "elem2", "elem3"] }
+  - [v]matches -> JSON Schema { "pattern": "RE" }
+  - [v]max -> JSON Schema { "maximum": val }
+  - [v]maxSize -> JSON Schema { "maxLength": val }
+  - [v]min -> JSON Schema { "minimum": val }
+  - [v]minSize -> JSON Schema { "minLength": val }
+  - [v]notEqual -> JSON Schema { "not": { "enum": ["value"]  } }
   - [NA]nullable
-  - [v]range
-  - { "minimum": v1, maximum": v2 }
+  - [v]range -> JSON Schema { "minimum": v1, maximum": v2 }
   - [NA]scale
-  - [v]size
-    { "minLength": v1, "maxLength": v2 }
+  - [v]size -> JSON Schema { "minLength": v1, "maxLength": v2 }
   - [NA]unique
-  - [v]url
-    { format: "uri" }
+  - [v]url -> JSON Schema { format: "uri" }
   - [NA]validator
 
 Grails constraints for Scaffolding support:
 
-  - [ ]display
-    (UISchema)
-  - [ ]editable
-    (UISchema)
-  - [ ]format
-    (UISchema)
-  - [v]widget
-    (UISchema) { "ui:widget":"textarea" }
+  - [v]editable -> UI Schema { "ui:readonly":true }
+  - [NA]format
+  - [v]password -> UI Schema { "ui:widget":"password" }
+  - [v]widget -> UI Schema { "ui:widget": ... }
+  - [v]display -> UI Schema{ "ui:widget":"hidden" }
 
 Other:
 
-  - [ ]deafult value
-    { "default": value }
+  - [ ]deafult value -> JSON Schema { "default": value }
 
 @see http://json-schema.org/latest/json-schema-validation.html
 */
