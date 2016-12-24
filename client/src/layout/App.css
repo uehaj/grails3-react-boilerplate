@@ -21,3 +21,8 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.App-loading {
+    animation: App-logo-spin infinite 1s linear;
+    height: 16px;
+}

@@ -4,7 +4,6 @@ import { LinkContainer } from 'react-router-bootstrap';
 import './App.css';
 import grailsLogo from '../images/favicon48.png';
 import reactLogo from '../images/logo.svg';
-import loadingIcon from '../images/loading.svg';
 
 /**
  * Application top level structure.

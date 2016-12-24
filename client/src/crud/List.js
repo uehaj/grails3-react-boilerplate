@@ -6,6 +6,7 @@ import Table from '../components/Table';
 import CreateDialog from './CreateDialog';
 import ShowDialog from './ShowDialog';
 import EditDialog from './EditDialog';
+import loadingIcon from '../images/loading.svg';
 
 /**
  * List Domain class instances.
@@ -22,6 +23,7 @@ export default class List extends Component {
       showDialogVisible: false,
       editDialogVisible: false,
       errorMessage: '',
+      loading: false,
     };
   }
 
@@ -148,17 +150,25 @@ export default class List extends Component {
   }
 
   async handleRefreshButtonClicked() {
-    this.reloadData();
+    this.setState({ loading: true });
+    try {
+      await this.reloadData();
+    } finally {
+      this.setState({ loading: false });
+    }
   }
 
   render() {
     const { api, schema, uiSchema } = this.props;
     const { title } = schema;
-    console.log(">>", this.props);
+
+    const loadingAnimation = this.state.loading
+          ? <img src={loadingIcon} className={'App-loading'} alt={'loading'} />
+          : null;
 
     return (
       <div>
-        <h1>{title}</h1>
+        <h1>{title}{loadingAnimation}</h1>
         <Table
           tableData={this.state.entityList}
           onRowClicked={this.handleRowClicked.bind(this)}
