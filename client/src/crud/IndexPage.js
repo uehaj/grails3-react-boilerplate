@@ -1,14 +1,15 @@
 import React, { PropTypes } from 'react';
 import { Grid, Row, Col } from 'react-bootstrap';
 import Breadcrumbs from 'react-breadcrumbs';
-import config from '../config';
 import List from './List';
 
 export default function IndexPage(props) {
   const { api, schema, uiSchema } = props.route;
-  const style = (config.NAVBAR_SECOND_LEVEL_DIRECTION !== 0)
-        ? { paddingTop: 40 }
+
+  const style = (props.route.config.NAVBAR_SECOND_LEVEL_DIRECTION !== 0)
+        ? { paddingTop: 40 } // vertical
         : {};
+
   return (
     <div style={style}>
       <Breadcrumbs

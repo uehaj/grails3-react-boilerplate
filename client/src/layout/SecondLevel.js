@@ -1,7 +1,6 @@
 import React, { PropTypes } from 'react';
 import { Navbar, Nav, NavItem, Tab, Row, Col } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-import { NAVBAR_SECOND_LEVEL_DIRECTION } from '../config';
 
 /**
  * Second level menu navbar(Horizontal).
@@ -89,7 +88,7 @@ SecondLevelNavbarVertical.propTypes = {
  * +-----------------------+
  */
 export default function SecondLevel(props) {
-  return (NAVBAR_SECOND_LEVEL_DIRECTION === 0)
+  return (props.route.config.NAVBAR_SECOND_LEVEL_DIRECTION === 0)
     ? <SecondLevelNavbarHorizontal {...props} />
     : <SecondLevelNavbarVertical {...props} />;
 }

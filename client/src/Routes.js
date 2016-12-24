@@ -9,6 +9,7 @@ import NotFound from './layout/NotFound';
 import IndexPage from './crud/IndexPage';
 // import Page1 from './components/Page1';
 import createRestApi from './util/api';
+import config from './config';
 
 export default class Routes extends Component {
 
@@ -40,7 +41,7 @@ export default class Routes extends Component {
 
     const IndexRoute = firstEntity.map(item => <IndexRedirect key="first" from="*" to={item.name} />);
 
-    const entityRoutes = this.state.entitiesInfo.map(info =>
+    const entitiesRoutes = this.state.entitiesInfo.map(info =>
       <Route
         path={info.name}
         name={info.name}
@@ -49,16 +50,18 @@ export default class Routes extends Component {
         schema={info.schema}
         uiSchema={info.uiSchema}
         component={IndexPage}
+        config={config}
       />);
+
     return (
       <Router history={browserHistory}>
         <Route name="TOP" path="/" component={TopLevel}>
           {/* add top level items here.*/}
           <IndexRedirect from="*" to="entities" />
-          {/* add crud pages here. */}
-          <Route path="entities" name="Entities" component={SecondLevel}>
+          {/* crud pages. */}
+          <Route path="entities" name="Entities" component={SecondLevel} config={config}>
             {IndexRoute}
-            {entityRoutes}
+            {entitiesRoutes}
           </Route>
           {/*
           <Route path="m1" name="MenuItem1" component={SecondLevel}>
