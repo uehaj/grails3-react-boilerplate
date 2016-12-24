@@ -1,6 +1,9 @@
+// @flow
 import React, { Component, PropTypes } from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { modalify } from 'react-modalify';
+import Highlight from 'react-highlight';
+import 'highlight.js/styles/github.css';
 
 export default class AlertBox extends Component {
 
@@ -16,6 +19,16 @@ export default class AlertBox extends Component {
     return modalify(props => (
       <AlertBox title={<i className="glyphicon glyphicon-exclamation-sign">Error</i>} yes={'ok'} {...props}>
         {error}
+      </AlertBox>
+    ))();
+  }
+
+  static viewJson({ title, json }) {
+    return modalify(props => (
+      <AlertBox title={title} yes={'ok'} {...props}>
+        <Highlight className="androidstudio">
+          {JSON.stringify(json, null, 2)}
+        </Highlight>
       </AlertBox>
     ))();
   }

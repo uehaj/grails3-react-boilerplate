@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Button } from 'react-bootstrap';
 import ModalForm from '../components/ModalForm';
+import AlertBox from '../components/AlertBox';
 
 /**
  * Show Domain class on a modal dialog.
@@ -22,7 +23,13 @@ export default class ShowDialog extends Component {
     }
   }
 
+  handleViewSchema(json, title) {
+    AlertBox.viewJson({ json, title });
+  }
+
   render() {
+    const schema = this.props.schema;
+
     /* replace input tag to normal text */
     const StaticText = props => <div>{props.value}</div>;
 
@@ -52,17 +59,10 @@ export default class ShowDialog extends Component {
         liveValidate
       >
         <span>
-          <Button
-            bsStyle="primary"
-            onClick={this.props.onEditButtonClicked}
-          >
-            Edit
-          </Button>
-          <Button
-            onClick={this.props.onClose}
-          >
-            Close
-          </Button>
+          <Button onClick={this.handleViewSchema.bind(this, schema, "JSON Schema")} bsStyle="link" style={{ opacity: 0.2 }}>schema</Button>
+          <Button onClick={this.handleViewSchema.bind(this, uiSchema, "UI Schema")} bsStyle="link" style={{ opacity: 0.2 }}>uiSchema</Button>
+          <Button bsStyle="primary" onClick={this.props.onEditButtonClicked}>Edit</Button>
+          <Button onClick={this.props.onClose}>Close</Button>
         </span>
       </ModalForm>
     );
