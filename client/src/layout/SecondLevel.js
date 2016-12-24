@@ -29,7 +29,12 @@ function SecondLevelNavbarHorizontal(props) {
 }
 
 SecondLevelNavbarHorizontal.propTypes = {
-  route: PropTypes.objectOf(PropTypes.object).required,
+  route: PropTypes.objectOf(PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object,
+    PropTypes.array,
+    PropTypes.func,
+  ])).isRequired,
   children: PropTypes.element,
 };
 
@@ -62,7 +67,12 @@ function SecondLevelNavbarVertical(props) {
 }
 
 SecondLevelNavbarVertical.propTypes = {
-  route: PropTypes.objectOf(PropTypes.object).required,
+  route: PropTypes.objectOf(PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object,
+    PropTypes.array,
+    PropTypes.func,
+  ])).isRequired,
   children: PropTypes.element,
 };
 
@@ -85,6 +95,11 @@ export default function SecondLevel(props) {
 }
 
 SecondLevel.propTypes = {
-  route: PropTypes.objectOf(PropTypes.object).isRequired,
+  route: PropTypes.objectOf(PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object,
+    PropTypes.array,
+    PropTypes.func,
+  ])).isRequired,
   children: PropTypes.element,
 };

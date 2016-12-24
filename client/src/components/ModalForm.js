@@ -47,12 +47,7 @@ ModalForm.propTypes = {
   formData: PropTypes.objectOf(PropTypes.object),
   show: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
-  schema: PropTypes.objectOf(
-    PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.object,
-      PropTypes.boolean,
-    ])).isRequired,
+  schema: PropTypes.shape({}),
   uiSchema: PropTypes.objectOf(PropTypes.object).isRequired,
   onSubmit: PropTypes.func,
   children: PropTypes.element.isRequired,

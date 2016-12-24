@@ -93,11 +93,7 @@ Table.propTypes = {
   onCreateButtonClicked: PropTypes.func,
   onDeleteButtonClicked: PropTypes.func,
   onRefreshButtonClicked: PropTypes.func,
-  schema: PropTypes.objectOf(
-    PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.object,
-      PropTypes.boolean,
-    ]),
-  ).isRequired,
+  schema: PropTypes.shape({
+    properties: PropTypes.object,
+  }).isRequired,
 };

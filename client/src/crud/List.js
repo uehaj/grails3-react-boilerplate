@@ -154,6 +154,7 @@ export default class List extends Component {
   render() {
     const { api, schema, uiSchema } = this.props;
     const { title } = schema;
+    console.log(">>", this.props);
 
     return (
       <div>
@@ -199,14 +200,9 @@ export default class List extends Component {
   }
 }
 
-
 List.propTypes = {
-  schema: PropTypes.objectOf(
-    PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.object,
-      PropTypes.boolean,
-    ])).isRequired,
+  schema: PropTypes.shape({}),
   uiSchema: PropTypes.objectOf(PropTypes.object).isRequired,
   api: PropTypes.objectOf(PropTypes.func).isRequired,
 };
+

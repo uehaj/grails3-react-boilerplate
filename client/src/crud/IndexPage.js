@@ -1,12 +1,12 @@
 import React, { PropTypes } from 'react';
 import { Grid, Row, Col } from 'react-bootstrap';
 import Breadcrumbs from 'react-breadcrumbs';
-import { NAVBAR_SECOND_LEVEL_DIRECTION } from '../config';
+import config from '../config';
 import List from './List';
 
 export default function IndexPage(props) {
   const { api, schema, uiSchema } = props.route;
-  const style = (NAVBAR_SECOND_LEVEL_DIRECTION !== 0)
+  const style = (config.NAVBAR_SECOND_LEVEL_DIRECTION !== 0)
         ? { paddingTop: 40 }
         : {};
   return (
@@ -30,6 +30,10 @@ export default function IndexPage(props) {
 }
 
 IndexPage.propTypes = {
-  route: PropTypes.objectOf(PropTypes.object).isRequired,
+  route: PropTypes.objectOf(PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object,
+    PropTypes.func,
+  ])).isRequired,
   routes: PropTypes.arrayOf(PropTypes.object).isRequired,
 };

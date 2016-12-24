@@ -38,7 +38,7 @@ export default class Routes extends Component {
 
     const firstEntity = entitiesInfo.slice(entitiesInfo.length - 1, entitiesInfo.length);
 
-    const IndexRoute = firstEntity.map(item => <IndexRedirect from="*" to={item.name} />);
+    const IndexRoute = firstEntity.map(item => <IndexRedirect key="first" from="*" to={item.name} />);
 
     const entityRoutes = this.state.entitiesInfo.map(info =>
       <Route

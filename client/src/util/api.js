@@ -1,6 +1,6 @@
-import { SERVER_URL } from '../config';
+import config from '../config';
 
-const urlBase = SERVER_URL;
+const urlBase = config.SERVER_URL;
 
 async function getEntities(entityName) {
   const url = `${urlBase}${entityName}?max=100`;
