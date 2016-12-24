@@ -207,27 +207,29 @@ class JsonSchemaUtil {
     def result = [:]
     def constrainedProperties = domainClass.getConstrainedProperties()
     if (constrainedProperties.containsKey(property.name)) {
-      if (constrainedProperties[property.name]?.widget) {
-        result += ['ui:widget':constrainedProperties[property.name]?.widget]
-      }
-      else if (constrainedProperties[property.name]?.display == 'false') {
-        result += ['ui:widget':'hidden']
-      }
-      else if (constrainedProperties[property.name]?.editable) {
+      if (constrainedProperties[property.name]?.editable == false) {
         result += ['ui:readonly':true]
       }
-      else if (constrainedProperties[property.name]?.format) {
+      if (constrainedProperties[property.name]?.format) {
+        // not supported
+      }
+      if (constrainedProperties[property.name]?.password) {
+        result += ['ui:widget':'password']
+      }
+      if (constrainedProperties[property.name]?.widget) {
+        // widget overwrite password
         result += ['ui:widget':constrainedProperties[property.name]?.widget]
       }
-      else if (constrainedProperties[property.name]?.password) {
-        result += ['ui:widget':'password']
+      if (constrainedProperties[property.name]?.display == false) {
+        // hidden overwrite password/widget
+        result += ['ui:widget':'hidden']
       }
     }
     return result
   }
 
   static Object genUiSchema(GrailsDomainClass domainClass) {
-    def properties = domainClass.properties 
+    def properties = domainClass.properties
     properties = filterProperties(properties)
     properties = reorderProperties(properties)
     def result = properties.collectEntries { property ->

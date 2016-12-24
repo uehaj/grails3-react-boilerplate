@@ -14,6 +14,11 @@ class ConstraintTest {
   String string_maxSize_20
   String string_size_10_20
   String string_url
+  String string_display_false
+  String string_editable_false
+  String string_format_xxx
+  String string_password_true
+  String string_widget_textarea
 
   static constraints = {
     string_blank_true blank: true
@@ -29,5 +34,10 @@ class ConstraintTest {
     string_maxSize_20 maxSize: 20
     string_size_10_20 size: 10..20
     string_url url: true
+    string_display_false display: false
+    string_editable_false editable: false
+    string_format_xxx format: 'xxx'
+    string_password_true password: 'true'
+    string_widget_textarea widget: 'textarea'
   }
 }

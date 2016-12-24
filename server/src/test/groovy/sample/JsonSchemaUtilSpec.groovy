@@ -72,6 +72,22 @@ class JsonSchemaUtilSpec extends Specification {
         'string'|'string_url'|'string_url'|{it.format == 'uri'}
     }
 
+    @Unroll
+    def "getPropertyUiSchema ConstraintTest #name"() {
+        setup:
+        def domainClass = grailsApplication.getDomainClass("sample.ConstraintTest")
+        when:
+        def uiSchema = JsonSchemaUtil.genPropertyUiSchema(domainClass, domainClass.properties.find{it.name==name})
+        then:
+        test(uiSchema)
+        where:
+        name|test
+        'string_display_false'|{it.'ui:widget' == 'hidden'}
+        'string_editable_false'|{it.'ui:readonly' == true}
+        'string_password_true'|{it.'ui:widget' == 'password'}
+        'string_widget_textarea'|{it.'ui:widget' == 'textarea'}
+    }
+
     def "getSchema sample.Book"() {
         setup:
         def domainClass = grailsApplication.getDomainClass("sample.Book")
