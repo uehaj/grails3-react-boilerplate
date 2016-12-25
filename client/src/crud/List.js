@@ -56,9 +56,7 @@ export default class List extends Component {
       }
     } catch (err) {
       const json = await err.json();
-      if (json.error !== 404) {
-        AlertBox.error(`Error: ${json.message}`);
-      }
+      AlertBox.error(`Error: Data not found(${json.message})`);
       this.setState({ entityList: [] });
     }
   }

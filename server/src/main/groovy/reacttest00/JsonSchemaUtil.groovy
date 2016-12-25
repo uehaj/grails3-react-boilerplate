@@ -50,7 +50,7 @@ class JsonSchemaUtil {
 
   private static String[] excludesProperties = ['version']
 
-  private static String mapType(Class type) {
+  private static Map<String, String> mapType(Class type) {
     switch (type) {
     case java.lang.Byte:
     case java.lang.Character:
@@ -59,13 +59,15 @@ class JsonSchemaUtil {
     case java.lang.Long:
     case java.lang.Float:
     case java.lang.Double:
-        return "number"
+        return [type: "number"]
     case java.lang.Boolean:
-        return "boolean"
+        return [type: "boolean"]
+    case java.util.Date:
+        return [type: "string", format:"date-time"]
     case java.lang.String:
-        return "string"
+        return [type: "string"]
     default:
-        return "object"
+        return [type: "object"]
     }
   }
 
@@ -127,7 +129,7 @@ class JsonSchemaUtil {
 
   static Object genPropertySchema(GrailsDomainClass domainClass, GrailsDomainClassProperty property) {
     def result = [
-      type: mapType(property.type),
+      *:mapType(property.type),
       title: property.name,
       //description: "field of "+property.name,
     ]

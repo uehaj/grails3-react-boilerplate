@@ -47,7 +47,6 @@ export default class AlertBox extends Component {
     const { yes, no } = this.props;
 
     return (
-      <div className="static-modal">
         <Modal show={this.state.show}>
           <Modal.Header>
             <Modal.Title>{this.props.title}</Modal.Title>
@@ -77,7 +76,6 @@ export default class AlertBox extends Component {
             }
           </Modal.Footer>
         </Modal>
-      </div>
     );
   }
 
