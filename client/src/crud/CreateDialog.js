@@ -43,8 +43,11 @@ export default class CreateDialog extends Component {
       >
         <span>
           <Button onClick={this.handleViewSchema.bind(this, schema, "JSON Schema")} bsStyle="link" style={{ opacity: 0.2 }}>schema</Button>
+          &nbsp;
           <Button onClick={this.handleViewSchema.bind(this, uiSchema, "UI Schema")} bsStyle="link" style={{ opacity: 0.2 }}>uiSchema</Button>
+          &nbsp;
           <Button bsStyle="primary" type="submit">Create</Button>
+          &nbsp;
           <Button onClick={this.props.onClose}>Cancel</Button>
         </span>
       </ModalForm>

@@ -2,6 +2,11 @@ import React, { PropTypes } from 'react';
 import { Navbar, Nav, NavItem, Tab, Row, Col } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 
+function removeOptionalPartFromPath(s) {
+  return s.replace(/[(:].*/, '');
+
+}
+
 /**
  * Second level menu navbar(Horizontal).
  */
@@ -13,7 +18,7 @@ function SecondLevelNavbarHorizontal(props) {
           {
             (props.route.childRoutes ? props.route.childRoutes : []).map(
               item =>
-                <LinkContainer key={item.name} to={`/${props.route.path}/${item.path}`}>
+                <LinkContainer key={item.name} to={`/${props.route.path}/${removeOptionalPartFromPath(item.path)}`}>
                   <NavItem>{item.name}</NavItem>
                 </LinkContainer>)
           }
@@ -50,7 +55,7 @@ function SecondLevelNavbarVertical(props) {
               {
                 (props.route.childRoutes ? props.route.childRoutes : []).map(
                   item =>
-                    <LinkContainer key={item.name} to={`/${props.route.path}/${item.path.replace(/[(:].*/, '')}`}>
+                    <LinkContainer key={item.name} to={`/${props.route.path}/${removeOptionalPartFromPath(item.path)}`}>
                       <NavItem eventKey={item.name}>{item.name}</NavItem>
                     </LinkContainer>)
               }
