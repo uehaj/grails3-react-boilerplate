@@ -18,9 +18,9 @@ export default class List extends Component {
 
     this.state = {
       entityList: [],
-      selectedId: null,
+      selectedId: props.selectedId,
       createDialogVisible: false,
-      showDialogVisible: false,
+      showDialogVisible: props.selectedId !== undefined,
       editDialogVisible: false,
       errorMessage: '',
       loading: false,
@@ -56,7 +56,7 @@ export default class List extends Component {
       }
     } catch (err) {
       const json = await err.json();
-      AlertBox.error(`Error: Data not found(${json.message})`);
+      AlertBox.error(`Error: ${json.message}`);
       this.setState({ entityList: [] });
     }
   }
@@ -212,5 +212,6 @@ List.propTypes = {
   schema: PropTypes.shape({}),
   uiSchema: PropTypes.objectOf(PropTypes.object).isRequired,
   api: PropTypes.objectOf(PropTypes.func).isRequired,
+  selectedId: PropTypes.string,
 };
 

@@ -38,7 +38,10 @@ export default class EditDialog extends Component {
 
   render() {
 
-    const schema = this.props.schema;
+    const schema = {
+      ...this.props.schema,
+      title: `${this.props.schema.title}:${this.props.selectedId}`,
+    }
 
     const uiSchema = {
       ...this.props.uiSchema,
@@ -56,8 +59,11 @@ export default class EditDialog extends Component {
       >
         <span>
           <Button onClick={this.handleViewSchema.bind(this, schema, "JSON Schema")} bsStyle="link" style={{ opacity: 0.2 }}>schema</Button>
+          &nbsp;
           <Button onClick={this.handleViewSchema.bind(this, uiSchema, "UI Schema")} bsStyle="link" style={{ opacity: 0.2 }}>uiSchema</Button>
+          &nbsp;
           <Button bsStyle="primary" type="submit">Update</Button>
+          &nbsp;
           <Button onClick={this.props.onClose}>Cancel</Button>
         </span>
       </ModalForm>

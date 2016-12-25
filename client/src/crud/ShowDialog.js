@@ -33,7 +33,10 @@ export default class ShowDialog extends Component {
   }
 
   render() {
-    const schema = this.props.schema;
+    const schema = {
+      ...this.props.schema,
+      title: `${this.props.schema.title}:${this.props.selectedId}`,
+    };
 
     /* replace input tag to normal text */
     const StaticText = props => <div>{props.value}</div>;
@@ -59,15 +62,19 @@ export default class ShowDialog extends Component {
         show={this.props.show}
         formData={this.state.formData}
         onClose={this.props.onClose}
-        schema={this.props.schema}
+        schema={schema}
         uiSchema={uiSchema}
         liveValidate
       >
         <span>
           <Button onClick={this.handleViewSchema.bind(this, schema, "JSON Schema")} bsStyle="link" style={{ opacity: 0.2 }}>schema</Button>
+          &nbsp;
           <Button onClick={this.handleViewSchema.bind(this, uiSchema, "UI Schema")} bsStyle="link" style={{ opacity: 0.2 }}>uiSchema</Button>
-          <Button bsStyle="danger" onClick={this.handleDeleteButtonClicked.bind(this)}>Delete</Button>
-          <Button bsStyle="primary" onClick={this.props.onEditButtonClicked}>Edit</Button>
+          &nbsp;
+          <Button bsStyle="danger" onClick={this.handleDeleteButtonClicked.bind(this)}><i className="glyphicon glyphicon-trash" />Delete</Button>
+          &nbsp;
+          <Button bsStyle="primary" onClick={this.props.onEditButtonClicked}><i className="glyphicon glyphicon-pencil" />Edit</Button>
+          &nbsp;
           <Button onClick={this.props.onClose}>Close</Button>
         </span>
       </ModalForm>
@@ -83,6 +90,7 @@ ShowDialog.propTypes = {
   onEditButtonClicked: PropTypes.func.isRequired,
   onDeleteButtonClicked: PropTypes.func.isRequired,
   schema: PropTypes.shape({
+    title: PropTypes.string,
     properties: PropTypes.object,
   }),
   uiSchema: PropTypes.objectOf(PropTypes.object).isRequired,

@@ -43,7 +43,7 @@ export default class Routes extends Component {
 
     const entitiesRoutes = this.state.entitiesInfo.map(info =>
       <Route
-        path={info.name}
+        path={`${info.name}(/:selectedId)`}
         name={info.name}
         key={info.name}
         api={createRestApi(info.name)}
