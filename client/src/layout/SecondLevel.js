@@ -50,7 +50,7 @@ function SecondLevelNavbarVertical(props) {
               {
                 (props.route.childRoutes ? props.route.childRoutes : []).map(
                   item =>
-                    <LinkContainer key={item.name} to={`/${props.route.path}/${item.path}`}>
+                    <LinkContainer key={item.name} to={`/${props.route.path}/${item.path.replace(/[(:].*/, '')}`}>
                       <NavItem eventKey={item.name}>{item.name}</NavItem>
                     </LinkContainer>)
               }
