@@ -1,6 +1,8 @@
 package reacttest00
 
 import org.grails.validation.*
+import org.grails.orm.hibernate.cfg.GrailsDomainBinder
+import org.grails.orm.hibernate.cfg.AbstractGrailsDomainBinder
 
 /**
 
@@ -45,10 +47,12 @@ Other:
 
 import grails.core.GrailsDomainClass
 import grails.core.GrailsDomainClassProperty
+import grails.persistence.Event
+
 
 class JsonSchemaUtil {
 
-  private static String[] excludesProperties = ['version']
+  private static String[] excludedProperties = Event.allEvents.toList() << 'version' << 'dateCreated' << 'lastUpdated'
 
   private static Map<String, String> mapType(Class type) {
     switch (type) {
@@ -67,7 +71,7 @@ class JsonSchemaUtil {
     case java.lang.String:
         return [type: "string"]
     default:
-        return [type: "object"]
+        return [type: "string"]
     }
   }
 
@@ -142,14 +146,8 @@ class JsonSchemaUtil {
     return result
   }
 
-  private static List filterProperties(properties) {
-    return properties.findAll { !(it.name in excludesProperties) }
-  }
-
   private static List reorderProperties(properties) {
-    // TODO: sort with order of constraints.
-    assert properties.find { it.name == 'id' }
-    properties = [properties.find { it.name == 'id'} ] + properties.findAll { it.name != 'id' }.reverse()
+    return properties
   }
 
   private static boolean isNullable(domainClass, property) {
@@ -162,9 +160,13 @@ class JsonSchemaUtil {
     }
   }
 
+  static resolveProperties(GrailsDomainClass domainClass) {
+    def persistentPropNames = domainClass.persistentProperties*.name
+    return domainClass.properties.findAll { persistentPropNames.contains(it.name) && !excludedProperties.contains(it.name) }
+  }
+
   static Object genSchema(GrailsDomainClass domainClass) {
-    def properties = domainClass.properties 
-    properties = filterProperties(properties)
+    def properties = resolveProperties(domainClass)
     properties = reorderProperties(properties)
 
     def requiredProperties = properties.findAll { property ->
@@ -173,9 +175,9 @@ class JsonSchemaUtil {
 
     properties = properties.collectEntries { property ->
       def value = genPropertySchema(domainClass, property)
-      if (property.name == 'version') {
-        value += ['default':0] // version fields' default value is 0
-      }
+      // if (property.name == 'version') {
+      //   value += ['default':0] // version fields' default value is 0
+      // }
       return [(property.name): value]
     }
 
@@ -215,14 +217,13 @@ class JsonSchemaUtil {
   }
 
   static Object genUiSchema(GrailsDomainClass domainClass) {
-    def properties = domainClass.properties
-    properties = filterProperties(properties)
+    def properties = resolveProperties(domainClass)
     properties = reorderProperties(properties)
     def result = properties.collectEntries { property ->
       def value = genPropertyUiSchema(domainClass, property)
-      if (property.name == 'version') {
-        value += ['default':0] // default DomainClass version field for optimistic lock to 0
-      }
+      // if (property.name == 'version') {
+      //   value += ['default':0] // default DomainClass version field for optimistic lock to 0
+      // }
       return value == [:] ? [:] : [(property.name): value]
     }
     return result

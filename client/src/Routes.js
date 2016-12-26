@@ -7,7 +7,7 @@ import TopLevel from './layout/TopLevel';
 import SecondLevel from './layout/SecondLevel';
 import NotFound from './layout/NotFound';
 import IndexPage from './crud/IndexPage';
-// import Page1 from './components/Page1';
+//import Page1 from './components/Page1';
 import createRestApi from './util/api';
 import config from './config';
 
@@ -23,10 +23,9 @@ export default class Routes extends Component {
     try {
       const resp = await entityApi.getEntities();
       const entitiesInfo = await resp.json();
-      this.setState({ entitiesInfo });
+      this.setState({ entitiesInfo:entitiesInfo });
     } catch (err) {
-      const json = await err.json();
-      AlertBox.error(`Error: ${json.message}`);
+      AlertBox.error(err.toString());
     }
   }
 
@@ -63,6 +62,7 @@ export default class Routes extends Component {
             {IndexRoute}
             {entitiesRoutes}
           </Route>
+
           {/*
           <Route path="m1" name="MenuItem1" component={SecondLevel}>
             <IndexRedirect from="*" to="p1" />
@@ -72,6 +72,7 @@ export default class Routes extends Component {
           </Route>
           <Route path="p1" name="page1" component={Page1} />
           */}
+
         </Route>
         <Route path="*" component={NotFound} />
       </Router>

@@ -69,10 +69,9 @@ export default class Table extends Component {
           }}
         >
           {
-            Object.keys(this.props.schema.properties).map(
+            ['id', ...Object.keys(this.props.schema.properties)].map(
               elem => (
                 <TableHeaderColumn
-                  key={elem}
                   dataField={elem}
                   dataSort
                   isKey={elem === 'id'}

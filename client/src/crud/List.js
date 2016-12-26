@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import { Button } from 'react-bootstrap';
 import 'react-bootstrap-table/css/react-bootstrap-table.css';
 
 import AlertBox from '../components/AlertBox';
@@ -143,7 +144,7 @@ export default class List extends Component {
         });
       }
     } catch (err) {
-      AlertBox.error(err);
+      AlertBox.error(err.toString());
     }
   }
 
@@ -156,6 +157,10 @@ export default class List extends Component {
     }
   }
 
+  handleViewSchema(json, title) {
+    AlertBox.viewJson({ json, title });
+  }
+
   render() {
     const { api, schema, uiSchema } = this.props;
     const { title } = schema;
@@ -166,7 +171,8 @@ export default class List extends Component {
 
     return (
       <div>
-        <h1>{title}{loadingAnimation}</h1>
+        <h1>{title}{loadingAnimation}
+          <Button onClick={this.handleViewSchema.bind(this, schema, "JSON Schema")} bsStyle="link" style={{ opacity: 0.2 }}>schema</Button></h1>
         <Table
           tableData={this.state.entityList}
           onRowClicked={this.handleRowClicked.bind(this)}
