@@ -52,7 +52,7 @@ import grails.persistence.Event
 
 class JsonSchemaUtil {
 
-  private static String[] excludedProperties = Event.allEvents.toList() << 'version' << 'dateCreated' << 'lastUpdated'
+  private static String[] excludedProperties = Event.allEvents.toList() << 'dateCreated' << 'lastUpdated'
 
   private static Map<String, String> mapType(Class type) {
     switch (type) {
@@ -147,6 +147,9 @@ class JsonSchemaUtil {
   }
 
   private static List reorderProperties(properties) {
+    // TODO: sort with order of constraints.
+    assert properties.find { it.name == 'id' }
+    properties = [properties.find { it.name == 'id'} ] + properties.findAll { it.name != 'id' }.reverse()
     return properties
   }
 
@@ -161,7 +164,14 @@ class JsonSchemaUtil {
   }
 
   static resolveProperties(GrailsDomainClass domainClass) {
+    def propNames = domainClass.properties*.name
     def persistentPropNames = domainClass.persistentProperties*.name
+    if ('id' in propNames) {
+      persistentPropNames << 'id'
+    }
+    if ('version' in propNames) {
+      persistentPropNames << 'version'
+    }
     return domainClass.properties.findAll { persistentPropNames.contains(it.name) && !excludedProperties.contains(it.name) }
   }
 
@@ -175,9 +185,9 @@ class JsonSchemaUtil {
 
     properties = properties.collectEntries { property ->
       def value = genPropertySchema(domainClass, property)
-      // if (property.name == 'version') {
-      //   value += ['default':0] // version fields' default value is 0
-      // }
+      if (property.name == 'version') {
+        value += ['default': 0] // version fields' default value is 0
+      }
       return [(property.name): value]
     }
 
@@ -217,13 +227,13 @@ class JsonSchemaUtil {
   }
 
   static Object genUiSchema(GrailsDomainClass domainClass) {
-    def properties = resolveProperties(domainClass)
-    properties = reorderProperties(properties)
+    def properties = reorderProperties(resolveProperties(domainClass))
     def result = properties.collectEntries { property ->
       def value = genPropertyUiSchema(domainClass, property)
-      // if (property.name == 'version') {
-      //   value += ['default':0] // default DomainClass version field for optimistic lock to 0
-      // }
+      if (property.name == 'version') {
+         value << ['default':0]
+         value << ['ui:widget':'hidden']
+       }
       return value == [:] ? [:] : [(property.name): value]
     }
     return result

@@ -48,6 +48,25 @@ export default class Table extends Component {
       </div>
     );
 
+    function resolveHeader(schema) {
+      const result = Object.keys(schema.properties).filter(elem => elem !== 'version');
+      return result;
+    }
+
+    const Header = (
+      resolveHeader(this.props.schema).map(
+        elem => (
+          <TableHeaderColumn
+            dataField={elem}
+            dataSort
+            isKey={elem === 'id'}
+            {... ((elem === 'id') ? { width: '50%' } : {})}
+            key={elem}
+          >
+            {elem}
+          </TableHeaderColumn>))
+    );
+
     return (
       <div>
         {Buttons}
@@ -68,18 +87,7 @@ export default class Table extends Component {
             sizePerPageList: [20, 30, 40],
           }}
         >
-          {
-            ['id', ...Object.keys(this.props.schema.properties)].map(
-              elem => (
-                <TableHeaderColumn
-                  dataField={elem}
-                  dataSort
-                  isKey={elem === 'id'}
-                  {... ((elem === 'id') ? { width: '50%' } : {})}
-                >
-                  {elem}
-                </TableHeaderColumn>))
-          }
+          {Header}
         </ModifiedBootstrapTable>
       </div>
     );

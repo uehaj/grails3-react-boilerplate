@@ -23,7 +23,7 @@ export default class Routes extends Component {
     try {
       const resp = await entityApi.getEntities();
       const entitiesInfo = await resp.json();
-      this.setState({ entitiesInfo:entitiesInfo });
+      this.setState({ entitiesInfo });
     } catch (err) {
       AlertBox.error(err.toString());
     }
