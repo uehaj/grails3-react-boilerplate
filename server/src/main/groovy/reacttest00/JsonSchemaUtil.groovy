@@ -83,7 +83,7 @@ class JsonSchemaUtil {
     default:
         if (property.manyToOne || property.oneToOne) {
           println property
-          return [*:genSchemaManyToOne(property), title:property.type.name]
+          return [*:genSchemaManyToOne(property), title:property.name]
         }
         return [type: 'string', *:result]
     }

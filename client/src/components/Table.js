@@ -48,22 +48,28 @@ export default class Table extends Component {
       </div>
     );
 
-    function resolveHeader(schema) {
+    function headerProperties(schema) {
       // eslint-disable-next-line
-      const { version, ...versionRemoved } = schema.properties;
-      return Object.entries(versionRemoved);
+      const { version, ...propsWithoutVersion } = schema.properties;
+      return propsWithoutVersion;
     }
+
+    const resolveRelationValue = (name, id) => {
+      const ids = this.props.schema.properties[name].properties.id;
+      const index = ids.enum.findIndex(elem => elem === id);
+      return ids.enumNames[index];
+    };
 
     function dataFormatter(cell, row, name) {
       if (typeof cell === 'object') {
-        return `${name}:${cell.id}`;
+        return resolveRelationValue(name, cell.id);
       }
       return cell;
     }
 
     const Header = (
-      resolveHeader(this.props.schema).map(
-        ([key, value]) => (
+      Object.keys(headerProperties(this.props.schema)).map(
+        key => (
           <TableHeaderColumn
             dataField={key}
             dataSort
@@ -71,7 +77,7 @@ export default class Table extends Component {
             {... ((key === 'id') ? { width: '50%' } : {})}
             key={key}
             dataFormat={dataFormatter}
-            formatExtraData={value.title}
+            formatExtraData={key}
           >
             {key}
           </TableHeaderColumn>))

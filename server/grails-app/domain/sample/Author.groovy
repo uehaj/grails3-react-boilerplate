@@ -5,6 +5,10 @@ class Author {
   Integer age
   String email
 
+  String toString() {
+    "$name($id)"
+  }
+
   static constraints = {
     email email:true, widget:'textarea'
     name nullable: true

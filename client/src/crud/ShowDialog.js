@@ -12,8 +12,10 @@ export default class ShowDialog extends Component {
   static makeStatic(schema) {
     const StaticText = props => <div>{props.value}</div>;
 
-    return Object.keys(schema.properties)
-      .filter(key => key !== 'version')
+    // eslint-disable-next-line
+    const { version, ...propsWithoutVersion } = schema.properties;
+
+    return Object.keys(propsWithoutVersion)
       .reduce(
         (map, key) => {
           if (schema.properties[key].type === 'object') {
