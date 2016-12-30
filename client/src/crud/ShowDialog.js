@@ -7,6 +7,24 @@ import AlertBox from '../components/AlertBox';
  * Show Domain class on a modal dialog.
  */
 export default class ShowDialog extends Component {
+
+  /* replace input tag to normal text */
+  static makeStatic(schema) {
+    const StaticText = props => <div>{props.value}</div>;
+
+    return Object.keys(schema.properties)
+      .filter(key => key !== 'version')
+      .reduce(
+        (map, key) => {
+          if (schema.properties[key].type === 'object') {
+            return { ...map, [key]: { 'ui:widget': StaticText, ...ShowDialog.makeStatic(schema.properties[key]) } };
+          } else {
+            return { ...map, [key]: { 'ui:widget': StaticText } };
+          }
+        },
+        {});
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -23,8 +41,8 @@ export default class ShowDialog extends Component {
     }
   }
 
+  // eslint-disable-next-line
   handleViewSchema(json, title) {
-    console.log('handleViewSchema=', title, '==', json);
     AlertBox.viewJson({ json, title });
   }
 
@@ -39,22 +57,9 @@ export default class ShowDialog extends Component {
       title: `${this.props.schema.title}:${this.props.selectedId}`,
     };
 
-    /* replace input tag to normal text */
-    const StaticText = props => <div>{props.value}</div>;
-
     const uiSchema = {
-      /*
-       * Generate additional ui customize entries for each property like:
-       * title: {'ui:widget': StaticText}
-       * price: {'ui:widget': StaticText}
-       * :
-       */
-      ...(Object.keys(this.props.schema.properties)
-          .filter(key => key !== 'version')
-          .reduce(
-            (map, key) =>
-              ({ ...map, [key]: { 'ui:widget': StaticText } }),
-            this.props.uiSchema)),
+      ...ShowDialog.makeStatic(this.props.schema),
+      ...this.props.uiSchema, // overrite version:'hidden'
       id: { 'ui:widget': 'hidden' },
     };
 
@@ -68,11 +73,11 @@ export default class ShowDialog extends Component {
         liveValidate
       >
         <span>
-          <Button onClick={this.handleViewSchema.bind(this, schema, "JSON Schema")} bsStyle="link" style={{ opacity: 0.2 }}>schema</Button>
+          <Button onClick={this.handleViewSchema.bind(this, schema, 'JSON Schema')} bsStyle="link" style={{ opacity: 0.2 }}>schema</Button>
           &nbsp;
-          <Button onClick={this.handleViewSchema.bind(this, this.props.uiSchema, "UI Schema")} bsStyle="link" style={{ opacity: 0.2 }}>uiSchema</Button>
+          <Button onClick={this.handleViewSchema.bind(this, this.props.uiSchema, 'UI Schema')} bsStyle="link" style={{ opacity: 0.2 }}>uiSchema</Button>
           &nbsp;
-          <Button onClick={this.handleViewSchema.bind(this, uiSchema, "UI Schema2")} bsStyle="link" style={{ opacity: 0.2 }}>uiSchema 2</Button>
+          <Button onClick={this.handleViewSchema.bind(this, uiSchema, 'UI Schema2')} bsStyle="link" style={{ opacity: 0.2 }}>uiSchema 2</Button>
           &nbsp;
           <Button bsStyle="danger" onClick={this.handleDeleteButtonClicked.bind(this)}><i className="glyphicon glyphicon-trash" />Delete</Button>
           &nbsp;

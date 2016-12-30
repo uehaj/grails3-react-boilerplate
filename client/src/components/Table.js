@@ -49,21 +49,31 @@ export default class Table extends Component {
     );
 
     function resolveHeader(schema) {
-      const result = Object.keys(schema.properties).filter(elem => elem !== 'version');
-      return result;
+      // eslint-disable-next-line
+      const { version, ...versionRemoved } = schema.properties;
+      return Object.entries(versionRemoved);
+    }
+
+    function dataFormatter(cell, row, name) {
+      if (typeof cell === 'object') {
+        return `${name}:${cell.id}`;
+      }
+      return cell;
     }
 
     const Header = (
       resolveHeader(this.props.schema).map(
-        elem => (
+        ([key, value]) => (
           <TableHeaderColumn
-            dataField={elem}
+            dataField={key}
             dataSort
-            isKey={elem === 'id'}
-            {... ((elem === 'id') ? { width: '50%' } : {})}
-            key={elem}
+            isKey={key === 'id'}
+            {... ((key === 'id') ? { width: '50%' } : {})}
+            key={key}
+            dataFormat={dataFormatter}
+            formatExtraData={value.title}
           >
-            {elem}
+            {key}
           </TableHeaderColumn>))
     );
 

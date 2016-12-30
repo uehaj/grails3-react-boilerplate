@@ -19,7 +19,7 @@ class DomainInfoController {
 
     private Object getUiSchema(String domainClassName) {
         def domainClass = grailsApplication.getDomainClass(domainClassName)
-        def result = JsonSchemaUtil.genUiSchema(domainClass)
+        def result = JsonUiSchemaUtil.genUiSchema(domainClass)
         return result
     }
 

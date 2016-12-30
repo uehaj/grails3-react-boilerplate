@@ -54,15 +54,15 @@ class JsonSchemaUtil {
 
   private static String[] excludedProperties = Event.allEvents.toList() << 'dateCreated' << 'lastUpdated'
 
-
   private static genSchemaManyToOne(GrailsDomainClassProperty property) {
     return [type: 'object', required: 'id', properties: [
-        id: [ type: 'number']
+        id: [ type: 'number',
+              enum: property.type.list().id,
+              enumNames: property.type.list().collect{ it.toString() } ] // return Custom labels for enum fields
       ]];
   }
 
   private static Map<String, String> genSchemaType(GrailsDomainClassProperty property) {
-    println property
     Class type = property.type;
     switch (type) {
     case java.lang.Byte:
@@ -149,11 +149,9 @@ class JsonSchemaUtil {
       title: property.name,
       //description: "field of "+property.name,
     ]
-    def constrainedProperties = domainClass.getConstrainedProperties()
-    if (constrainedProperties.containsKey(property.name)) {
-      constrainedProperties[property.name].appliedConstraints.each { constraint ->
-        result += constraintsToSchema(constraint)
-      }
+    def constrainedProperty = domainClass.constrainedProperties[property.name]
+    constrainedProperty?.appliedConstraints?.each { constraint ->
+      result += constraintsToSchema(constraint)
     }
     return result
   }
@@ -210,44 +208,6 @@ class JsonSchemaUtil {
       required: requiredProperties.name,
       properties: properties
     ]
-    return result
-  }
-
-  static Object genUiSchemaProperty(GrailsDomainClass domainClass, GrailsDomainClassProperty property) {
-    def result = [:]
-    def constrainedProperties = domainClass.getConstrainedProperties()
-    if (constrainedProperties.containsKey(property.name)) {
-      if (constrainedProperties[property.name]?.editable == false) {
-        result += ['ui:readonly':true]
-      }
-      if (constrainedProperties[property.name]?.format) {
-        // not supported
-      }
-      if (constrainedProperties[property.name]?.password) {
-        result += ['ui:widget':'password']
-      }
-      if (constrainedProperties[property.name]?.widget) {
-        // widget overwrite password
-        result += ['ui:widget':constrainedProperties[property.name]?.widget]
-      }
-      if (constrainedProperties[property.name]?.display == false) {
-        // hidden overwrite password/widget
-        result += ['ui:widget':'hidden']
-      }
-    }
-    return result
-  }
-
-  static Object genUiSchema(GrailsDomainClass domainClass) {
-    def properties = reorderProperties(resolveProperties(domainClass))
-    def result = properties.collectEntries { property ->
-      def value = genUiSchemaProperty(domainClass, property)
-      if (property.name == 'version') {
-         value << ['ui:widget':'hidden']
-       }
-      def result = (value == [:] ? [:] : [(property.name): value])
-      return result
-    }
     return result
   }
 

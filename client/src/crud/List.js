@@ -43,7 +43,7 @@ export default class List extends Component {
   }
 
   componentWillUnmount() {
-    // allows us to ignore an inflight request in scenario 4
+    // allows us to ignore an inflight request after umounted.
     this.ignoreLastFetch = true;
   }
 

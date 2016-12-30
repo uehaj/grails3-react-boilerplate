@@ -22,7 +22,12 @@ export default function IndexPage(props) {
       <Grid fluid style={{ marginTop: '-20px' }}>
         <Row>
           <Col md={12} style={{ paddingLeft: '1em', paddingRight: '1em' }}>
-            <List schema={schema} uiSchema={uiSchema} api={api} selectedId={props.params.selectedId}/>
+            <List
+              schema={schema}
+              uiSchema={uiSchema}
+              api={api}
+              selectedId={props.params.selectedId}
+            />
           </Col>
         </Row>
       </Grid>
@@ -37,4 +42,5 @@ IndexPage.propTypes = {
     PropTypes.func,
   ])).isRequired,
   routes: PropTypes.arrayOf(PropTypes.object).isRequired,
+  params: PropTypes.shape({ selectedId: PropTypes.number }),
 };
