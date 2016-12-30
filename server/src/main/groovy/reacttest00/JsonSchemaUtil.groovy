@@ -54,7 +54,16 @@ class JsonSchemaUtil {
 
   private static String[] excludedProperties = Event.allEvents.toList() << 'dateCreated' << 'lastUpdated'
 
-  private static Map<String, String> mapType(Class type) {
+
+  private static genSchemaManyToOne(GrailsDomainClassProperty property) {
+    return [type: 'object', required: 'id', properties: [
+        id: [ type: 'number']
+      ]];
+  }
+
+  private static Map<String, String> genSchemaType(GrailsDomainClassProperty property) {
+    println property
+    Class type = property.type;
     switch (type) {
     case java.lang.Byte:
     case java.lang.Character:
@@ -63,15 +72,18 @@ class JsonSchemaUtil {
     case java.lang.Long:
     case java.lang.Float:
     case java.lang.Double:
-        return [type: "number"]
+        return [type: 'number']
     case java.lang.Boolean:
-        return [type: "boolean"]
+        return [type: 'boolean']
     case java.util.Date:
-        return [type: "string", format:"date-time"]
+        return [type: 'string', format:'date-time']
     case java.lang.String:
-        return [type: "string"]
+        return [type: 'string']
     default:
-        return [type: "string"]
+        if (property.manyToOne || property.oneToOne) {
+          return genSchemaManyToOne(property)
+        }
+        return [type: 'string']
     }
   }
 
@@ -84,56 +96,56 @@ class JsonSchemaUtil {
       // not supported
     }
     else if (constraint instanceof EmailConstraint) {
-      result << [format: "email"]
+      result << [format: 'email']
     }
     else if (constraint instanceof InListConstraint) {
-      result << ["enum": constraint.list]
+      result << ['enum': constraint.list]
     }
     else if (constraint instanceof MatchesConstraint) {
-      result << ["pattern": constraint.regex]
+      result << ['pattern': constraint.regex]
     }
     else if (constraint instanceof MaxConstraint) {
-      result << ["maximum": constraint.maxValue]
+      result << ['maximum': constraint.maxValue]
     }
     else if (constraint instanceof MaxSizeConstraint) {
-      result << ["maxLength": constraint.maxSize]
+      result << ['maxLength': constraint.maxSize]
     }
     else if (constraint instanceof MinConstraint) {
-      result << ["minimum": constraint.minValue]
+      result << ['minimum': constraint.minValue]
     }
     else if (constraint instanceof MinSizeConstraint) {
-      result << ["minLength": constraint.minSize]
+      result << ['minLength': constraint.minSize]
     }
     else if (constraint instanceof NotEqualConstraint) {
-      result << ["not": ["enum": [constraint.notEqualTo]]]
+      result << ['not': ['enum': [constraint.notEqualTo]]]
     }
     else if (constraint instanceof NullableConstraint) {
       // not supported
     }
     else if (constraint instanceof RangeConstraint) {
-      result << ["minimum": constraint.range.from, "maximum": constraint.range.to ] // TODO check exclusive end
+      result << ['minimum': constraint.range.from, 'maximum': constraint.range.to ] // TODO check exclusive end
     }
     else if (constraint instanceof ScaleConstraint) {
       // not supported
     }
     else if (constraint instanceof SizeConstraint) {
-      result << ["minLength": constraint.range.from, "maxLength": constraint.range.to ]
+      result << ['minLength': constraint.range.from, 'maxLength': constraint.range.to ]
     }
     else if (constraint instanceof UrlConstraint) {
-      result << ["format": "uri"]
+      result << ['format': 'uri']
     }
     else if (constraint instanceof ValidatorConstraint) {
       // not supported
     }
     else {
-      throw new Exception("Unknown constraint:"+constraint)
+      throw new Exception('Unknown constraint:'+constraint)
     }
     return result
   }
 
-  static Object genPropertySchema(GrailsDomainClass domainClass, GrailsDomainClassProperty property) {
+  static Object genSchemaProperty(GrailsDomainClass domainClass, GrailsDomainClassProperty property) {
     def result = [
-      *:mapType(property.type),
+      *:genSchemaType(property),
       title: property.name,
       //description: "field of "+property.name,
     ]
@@ -184,7 +196,7 @@ class JsonSchemaUtil {
     }
 
     properties = properties.collectEntries { property ->
-      def value = genPropertySchema(domainClass, property)
+      def value = genSchemaProperty(domainClass, property)
       if (property.name == 'version') {
         value += ['default': 0] // version fields' default value is 0
       }
@@ -192,7 +204,7 @@ class JsonSchemaUtil {
     }
 
     def result = [
-      '$schema': "http://json-schema.org/schema#",
+      '$schema': 'http://json-schema.org/schema#',
       title: domainClass.getShortName(),
       type: 'object',
       required: requiredProperties.name,
@@ -201,7 +213,7 @@ class JsonSchemaUtil {
     return result
   }
 
-  static Object genPropertyUiSchema(GrailsDomainClass domainClass, GrailsDomainClassProperty property) {
+  static Object genUiSchemaProperty(GrailsDomainClass domainClass, GrailsDomainClassProperty property) {
     def result = [:]
     def constrainedProperties = domainClass.getConstrainedProperties()
     if (constrainedProperties.containsKey(property.name)) {
@@ -229,12 +241,12 @@ class JsonSchemaUtil {
   static Object genUiSchema(GrailsDomainClass domainClass) {
     def properties = reorderProperties(resolveProperties(domainClass))
     def result = properties.collectEntries { property ->
-      def value = genPropertyUiSchema(domainClass, property)
+      def value = genUiSchemaProperty(domainClass, property)
       if (property.name == 'version') {
-         value << ['default':0]
          value << ['ui:widget':'hidden']
        }
-      return value == [:] ? [:] : [(property.name): value]
+      def result = (value == [:] ? [:] : [(property.name): value])
+      return result
     }
     return result
   }

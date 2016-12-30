@@ -44,7 +44,7 @@ export default class ModalForm extends Component {
 }
 
 ModalForm.propTypes = {
-  formData: PropTypes.objectOf(PropTypes.object),
+  formData: PropTypes.shape({}),
   show: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   schema: PropTypes.shape({}),

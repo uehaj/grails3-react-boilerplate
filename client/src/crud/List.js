@@ -171,8 +171,12 @@ export default class List extends Component {
 
     return (
       <div>
-        <h1>{title}{loadingAnimation}
-          <Button onClick={this.handleViewSchema.bind(this, schema, "JSON Schema")} bsStyle="link" style={{ opacity: 0.2 }}>schema</Button></h1>
+        <h1>
+          {title}
+          {loadingAnimation}
+          <Button onClick={this.handleViewSchema.bind(this, schema, "JSON Schema")} bsStyle="link" style={{ opacity: 0.2 }}>schema</Button>
+          <Button onClick={this.handleViewSchema.bind(this, uiSchema, "UI Schema")} bsStyle="link" style={{ opacity: 0.2 }}>uiSchema</Button>
+        </h1>
         <Table
           tableData={this.state.entityList}
           onRowClicked={this.handleRowClicked.bind(this)}

@@ -24,6 +24,7 @@ export default class ShowDialog extends Component {
   }
 
   handleViewSchema(json, title) {
+    console.log('handleViewSchema=', title, '==', json);
     AlertBox.viewJson({ json, title });
   }
 
@@ -42,18 +43,18 @@ export default class ShowDialog extends Component {
     const StaticText = props => <div>{props.value}</div>;
 
     const uiSchema = {
-      ...this.props.uiSchema,
       /*
-        Generate additional ui customize entries for each property like:
-        title: {'ui:widget': StaticText}
-        price: {'ui:widget': StaticText}
-        :
-      */
+       * Generate additional ui customize entries for each property like:
+       * title: {'ui:widget': StaticText}
+       * price: {'ui:widget': StaticText}
+       * :
+       */
       ...(Object.keys(this.props.schema.properties)
+          .filter(key => key !== 'version')
           .reduce(
             (map, key) =>
               ({ ...map, [key]: { 'ui:widget': StaticText } }),
-            {})),
+            this.props.uiSchema)),
       id: { 'ui:widget': 'hidden' },
     };
 
@@ -69,7 +70,9 @@ export default class ShowDialog extends Component {
         <span>
           <Button onClick={this.handleViewSchema.bind(this, schema, "JSON Schema")} bsStyle="link" style={{ opacity: 0.2 }}>schema</Button>
           &nbsp;
-          <Button onClick={this.handleViewSchema.bind(this, uiSchema, "UI Schema")} bsStyle="link" style={{ opacity: 0.2 }}>uiSchema</Button>
+          <Button onClick={this.handleViewSchema.bind(this, this.props.uiSchema, "UI Schema")} bsStyle="link" style={{ opacity: 0.2 }}>uiSchema</Button>
+          &nbsp;
+          <Button onClick={this.handleViewSchema.bind(this, uiSchema, "UI Schema2")} bsStyle="link" style={{ opacity: 0.2 }}>uiSchema 2</Button>
           &nbsp;
           <Button bsStyle="danger" onClick={this.handleDeleteButtonClicked.bind(this)}><i className="glyphicon glyphicon-trash" />Delete</Button>
           &nbsp;

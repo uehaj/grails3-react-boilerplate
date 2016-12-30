@@ -24,10 +24,16 @@ export default class AlertBox extends Component {
   }
 
   static viewJson({ title, json }) {
+    const replacer = (k, v) => {
+      if (typeof v === 'function') {
+        return v.toString().replace(/{(.|\n)*/m, '').replace(/^function /, '');
+      }
+      return v;
+    };
     return modalify(props => (
       <AlertBox title={title} yes={'ok'} {...props}>
         <Highlight className="androidstudio">
-          {JSON.stringify(json, null, 2)}
+          {JSON.stringify(json, replacer, 2)}
         </Highlight>
       </AlertBox>
     ))();
