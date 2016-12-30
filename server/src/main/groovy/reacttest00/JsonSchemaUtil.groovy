@@ -62,7 +62,8 @@ class JsonSchemaUtil {
       ]];
   }
 
-  private static Map<String, String> genSchemaType(GrailsDomainClassProperty property) {
+  private static Map<String, String> genSchemaTypeAndTitle(GrailsDomainClassProperty property) {
+    Map result = [title: property.name];
     Class type = property.type;
     switch (type) {
     case java.lang.Byte:
@@ -72,18 +73,19 @@ class JsonSchemaUtil {
     case java.lang.Long:
     case java.lang.Float:
     case java.lang.Double:
-        return [type: 'number']
+        return [type: 'number', *:result]
     case java.lang.Boolean:
-        return [type: 'boolean']
+        return [type: 'boolean', *:result]
     case java.util.Date:
-        return [type: 'string', format:'date-time']
+        return [type: 'string', format:'date-time', *:result]
     case java.lang.String:
-        return [type: 'string']
+        return [type: 'string', *:result]
     default:
         if (property.manyToOne || property.oneToOne) {
-          return genSchemaManyToOne(property)
+          println property
+          return [*:genSchemaManyToOne(property), title:property.type.name]
         }
-        return [type: 'string']
+        return [type: 'string', *:result]
     }
   }
 
@@ -144,11 +146,7 @@ class JsonSchemaUtil {
   }
 
   static Object genSchemaProperty(GrailsDomainClass domainClass, GrailsDomainClassProperty property) {
-    def result = [
-      *:genSchemaType(property),
-      title: property.name,
-      //description: "field of "+property.name,
-    ]
+    def result = genSchemaTypeAndTitle(property)
     def constrainedProperty = domainClass.constrainedProperties[property.name]
     constrainedProperty?.appliedConstraints?.each { constraint ->
       result += constraintsToSchema(constraint)
