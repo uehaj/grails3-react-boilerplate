@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Button } from 'react-bootstrap';
 import ModalForm from '../components/ModalForm';
-import AlertBox from '../components/AlertBox';
+import SchemaLinks from './SchemaLinks';
 
 /**
  * Form for create Domain class on a modal dialog.
@@ -16,10 +16,6 @@ export default class CreateDialog extends Component {
 
   handleSubmit({ formData }) {
     this.props.onSubmit(formData);
-  }
-
-  handleViewSchema(json, title) {
-    AlertBox.viewJson({ json, title });
   }
 
   render() {
@@ -42,9 +38,10 @@ export default class CreateDialog extends Component {
         liveValidate
       >
         <span>
-          <Button onClick={this.handleViewSchema.bind(this, schema, "JSON Schema")} bsStyle="link" style={{ opacity: 0.2 }}>schema</Button>
-          &nbsp;
-          <Button onClick={this.handleViewSchema.bind(this, uiSchema, "UI Schema")} bsStyle="link" style={{ opacity: 0.2 }}>uiSchema</Button>
+          {
+            this.props.config.SHOW_SCHEMA_LINKS &&
+              <SchemaLinks schema={schema} uiSchema={uiSchema} />
+          }
           &nbsp;
           <Button bsStyle="primary" type="submit">Create</Button>
           &nbsp;
@@ -61,4 +58,9 @@ CreateDialog.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   schema: PropTypes.shape({}).isRequired,
   uiSchema: PropTypes.objectOf(PropTypes.object).isRequired,
+  config: PropTypes.objectOf(PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string,
+    PropTypes.bool,
+  ])).isRequired,
 };

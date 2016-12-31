@@ -5,7 +5,7 @@ const CLIENT_VERSION = pjson.version;
 const REACT_VERSION = pjson.dependencies.react;
 const NAVBAR_SECOND_LEVEL_DIRECTION = 0; // 0 for holizontal, Other for vertical
 const SHOW_BREADCRUMBS = true;
-const SHOW_SCHEMA_LINKS = false;
+const SHOW_SCHEMA_LINKS = true;
 
 export default {
   SERVER_URL,

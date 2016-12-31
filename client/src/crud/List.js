@@ -8,6 +8,7 @@ import CreateDialog from './CreateDialog';
 import ShowDialog from './ShowDialog';
 import EditDialog from './EditDialog';
 import loadingIcon from '../images/loading.svg';
+import SchemaLinks from './SchemaLinks';
 
 /**
  * List Domain class instances.
@@ -169,20 +170,15 @@ export default class List extends Component {
           ? <img src={loadingIcon} className={'App-loading'} alt={'loading'} />
           : null;
 
-    const schemaLinks = this.props.config.SHOW_SCHEMA_LINKS
-          ? (
-            <div>
-              <Button onClick={this.handleViewSchema.bind(this, schema, "JSON Schema")} bsStyle="link" style={{ opacity: 0.2 }}>schema</Button>
-              <Button onClick={this.handleViewSchema.bind(this, uiSchema, "UI Schema")} bsStyle="link" style={{ opacity: 0.2 }}>uiSchema</Button>
-            </div>)
-          : null;
-
     return (
       <div>
         <h1>
           {title}
           {loadingAnimation}
-          {schemaLinks}
+          {
+            this.props.config.SHOW_SCHEMA_LINKS &&
+              <SchemaLinks schema={schema} uiSchema={uiSchema} />
+          }
         </h1>
         <Table
           tableData={this.state.entityList}
@@ -200,6 +196,7 @@ export default class List extends Component {
           schema={{ title: `Create ${title}`, ...schema }}
           uiSchema={uiSchema}
           api={api}
+          config={this.props.config}
         />
         <ShowDialog
           show={this.state.showDialogVisible}
@@ -210,6 +207,7 @@ export default class List extends Component {
           schema={schema}
           uiSchema={uiSchema}
           api={api}
+          config={this.props.config}
         />
         <EditDialog
           show={this.state.editDialogVisible}
@@ -219,6 +217,7 @@ export default class List extends Component {
           schema={{ title: `Edit ${title}`, ...schema }}
           uiSchema={uiSchema}
           api={api}
+          config={this.props.config}
         />
       </div>
     );
@@ -233,6 +232,6 @@ List.propTypes = {
   config: PropTypes.objectOf(PropTypes.oneOfType([
     PropTypes.number,
     PropTypes.string,
-    PropTypes.boolean,
+    PropTypes.bool,
   ])).isRequired,
 };

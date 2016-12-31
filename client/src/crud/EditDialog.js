@@ -1,15 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import { Button } from 'react-bootstrap';
 import ModalForm from '../components/ModalForm';
-import AlertBox from '../components/AlertBox';
+import SchemaLinks from './SchemaLinks';
 
 /**
  * Form for edit existing Domain class on a modal dialog.
  */
 export default class EditDialog extends Component {
-  static handleViewSchema(json, title) {
-    AlertBox.viewJson({ json, title });
-  }
 
   constructor(props) {
     super(props);
@@ -57,10 +54,10 @@ export default class EditDialog extends Component {
         onSubmit={this.handleSubmit.bind(this)}
       >
         <span>
-          <Button onClick={EditDialog.handleViewSchema.bind(this, schema, 'JSON Schema')} bsStyle="link" style={{ opacity: 0.2 }}>schema</Button>
-          &nbsp;
-          <Button onClick={EditDialog.handleViewSchema.bind(this, uiSchema, 'UI Schema')} bsStyle="link" style={{ opacity: 0.2 }}>uiSchema</Button>
-          &nbsp;
+          {
+            this.props.config.SHOW_SCHEMA_LINKS &&
+              <SchemaLinks schema={schema} uiSchema={uiSchema} />
+          }
           <Button bsStyle="primary" type="submit">Update</Button>
           &nbsp;
           <Button onClick={this.props.onClose}>Cancel</Button>
@@ -78,4 +75,9 @@ EditDialog.propTypes = {
   schema: PropTypes.shape({ title: PropTypes.string }),
   uiSchema: PropTypes.objectOf(PropTypes.object).isRequired,
   api: PropTypes.objectOf(PropTypes.func).isRequired,
+  config: PropTypes.objectOf(PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string,
+    PropTypes.bool,
+  ])).isRequired,
 };

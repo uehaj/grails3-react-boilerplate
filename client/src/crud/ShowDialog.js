@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Button } from 'react-bootstrap';
 import ModalForm from '../components/ModalForm';
-import AlertBox from '../components/AlertBox';
+import SchemaLinks from './SchemaLinks';
 
 /**
  * Show Domain class on a modal dialog.
@@ -11,7 +11,11 @@ export default class ShowDialog extends Component {
   /* replace input tag to normal text */
   static makeStatic(schema) {
     const StaticText = props => <div>{props.value}</div>;
-    const RelationValueText = props => <div>[{props.toString()}]</div>;
+    const RelationValueText = props => {
+      const ids = props.schema;
+      const index = ids.enum.findIndex(elem => elem === props.value);
+      return <div>{ids.enumNames[index]}</div>;
+    };
 
     // eslint-disable-next-line
     const { version, ...propsWithoutVersion } = schema.properties;
@@ -52,11 +56,6 @@ export default class ShowDialog extends Component {
     }
   }
 
-  // eslint-disable-next-line
-  handleViewSchema(json, title) {
-    AlertBox.viewJson({ json, title });
-  }
-
   handleDeleteButtonClicked() {
     this.props.onDeleteButtonClicked([this.props.selectedId]);
     this.props.onClose();
@@ -84,12 +83,10 @@ export default class ShowDialog extends Component {
         liveValidate
       >
         <span>
-          <Button onClick={this.handleViewSchema.bind(this, schema, 'JSON Schema')} bsStyle="link" style={{ opacity: 0.2 }}>schema</Button>
-          &nbsp;
-          <Button onClick={this.handleViewSchema.bind(this, this.props.uiSchema, 'UI Schema')} bsStyle="link" style={{ opacity: 0.2 }}>uiSchema</Button>
-          &nbsp;
-          <Button onClick={this.handleViewSchema.bind(this, uiSchema, 'UI Schema2')} bsStyle="link" style={{ opacity: 0.2 }}>uiSchema 2</Button>
-          &nbsp;
+          {
+            this.props.config.SHOW_SCHEMA_LINKS &&
+              <SchemaLinks schema={schema} uiSchema={uiSchema} />
+          }
           <Button bsStyle="danger" onClick={this.handleDeleteButtonClicked.bind(this)}><i className="glyphicon glyphicon-trash" />Delete</Button>
           &nbsp;
           <Button bsStyle="primary" onClick={this.props.onEditButtonClicked}><i className="glyphicon glyphicon-pencil" />Edit</Button>
@@ -114,4 +111,9 @@ ShowDialog.propTypes = {
   }),
   uiSchema: PropTypes.objectOf(PropTypes.object).isRequired,
   api: PropTypes.objectOf(PropTypes.func).isRequired,
+  config: PropTypes.objectOf(PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string,
+    PropTypes.bool,
+  ])).isRequired,
 };

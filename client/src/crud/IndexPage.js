@@ -46,11 +46,10 @@ export default function IndexPage(props) {
 }
 
 IndexPage.propTypes = {
-  route: PropTypes.objectOf(PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.object,
-    PropTypes.func,
-  ])).isRequired,
   routes: PropTypes.arrayOf(PropTypes.object).isRequired,
-  params: PropTypes.shape({ selectedId: PropTypes.number }),
+  params: PropTypes.shape({
+    selectedId: PropTypes.number,
+  }),
+  // eslint-disable-next-line
+  route: PropTypes.object,
 };

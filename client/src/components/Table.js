@@ -19,11 +19,11 @@ class ModifiedBootstrapTable extends BootstrapTable {
 
 export default class Table extends Component {
 
-  static resolveRelationValue(schema, name, id) {
+  static resolveRelationValue(schema, name, value) {
     const ids = schema.properties[name].properties.id;
-    const index = ids.enum.findIndex(elem => elem === id);
+    const index = ids.enum.findIndex(elem => elem === value);
     return ids.enumNames[index];
-  };
+  }
 
   handleDeleteButtonClicked() {
     // eslint-disable-next-line

@@ -80,9 +80,13 @@ export default class Routes extends Component {
 }
 
 Routes.propTypes = {
-  config: PropTypes.objectOf(PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.string,
-    PropTypes.boolean,
-  ])).isRequired,
+  config: PropTypes.shape({
+    SERVER_URL: PropTypes.string,
+    CLIENT_VERSION: PropTypes.string,
+    REACT_VERSION: PropTypes.string,
+    NAVBAR_SECOND_LEVEL_DIRECTION: PropTypes.number,
+    SHOW_BREADCRUMBS: PropTypes.bool,
+    SHOW_SCHEMA_LINKS: PropTypes.bool,
+  }).isRequired,
 };
+
