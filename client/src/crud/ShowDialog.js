@@ -11,6 +11,7 @@ export default class ShowDialog extends Component {
   /* replace input tag to normal text */
   static makeStatic(schema) {
     const StaticText = props => <div>{props.value}</div>;
+    const RelationValueText = props => <div>[{props.toString()}]</div>;
 
     // eslint-disable-next-line
     const { version, ...propsWithoutVersion } = schema.properties;
@@ -19,10 +20,18 @@ export default class ShowDialog extends Component {
       .reduce(
         (map, key) => {
           if (schema.properties[key].type === 'object') {
-            return { ...map, [key]: { 'ui:widget': StaticText, ...ShowDialog.makeStatic(schema.properties[key]) } };
-          } else {
-            return { ...map, [key]: { 'ui:widget': StaticText } };
+            //            return { ...map, [key]: { 'ui:widget': StaticText, ...ShowDialog.makeStatic(schema.properties[key]) } };
+            return {
+              ...map,
+              [key]: {
+                'ui:widget': StaticText,
+                id: {
+                  'ui:widget': RelationValueText,
+                }
+              }
+            };
           }
+          return { ...map, [key]: { 'ui:widget': StaticText } };
         },
         {});
   }

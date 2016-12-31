@@ -10,16 +10,25 @@ export default function IndexPage(props) {
         ? { paddingTop: 40 } // vertical
         : {};
 
+  const breadcrumbs = (props.route.config.SHOW_BREADCRUMBS)
+        ?
+        (
+          <div style={{ marginTop: '10px' }}>
+            <Breadcrumbs
+              wrapperElement="ol"
+              itemElement="li"
+              customClass="breadcrumb"
+              separator=""
+              routes={props.routes}
+            />
+          </div>
+        )
+        : null;
+
   return (
     <div style={style}>
-      <Breadcrumbs
-        wrapperElement="ol"
-        itemElement="li"
-        customClass="breadcrumb"
-        separator=""
-        routes={props.routes}
-      />
-      <Grid fluid style={{ marginTop: '-20px' }}>
+      {breadcrumbs}
+      <Grid fluid style={{ marginTop: '-15px' }}>
         <Row>
           <Col md={12} style={{ paddingLeft: '1em', paddingRight: '1em' }}>
             <List
@@ -27,6 +36,7 @@ export default function IndexPage(props) {
               uiSchema={uiSchema}
               api={api}
               selectedId={props.params.selectedId}
+              config={props.route.config}
             />
           </Col>
         </Row>

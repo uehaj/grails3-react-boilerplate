@@ -169,13 +169,20 @@ export default class List extends Component {
           ? <img src={loadingIcon} className={'App-loading'} alt={'loading'} />
           : null;
 
+    const schemaLinks = this.props.config.SHOW_SCHEMA_LINKS
+          ? (
+            <div>
+              <Button onClick={this.handleViewSchema.bind(this, schema, "JSON Schema")} bsStyle="link" style={{ opacity: 0.2 }}>schema</Button>
+              <Button onClick={this.handleViewSchema.bind(this, uiSchema, "UI Schema")} bsStyle="link" style={{ opacity: 0.2 }}>uiSchema</Button>
+            </div>)
+          : null;
+
     return (
       <div>
         <h1>
           {title}
           {loadingAnimation}
-          <Button onClick={this.handleViewSchema.bind(this, schema, "JSON Schema")} bsStyle="link" style={{ opacity: 0.2 }}>schema</Button>
-          <Button onClick={this.handleViewSchema.bind(this, uiSchema, "UI Schema")} bsStyle="link" style={{ opacity: 0.2 }}>uiSchema</Button>
+          {schemaLinks}
         </h1>
         <Table
           tableData={this.state.entityList}
@@ -219,9 +226,13 @@ export default class List extends Component {
 }
 
 List.propTypes = {
-  schema: PropTypes.shape({}),
+  schema: PropTypes.shape({}).isRequired,
   uiSchema: PropTypes.objectOf(PropTypes.object).isRequired,
   api: PropTypes.objectOf(PropTypes.func).isRequired,
   selectedId: PropTypes.string,
+  config: PropTypes.objectOf(PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string,
+    PropTypes.boolean,
+  ])).isRequired,
 };
-

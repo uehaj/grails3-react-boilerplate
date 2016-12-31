@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { Router, Route, IndexRedirect, browserHistory } from 'react-router';
 
 import 'bootstrap/dist/css/bootstrap.css';
@@ -7,9 +7,8 @@ import TopLevel from './layout/TopLevel';
 import SecondLevel from './layout/SecondLevel';
 import NotFound from './layout/NotFound';
 import IndexPage from './crud/IndexPage';
-//import Page1 from './components/Page1';
+// import Page1 from './components/Page1';
 import createRestApi from './util/api';
-import config from './config';
 
 export default class Routes extends Component {
 
@@ -49,7 +48,7 @@ export default class Routes extends Component {
         schema={info.schema}
         uiSchema={info.uiSchema}
         component={IndexPage}
-        config={config}
+        config={this.props.config}
       />);
 
     return (
@@ -58,7 +57,7 @@ export default class Routes extends Component {
           {/* add top level items here.*/}
           <IndexRedirect from="*" to="entities" />
           {/* crud pages. */}
-          <Route path="entities" name="Entities" component={SecondLevel} config={config}>
+          <Route path="entities" name="Entities" component={SecondLevel} config={this.props.config}>
             {IndexRoute}
             {entitiesRoutes}
           </Route>
@@ -79,3 +78,11 @@ export default class Routes extends Component {
     );
   }
 }
+
+Routes.propTypes = {
+  config: PropTypes.objectOf(PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string,
+    PropTypes.boolean,
+  ])).isRequired,
+};

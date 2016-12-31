@@ -19,6 +19,12 @@ class ModifiedBootstrapTable extends BootstrapTable {
 
 export default class Table extends Component {
 
+  static resolveRelationValue(schema, name, id) {
+    const ids = schema.properties[name].properties.id;
+    const index = ids.enum.findIndex(elem => elem === id);
+    return ids.enumNames[index];
+  };
+
   handleDeleteButtonClicked() {
     // eslint-disable-next-line
     this.refs.table.deleteSelected(
@@ -54,18 +60,12 @@ export default class Table extends Component {
       return propsWithoutVersion;
     }
 
-    const resolveRelationValue = (name, id) => {
-      const ids = this.props.schema.properties[name].properties.id;
-      const index = ids.enum.findIndex(elem => elem === id);
-      return ids.enumNames[index];
-    };
-
-    function dataFormatter(cell, row, name) {
+    const dataFormatter = (cell, row, name) => {
       if (typeof cell === 'object') {
-        return resolveRelationValue(name, cell.id);
+        return Table.resolveRelationValue(this.props.schema, name, cell.id);
       }
       return cell;
-    }
+    };
 
     const Header = (
       Object.keys(headerProperties(this.props.schema)).map(

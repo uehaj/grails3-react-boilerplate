@@ -6,7 +6,7 @@ class Author {
   String email
 
   String toString() {
-    "$name($id)"
+    name
   }
 
   static constraints = {

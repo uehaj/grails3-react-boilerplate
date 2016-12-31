@@ -7,6 +7,10 @@ import AlertBox from '../components/AlertBox';
  * Form for edit existing Domain class on a modal dialog.
  */
 export default class EditDialog extends Component {
+  static handleViewSchema(json, title) {
+    AlertBox.viewJson({ json, title });
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -32,16 +36,11 @@ export default class EditDialog extends Component {
     }
   }
 
-  handleViewSchema(json, title) {
-    AlertBox.viewJson({ json, title });
-  }
-
   render() {
-
     const schema = {
       ...this.props.schema,
       title: `${this.props.schema.title}:${this.props.selectedId}`,
-    }
+    };
 
     const uiSchema = {
       ...this.props.uiSchema,
@@ -58,9 +57,9 @@ export default class EditDialog extends Component {
         onSubmit={this.handleSubmit.bind(this)}
       >
         <span>
-          <Button onClick={this.handleViewSchema.bind(this, schema, "JSON Schema")} bsStyle="link" style={{ opacity: 0.2 }}>schema</Button>
+          <Button onClick={EditDialog.handleViewSchema.bind(this, schema, 'JSON Schema')} bsStyle="link" style={{ opacity: 0.2 }}>schema</Button>
           &nbsp;
-          <Button onClick={this.handleViewSchema.bind(this, uiSchema, "UI Schema")} bsStyle="link" style={{ opacity: 0.2 }}>uiSchema</Button>
+          <Button onClick={EditDialog.handleViewSchema.bind(this, uiSchema, 'UI Schema')} bsStyle="link" style={{ opacity: 0.2 }}>uiSchema</Button>
           &nbsp;
           <Button bsStyle="primary" type="submit">Update</Button>
           &nbsp;
@@ -76,7 +75,7 @@ EditDialog.propTypes = {
   selectedId: PropTypes.number,
   onClose: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
-  schema: PropTypes.shape({}),
+  schema: PropTypes.shape({ title: PropTypes.string }),
   uiSchema: PropTypes.objectOf(PropTypes.object).isRequired,
   api: PropTypes.objectOf(PropTypes.func).isRequired,
 };
