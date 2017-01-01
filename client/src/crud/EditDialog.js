@@ -55,7 +55,7 @@ export default class EditDialog extends Component {
       >
         <span>
           {
-            this.props.config.SHOW_SCHEMA_LINKS &&
+            this.props.crudConfig.SHOW_SCHEMA_LINKS &&
               <SchemaLinks schema={schema} uiSchema={uiSchema} />
           }
           <Button bsStyle="primary" type="submit">Update</Button>
@@ -75,7 +75,7 @@ EditDialog.propTypes = {
   schema: PropTypes.shape({ title: PropTypes.string }),
   uiSchema: PropTypes.objectOf(PropTypes.object).isRequired,
   api: PropTypes.objectOf(PropTypes.func).isRequired,
-  config: PropTypes.objectOf(PropTypes.oneOfType([
+  crudConfig: PropTypes.objectOf(PropTypes.oneOfType([
     PropTypes.number,
     PropTypes.string,
     PropTypes.bool,

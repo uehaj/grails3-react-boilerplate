@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import { Button } from 'react-bootstrap';
 import 'react-bootstrap-table/css/react-bootstrap-table.css';
 
 import AlertBox from '../components/AlertBox';
@@ -141,6 +140,7 @@ export default class List extends Component {
       if (result === 'Delete') {
         rowKeys.forEach(async (entityId) => {
           await api.deleteEntity(entityId);
+          this.setState({ selectedId: null });
           this.reloadData();
         });
       }
@@ -176,7 +176,7 @@ export default class List extends Component {
           {title}
           {loadingAnimation}
           {
-            this.props.config.SHOW_SCHEMA_LINKS &&
+            this.props.crudConfig.SHOW_SCHEMA_LINKS &&
               <SchemaLinks schema={schema} uiSchema={uiSchema} />
           }
         </h1>
@@ -196,7 +196,7 @@ export default class List extends Component {
           schema={{ title: `Create ${title}`, ...schema }}
           uiSchema={uiSchema}
           api={api}
-          config={this.props.config}
+          crudConfig={this.props.crudConfig}
         />
         <ShowDialog
           show={this.state.showDialogVisible}
@@ -207,7 +207,7 @@ export default class List extends Component {
           schema={schema}
           uiSchema={uiSchema}
           api={api}
-          config={this.props.config}
+          crudConfig={this.props.crudConfig}
         />
         <EditDialog
           show={this.state.editDialogVisible}
@@ -217,7 +217,7 @@ export default class List extends Component {
           schema={{ title: `Edit ${title}`, ...schema }}
           uiSchema={uiSchema}
           api={api}
-          config={this.props.config}
+          crudConfig={this.props.crudConfig}
         />
       </div>
     );
@@ -229,7 +229,7 @@ List.propTypes = {
   uiSchema: PropTypes.objectOf(PropTypes.object).isRequired,
   api: PropTypes.objectOf(PropTypes.func).isRequired,
   selectedId: PropTypes.string,
-  config: PropTypes.objectOf(PropTypes.oneOfType([
+  crudConfig: PropTypes.objectOf(PropTypes.oneOfType([
     PropTypes.number,
     PropTypes.string,
     PropTypes.bool,

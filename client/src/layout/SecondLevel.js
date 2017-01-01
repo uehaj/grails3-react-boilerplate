@@ -93,7 +93,7 @@ SecondLevelNavbarVertical.propTypes = {
  * +-----------------------+
  */
 export default function SecondLevel(props) {
-  return (props.route.config.NAVBAR_SECOND_LEVEL_DIRECTION === 0)
+  return (props.route.crudConfig.NAVBAR_SECOND_LEVEL_DIRECTION === 0)
     ? <SecondLevelNavbarHorizontal {...props} />
     : <SecondLevelNavbarVertical {...props} />;
 }

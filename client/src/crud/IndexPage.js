@@ -6,11 +6,11 @@ import List from './List';
 export default function IndexPage(props) {
   const { api, schema, uiSchema } = props.route;
 
-  const style = (props.route.config.NAVBAR_SECOND_LEVEL_DIRECTION !== 0)
+  const style = (props.route.crudConfig.NAVBAR_SECOND_LEVEL_DIRECTION !== 0)
         ? { paddingTop: 40 } // vertical
         : {};
 
-  const breadcrumbs = (props.route.config.SHOW_BREADCRUMBS)
+  const breadcrumbs = (props.route.crudConfig.SHOW_BREADCRUMBS)
         ?
         (
           <div style={{ marginTop: '10px' }}>
@@ -36,7 +36,7 @@ export default function IndexPage(props) {
               uiSchema={uiSchema}
               api={api}
               selectedId={props.params.selectedId}
-              config={props.route.config}
+              crudConfig={props.route.crudConfig}
             />
           </Col>
         </Row>

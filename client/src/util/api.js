@@ -1,8 +1,4 @@
-import config from '../config';
-
-const urlBase = config.SERVER_URL;
-
-async function getEntities(entityName) {
+async function getEntities(urlBase, entityName) {
   const url = `${urlBase}${entityName}?max=100`;
   const resp = await fetch(url, {
     method: 'GET',
@@ -10,7 +6,7 @@ async function getEntities(entityName) {
   return resp.ok ? Promise.resolve(resp) : Promise.reject(resp);
 }
 
-async function getEntity(entityName, id) {
+async function getEntity(urlBase, entityName, id) {
   const url = `${urlBase}${entityName}/${id}`;
   const resp = await fetch(url, {
     method: 'GET',
@@ -18,7 +14,7 @@ async function getEntity(entityName, id) {
   return resp.ok ? Promise.resolve(resp) : Promise.reject(resp);
 }
 
-async function updateEntity(entityName, entity) {
+async function updateEntity(urlBase, entityName, entity) {
   const url = `${urlBase}${entityName}/${entity.id}`;
   const resp = await fetch(url, {
     method: 'PUT',
@@ -28,7 +24,7 @@ async function updateEntity(entityName, entity) {
   return resp.ok ? Promise.resolve(resp) : Promise.reject(resp);
 }
 
-async function createEntity(entityName, entity) {
+async function createEntity(urlBase, entityName, entity) {
   const url = `${urlBase}${entityName}`;
   const resp = await fetch(url, {
     method: 'POST',
@@ -38,7 +34,7 @@ async function createEntity(entityName, entity) {
   return resp.ok ? Promise.resolve(resp) : Promise.reject(resp);
 }
 
-async function deleteEntity(entityName, id) {
+async function deleteEntity(urlBase, entityName, id) {
   const url = `${urlBase}${entityName}/${id}.json`;
   const resp = await fetch(url, {
     method: 'DELETE',
@@ -46,13 +42,12 @@ async function deleteEntity(entityName, id) {
   return resp.ok ? Promise.resolve(resp) : Promise.reject(resp);
 }
 
-export default function createRestApi(entityName) {
+export default function createRestApi(urlBase, entityName) {
   return {
-    getEntities: getEntities.bind(null, entityName),
-    getEntity: getEntity.bind(null, entityName),
-    updateEntity: updateEntity.bind(null, entityName),
-    createEntity: createEntity.bind(null, entityName),
-    deleteEntity: deleteEntity.bind(null, entityName),
+    getEntities: getEntities.bind(null, urlBase, entityName),
+    getEntity: getEntity.bind(null, urlBase, entityName),
+    updateEntity: updateEntity.bind(null, urlBase, entityName),
+    createEntity: createEntity.bind(null, urlBase, entityName),
+    deleteEntity: deleteEntity.bind(null, urlBase, entityName),
   };
 }
-

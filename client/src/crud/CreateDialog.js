@@ -39,7 +39,7 @@ export default class CreateDialog extends Component {
       >
         <span>
           {
-            this.props.config.SHOW_SCHEMA_LINKS &&
+            this.props.crudConfig.SHOW_SCHEMA_LINKS &&
               <SchemaLinks schema={schema} uiSchema={uiSchema} />
           }
           &nbsp;
@@ -58,7 +58,7 @@ CreateDialog.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   schema: PropTypes.shape({}).isRequired,
   uiSchema: PropTypes.objectOf(PropTypes.object).isRequired,
-  config: PropTypes.objectOf(PropTypes.oneOfType([
+  crudConfig: PropTypes.objectOf(PropTypes.oneOfType([
     PropTypes.number,
     PropTypes.string,
     PropTypes.bool,

@@ -18,7 +18,8 @@ export default class Routes extends Component {
   }
 
   async componentWillMount() {
-    const entityApi = createRestApi('domainInfo');
+    const urlBase = this.props.crudConfig.SERVER_URL;
+    const entityApi = createRestApi(urlBase, 'domainInfo');
     try {
       const resp = await entityApi.getEntities();
       const entitiesInfo = await resp.json();
@@ -39,16 +40,18 @@ export default class Routes extends Component {
 
     const IndexRoute = firstEntity.map(item => <IndexRedirect key="first" from="*" to={item.name} />);
 
+    const urlBase = this.props.crudConfig.SERVER_URL;
+
     const entitiesRoutes = this.state.entitiesInfo.map(info =>
       <Route
         path={`${info.name}(/:selectedId)`}
         name={info.name}
         key={info.name}
-        api={createRestApi(info.name)}
+        api={createRestApi(urlBase, info.name)}
         schema={info.schema}
         uiSchema={info.uiSchema}
         component={IndexPage}
-        config={this.props.config}
+        crudConfig={this.props.crudConfig}
       />);
 
     return (
@@ -57,7 +60,7 @@ export default class Routes extends Component {
           {/* add top level items here.*/}
           <IndexRedirect from="*" to="entities" />
           {/* crud pages. */}
-          <Route path="entities" name="Entities" component={SecondLevel} config={this.props.config}>
+          <Route path="entities" name="Entities" component={SecondLevel} crudConfig={this.props.crudConfig}>
             {IndexRoute}
             {entitiesRoutes}
           </Route>
@@ -80,7 +83,7 @@ export default class Routes extends Component {
 }
 
 Routes.propTypes = {
-  config: PropTypes.shape({
+  crudConfig: PropTypes.shape({
     SERVER_URL: PropTypes.string,
     CLIENT_VERSION: PropTypes.string,
     REACT_VERSION: PropTypes.string,
