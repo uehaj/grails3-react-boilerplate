@@ -57,6 +57,7 @@ export default class List extends Component {
         this.setState({ entityList: json });
       }
     } catch (err) {
+      console.log(err);
       const json = await err.json();
       AlertBox.error(`Error: ${json.message}`);
       this.setState({ entityList: [] });

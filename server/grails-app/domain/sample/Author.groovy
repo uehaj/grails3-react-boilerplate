@@ -5,6 +5,8 @@ class Author {
   Integer age
   String email
 
+  static hasMany = [schedules: Schedule]
+
   String toString() {
     name
   }

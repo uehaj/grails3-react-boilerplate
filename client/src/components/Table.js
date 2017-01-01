@@ -19,10 +19,16 @@ class ModifiedBootstrapTable extends BootstrapTable {
 
 export default class Table extends Component {
 
-  static resolveRelationValue(schema, name, value) {
-    const ids = schema.properties[name].properties.id;
-    const index = ids.enum.findIndex(elem => elem === value);
-    return ids.enumNames[index];
+  static resolveRelationValue(schema, name, cellValue) {
+    if (schema.properties[name].associationType === 'many-to-one' ||
+        schema.properties[name].associationType === 'one-to-one') {
+      const ids = schema.properties[name].properties.id;
+      const index = ids.enum.findIndex(elem => elem === cellValue.id);
+      return ids.enumNames[index];
+    } else if (schema.properties[name].associationType === 'one-to-many') {
+      return cellValue.reduce((acc, elem) => [...acc, elem.id], []).toString();
+    }
+    return cellValue;
   }
 
   handleDeleteButtonClicked() {
@@ -33,7 +39,8 @@ export default class Table extends Component {
   }
 
   render() {
-    const { tableData, onRowClicked, onCreateButtonClicked, onRefreshButtonClicked, schema, crudConfig } = this.props;
+    const { tableData, onRowClicked, onCreateButtonClicked,
+            onRefreshButtonClicked, schema, crudConfig } = this.props;
 
     const Buttons = (
       <div style={{ marginLeft: 10 }}>
@@ -54,8 +61,8 @@ export default class Table extends Component {
       </div>
     );
 
-    const headerProperties = (schema) => {
-      const result = Object.entries(schema.properties)
+    const headerProperties = (scm) => {
+      const result = Object.entries(scm.properties)
             .filter(([k, _]) => crudConfig.HIDDEN_TABLE_FIELDS.indexOf(k) === -1)
             .reduce((acc, [kk, vv]) => ({ ...acc, [kk]: vv }), {});
       return result;
@@ -63,7 +70,7 @@ export default class Table extends Component {
 
     const dataFormatter = (cell, row, name) => {
       if (typeof cell === 'object') {
-        return Table.resolveRelationValue(schema, name, cell.id);
+        return Table.resolveRelationValue(schema, name, cell);
       }
       return cell;
     };

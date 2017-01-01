@@ -8,37 +8,6 @@ import SchemaLinks from './SchemaLinks';
  */
 export default class ShowDialog extends Component {
 
-  /* replace input tag to normal text */
-  static makeStatic(schema) {
-    const StaticText = props => <div>{props.value}</div>;
-    const RelationValueText = props => {
-      const ids = props.schema;
-      const index = ids.enum.findIndex(elem => elem === props.value);
-      return <div>{ids.enumNames[index]}</div>;
-    };
-
-    // eslint-disable-next-line
-    const { version, ...propsWithoutVersion } = schema.properties;
-
-    return Object.keys(propsWithoutVersion)
-      .reduce(
-        (map, key) => {
-          if (schema.properties[key].type === 'object') {
-            return {
-              ...map,
-              [key]: {
-                'ui:widget': StaticText,
-                id: {
-                  'ui:widget': RelationValueText,
-                },
-              },
-            };
-          }
-          return { ...map, [key]: { 'ui:widget': StaticText } };
-        },
-        {});
-  }
-
   constructor(props) {
     super(props);
     this.state = {
@@ -60,6 +29,47 @@ export default class ShowDialog extends Component {
     this.props.onClose();
   }
 
+  /* replace input tag to normal text */
+  makeStatic() {
+    const { schema, crudConfig } = this.props;
+
+    const StaticText = props => <div>{props.value}</div>;
+
+    const RelationValueText = (key, props) => {
+      console.log('key=',key,' props=',props);
+      const ids = props.schema;
+      if (ids.properties[key].associationType === 'many-to-many' ||
+          ids.properties[key].associationType === 'one-to-one') {
+        const index = ids.enum.findIndex(elem => elem === props.value);
+        return <div>{ids.enumNames[index]}</div>;
+      } else if (ids.properties[key].associationType === 'one-to-many') {
+        console.log(key);
+      }
+      return props;
+    };
+
+    return Object.keys(schema.properties)
+      .filter(k => crudConfig.HIDDEN_FORM_FIELDS.indexOf(k) === -1)
+      .reduce(
+        (map, key) => {
+          if (schema.properties[key].associationType) {
+            console.log(schema.properties[key].associationType);
+            return {
+              ...map,
+              [key]: {
+//                'ui:widget': StaticText,
+                'ui:widget': RelationValueText.bind(this, key),
+                id: {
+                  'ui:widget': RelationValueText.bind(this, key),
+                },
+              },
+            };
+          }
+          return { ...map, [key]: { 'ui:widget': StaticText } };
+        },
+        {});
+  }
+
   render() {
     const schema = {
       ...this.props.schema,
@@ -70,7 +80,7 @@ export default class ShowDialog extends Component {
           .reduce((accum, elem) => ({ [elem]: { 'ui:widget': 'hidden' }, ...accum }), {});
 
     const uiSchema = {
-      ...ShowDialog.makeStatic(this.props.schema),
+      ...this.makeStatic(),
       ...this.props.uiSchema,
       ...hiddenFields,
     };
@@ -89,9 +99,11 @@ export default class ShowDialog extends Component {
             this.props.crudConfig.SHOW_SCHEMA_LINKS &&
               <SchemaLinks schema={schema} uiSchema={uiSchema} />
           }
-          <Button bsStyle="danger" onClick={this.handleDeleteButtonClicked.bind(this)}><i className="glyphicon glyphicon-trash" />Delete</Button>
+          <Button bsStyle="danger" onClick={this.handleDeleteButtonClicked.bind(this)}>
+            <i className="glyphicon glyphicon-trash" />Delete</Button>
           &nbsp;
-          <Button bsStyle="primary" onClick={this.props.onEditButtonClicked}><i className="glyphicon glyphicon-pencil" />Edit</Button>
+          <Button bsStyle="primary" onClick={this.props.onEditButtonClicked}>
+            <i className="glyphicon glyphicon-pencil" />Edit</Button>
           &nbsp;
           <Button onClick={this.props.onClose}>Close</Button>
         </span>

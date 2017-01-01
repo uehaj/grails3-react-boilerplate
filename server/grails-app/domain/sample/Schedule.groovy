@@ -3,5 +3,6 @@ package sample
 class Schedule {
   Date date
   String name
-  Author author
+
+  static belongsTo = [author: Author]
 }

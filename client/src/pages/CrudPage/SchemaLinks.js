@@ -13,7 +13,7 @@ export default class SchemaLinks extends Component {
     return (
       <span>
         <Button onClick={SchemaLinks.handleViewSchema.bind(null, schema, 'JSON Schema')} bsStyle="link" style={{ opacity: 0.2 }}>JSON Schema</Button>
-        <Button onClick={SchemaLinks.handleViewSchema.bind(null, uiSchema, 'UI Schema')} bsStyle="link" style={{ opacity: 0.2 }}>UI Schema 2</Button>
+        <Button onClick={SchemaLinks.handleViewSchema.bind(null, uiSchema, 'UI Schema')} bsStyle="link" style={{ opacity: 0.2 }}>UI Schema</Button>
       </span>
     );
   }

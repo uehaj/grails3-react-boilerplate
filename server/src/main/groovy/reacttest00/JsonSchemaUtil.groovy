@@ -55,11 +55,20 @@ class JsonSchemaUtil {
   private static String[] excludedProperties = Event.allEvents.toList() << 'dateCreated' << 'lastUpdated'
 
   private static genSchemaManyToOne(GrailsDomainClassProperty property) {
-    return [type: 'object', required: 'id', properties: [
+    return [type: 'object', associationType: "many-to-one", required: 'id', properties: [
         id: [ type: 'number',
               enum: property.type.list().id,
               enumNames: property.type.list().collect{ it.toString() } ] // return Custom labels for enum fields
       ]];
+  }
+
+  private static genSchemaOneToMany(GrailsDomainClassProperty property) {
+    return [type: 'array', associationType: "one-to-many", items:
+            [type: 'object', required: 'id', properties: [
+                id: [ type: 'number' ]
+                ]
+            ]
+           ];
   }
 
   private static Map<String, String> genSchemaTypeAndTitle(GrailsDomainClassProperty property) {
@@ -82,7 +91,10 @@ class JsonSchemaUtil {
         return [type: 'string', *:result]
     default:
         if (property.manyToOne || property.oneToOne) {
-          return [*:genSchemaManyToOne(property), title:property.name]
+          return [*:genSchemaManyToOne(property), *:result]
+        }
+        if (property.oneToMany) {
+          return [*:genSchemaOneToMany(property), *:result]
         }
         return [type: 'string', *:result]
     }
