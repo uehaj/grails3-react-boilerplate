@@ -48,9 +48,10 @@ export default class List extends Component {
   }
 
   async reloadData() {
-    const { api } = this.props;
+    const { api, crudConfig } = this.props;
     try {
-      const resp = await api.getEntities();
+      const max = crudConfig.MAX_TABLEDATA_SIZE;
+      const resp = await api.getEntities(max);
       const json = await resp.json();
       if (!this.ignoreLastFetch) {
         this.setState({ entityList: json });
@@ -188,6 +189,7 @@ export default class List extends Component {
           onRefreshButtonClicked={this.handleRefreshButtonClicked.bind(this)}
           schema={schema}
           api={api}
+          crudConfig={this.props.crudConfig}
         />
         <CreateDialog
           show={this.state.createDialogVisible}
@@ -233,5 +235,6 @@ List.propTypes = {
     PropTypes.number,
     PropTypes.string,
     PropTypes.bool,
+    PropTypes.arrayOf(PropTypes.string),
   ])).isRequired,
 };

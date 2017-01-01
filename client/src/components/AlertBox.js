@@ -11,7 +11,6 @@ const options = {
   },
 };
 
-
 export default class AlertBox extends Component {
 
   static askYesNo({ title, body, yes, no }) {
@@ -61,7 +60,6 @@ export default class AlertBox extends Component {
 
     return (
       <div>
-        <div>
         <Modal.Header>
           <Modal.Title>{this.props.title}</Modal.Title>
         </Modal.Header>
@@ -89,7 +87,6 @@ export default class AlertBox extends Component {
               </Button>
           }
         </Modal.Footer>
-        </div>
       </div>
     );
   }

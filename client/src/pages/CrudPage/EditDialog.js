@@ -39,9 +39,12 @@ export default class EditDialog extends Component {
       title: `${this.props.schema.title}:${this.props.selectedId}`,
     };
 
+    const hiddenFields = this.props.crudConfig.HIDDEN_FORM_FIELDS
+          .reduce((accum, elem) => ({ [elem]: { 'ui:widget': 'hidden' }, ...accum }), {});
+
     const uiSchema = {
       ...this.props.uiSchema,
-      id: { 'ui:widget': 'hidden' },
+      ...hiddenFields,
     };
 
     return (
@@ -79,5 +82,6 @@ EditDialog.propTypes = {
     PropTypes.number,
     PropTypes.string,
     PropTypes.bool,
+    PropTypes.arrayOf(PropTypes.string),
   ])).isRequired,
 };

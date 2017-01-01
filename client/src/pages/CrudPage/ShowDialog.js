@@ -24,15 +24,14 @@ export default class ShowDialog extends Component {
       .reduce(
         (map, key) => {
           if (schema.properties[key].type === 'object') {
-            //            return { ...map, [key]: { 'ui:widget': StaticText, ...ShowDialog.makeStatic(schema.properties[key]) } };
             return {
               ...map,
               [key]: {
                 'ui:widget': StaticText,
                 id: {
                   'ui:widget': RelationValueText,
-                }
-              }
+                },
+              },
             };
           }
           return { ...map, [key]: { 'ui:widget': StaticText } };
@@ -67,10 +66,13 @@ export default class ShowDialog extends Component {
       title: `${this.props.schema.title}:${this.props.selectedId}`,
     };
 
+    const hiddenFields = this.props.crudConfig.HIDDEN_FORM_FIELDS
+          .reduce((accum, elem) => ({ [elem]: { 'ui:widget': 'hidden' }, ...accum }), {});
+
     const uiSchema = {
       ...ShowDialog.makeStatic(this.props.schema),
-      ...this.props.uiSchema, // overrite version:'hidden'
-      id: { 'ui:widget': 'hidden' },
+      ...this.props.uiSchema,
+      ...hiddenFields,
     };
 
     return (
@@ -100,7 +102,6 @@ export default class ShowDialog extends Component {
 
 ShowDialog.propTypes = {
   show: PropTypes.bool.isRequired,
-  // eslint-disable-next-line
   selectedId: PropTypes.number,
   onClose: PropTypes.func.isRequired,
   onEditButtonClicked: PropTypes.func.isRequired,
@@ -115,5 +116,6 @@ ShowDialog.propTypes = {
     PropTypes.number,
     PropTypes.string,
     PropTypes.bool,
+    PropTypes.arrayOf(PropTypes.string),
   ])).isRequired,
 };

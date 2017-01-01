@@ -81,9 +81,6 @@ class JsonUiSchemaUtil {
     def properties = JsonSchemaUtil.reorderProperties(JsonSchemaUtil.resolveProperties(domainClass))
     def result = properties.collectEntries { property ->
       def value = genUiSchemaProperty(domainClass, property)
-      if (property.name == 'version') {
-         value << ['ui:widget':'hidden']
-       }
       def result = (value == [:] ? [:] : [(property.name): value])
       return result
     }

@@ -62,5 +62,6 @@ CreateDialog.propTypes = {
     PropTypes.number,
     PropTypes.string,
     PropTypes.bool,
+    PropTypes.arrayOf(PropTypes.string),
   ])).isRequired,
 };

@@ -33,7 +33,7 @@ export default class Table extends Component {
   }
 
   render() {
-    const { tableData, onRowClicked, onCreateButtonClicked, onRefreshButtonClicked } = this.props;
+    const { tableData, onRowClicked, onCreateButtonClicked, onRefreshButtonClicked, schema, crudConfig } = this.props;
 
     const Buttons = (
       <div style={{ marginLeft: 10 }}>
@@ -54,21 +54,22 @@ export default class Table extends Component {
       </div>
     );
 
-    function headerProperties(schema) {
-      // eslint-disable-next-line
-      const { version, ...propsWithoutVersion } = schema.properties;
-      return propsWithoutVersion;
-    }
+    const headerProperties = (schema) => {
+      const result = Object.entries(schema.properties)
+            .filter(([k, _]) => crudConfig.HIDDEN_TABLE_FIELDS.indexOf(k) === -1)
+            .reduce((acc, [kk, vv]) => ({ ...acc, [kk]: vv }), {});
+      return result;
+    };
 
     const dataFormatter = (cell, row, name) => {
       if (typeof cell === 'object') {
-        return Table.resolveRelationValue(this.props.schema, name, cell.id);
+        return Table.resolveRelationValue(schema, name, cell.id);
       }
       return cell;
     };
 
     const Header = (
-      Object.keys(headerProperties(this.props.schema)).map(
+      Object.keys(headerProperties(schema)).map(
         key => (
           <TableHeaderColumn
             dataField={key}
@@ -119,4 +120,10 @@ Table.propTypes = {
   schema: PropTypes.shape({
     properties: PropTypes.object,
   }).isRequired,
+  crudConfig: PropTypes.objectOf(PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string,
+    PropTypes.bool,
+    PropTypes.arrayOf(PropTypes.string),
+  ])).isRequired,
 };

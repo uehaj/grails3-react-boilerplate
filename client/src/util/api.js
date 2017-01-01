@@ -1,5 +1,7 @@
-async function getEntities(urlBase, entityName) {
-  const url = `${urlBase}${entityName}?max=100`;
+async function getEntities(urlBase, entityName, max = 0) {
+  const url = (max <= 0)
+        ? `${urlBase}${entityName}`
+        : `${urlBase}${entityName}?max=${max}`;
   const resp = await fetch(url, {
     method: 'GET',
   });
