@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { Button } from 'react-bootstrap';
-import ModalForm from '../components/ModalForm';
+import ModalForm from '../../components/ModalForm';
 import SchemaLinks from './SchemaLinks';
 
 /**

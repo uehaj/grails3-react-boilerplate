@@ -6,8 +6,8 @@ import AlertBox from './components/AlertBox';
 import TopLevel from './layout/TopLevel';
 import SecondLevel from './layout/SecondLevel';
 import NotFound from './layout/NotFound';
-import IndexPage from './crud/IndexPage';
-// import Page1 from './components/Page1';
+import CrudPage from './pages/CrudPage';
+import Page1 from './pages/Page1';
 import createRestApi from './util/api';
 
 export default class Routes extends Component {
@@ -50,7 +50,7 @@ export default class Routes extends Component {
         api={createRestApi(urlBase, info.name)}
         schema={info.schema}
         uiSchema={info.uiSchema}
-        component={IndexPage}
+        component={CrudPage}
         crudConfig={this.props.crudConfig}
       />);
 
@@ -65,7 +65,7 @@ export default class Routes extends Component {
             {entitiesRoutes}
           </Route>
 
-          {/*
+          {/**/}
           <Route path="m1" name="MenuItem1" component={SecondLevel}>
             <IndexRedirect from="*" to="p1" />
           </Route>
@@ -73,7 +73,7 @@ export default class Routes extends Component {
             <IndexRedirect from="*" to="p4" />
           </Route>
           <Route path="p1" name="page1" component={Page1} />
-          */}
+          {/**/}
 
         </Route>
         <Route path="*" component={NotFound} />

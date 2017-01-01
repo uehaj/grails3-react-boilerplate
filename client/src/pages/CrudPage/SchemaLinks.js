@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { Button } from 'react-bootstrap';
-import AlertBox from '../components/AlertBox';
+import AlertBox from '../../components/AlertBox';
 
 export default class SchemaLinks extends Component {
 

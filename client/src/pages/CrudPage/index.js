@@ -3,7 +3,7 @@ import { Grid, Row, Col } from 'react-bootstrap';
 import Breadcrumbs from 'react-breadcrumbs';
 import List from './List';
 
-export default function IndexPage(props) {
+function CrudPage(props) {
   const { api, schema, uiSchema } = props.route;
 
   const style = (props.route.crudConfig.NAVBAR_SECOND_LEVEL_DIRECTION !== 0)
@@ -11,7 +11,7 @@ export default function IndexPage(props) {
         : {};
 
   const breadcrumbs = (props.route.crudConfig.SHOW_BREADCRUMBS)
-        ?
+        &&
         (
           <div style={{ marginTop: '10px' }}>
             <Breadcrumbs
@@ -22,8 +22,7 @@ export default function IndexPage(props) {
               routes={props.routes}
             />
           </div>
-        )
-        : null;
+        );
 
   return (
     <div style={style}>
@@ -45,7 +44,7 @@ export default function IndexPage(props) {
   );
 }
 
-IndexPage.propTypes = {
+CrudPage.propTypes = {
   routes: PropTypes.arrayOf(PropTypes.object).isRequired,
   params: PropTypes.shape({
     selectedId: PropTypes.number,
@@ -53,3 +52,5 @@ IndexPage.propTypes = {
   // eslint-disable-next-line
   route: PropTypes.object,
 };
+
+export default CrudPage;

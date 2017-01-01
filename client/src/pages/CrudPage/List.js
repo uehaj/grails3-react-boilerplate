@@ -1,12 +1,12 @@
 import React, { Component, PropTypes } from 'react';
 import 'react-bootstrap-table/css/react-bootstrap-table.css';
 
-import AlertBox from '../components/AlertBox';
-import Table from '../components/Table';
+import AlertBox from '../../components/AlertBox';
+import Table from '../../components/Table';
 import CreateDialog from './CreateDialog';
 import ShowDialog from './ShowDialog';
 import EditDialog from './EditDialog';
-import loadingIcon from '../images/loading.svg';
+import loadingIcon from '../../images/loading.svg';
 import SchemaLinks from './SchemaLinks';
 
 /**
