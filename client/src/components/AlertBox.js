@@ -5,6 +5,13 @@ import { modalify } from 'react-modalify';
 import Highlight from 'react-highlight';
 import 'highlight.js/styles/github.css';
 
+const options = {
+  modalStyles: {
+    marginTop: '100px',
+  },
+};
+
+
 export default class AlertBox extends Component {
 
   static askYesNo({ title, body, yes, no }) {
@@ -12,7 +19,7 @@ export default class AlertBox extends Component {
       <AlertBox title={title} yes={yes} no={no} {...props}>
         {body}
       </AlertBox>
-    ))();
+    ), options)();
   }
 
   static error(error) {
@@ -20,7 +27,7 @@ export default class AlertBox extends Component {
       <AlertBox title={<i className="glyphicon glyphicon-exclamation-sign">Error</i>} yes={'ok'} {...props}>
         {error}
       </AlertBox>
-    ))();
+    ), options)();
   }
 
   static viewJson({ title, json }) {
@@ -36,7 +43,7 @@ export default class AlertBox extends Component {
           {JSON.stringify(json, replacer, 2)}
         </Highlight>
       </AlertBox>
-    ))();
+    ), options)();
   }
 
   constructor(props) {
@@ -53,35 +60,37 @@ export default class AlertBox extends Component {
     const { yes, no } = this.props;
 
     return (
-        <Modal show={this.state.show}>
-          <Modal.Header>
-            <Modal.Title>{this.props.title}</Modal.Title>
-          </Modal.Header>
+      <div>
+        <div>
+        <Modal.Header>
+          <Modal.Title>{this.props.title}</Modal.Title>
+        </Modal.Header>
 
-          <Modal.Body>
-            {this.props.children}
-          </Modal.Body>
+        <Modal.Body>
+          {this.props.children}
+        </Modal.Body>
 
-          <Modal.Footer>
-            {
-              yes &&
-                <Button
-                  onClick={this.closeAndReturn.bind(this, yes)}
-                  bsStyle="primary"
-                >
-                  {yes}
-                </Button>
-            }
-            {
-              no &&
-                <Button
-                  onClick={this.closeAndReturn.bind(this, no)}
-                >
-                  {no}
-                </Button>
-            }
-          </Modal.Footer>
-        </Modal>
+        <Modal.Footer>
+          {
+            yes &&
+              <Button
+                onClick={this.closeAndReturn.bind(this, yes)}
+                bsStyle="primary"
+              >
+                {yes}
+              </Button>
+          }
+          {
+            no &&
+              <Button
+                onClick={this.closeAndReturn.bind(this, no)}
+              >
+                {no}
+              </Button>
+          }
+        </Modal.Footer>
+        </div>
+      </div>
     );
   }
 
