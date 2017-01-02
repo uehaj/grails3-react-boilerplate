@@ -52,9 +52,9 @@ import grails.persistence.Event
 
 class JsonSchemaUtil {
 
-  private static String[] excludedProperties = Event.allEvents.toList() << 'dateCreated' << 'lastUpdated'
+  private static List<String> excludedProperties = Event.allEvents.toList() << 'dateCreated' << 'lastUpdated'
 
-  private static genSchemaManyToOne(GrailsDomainClassProperty property) {
+  private static Map genSchemaManyToOne(GrailsDomainClassProperty property) {
     return [type: 'object', associationType: "many-to-one", required: 'id', properties: [
         id: [ type: 'number',
               enum: property.type.list().id,
@@ -62,7 +62,7 @@ class JsonSchemaUtil {
       ]];
   }
 
-  private static genSchemaOneToMany(GrailsDomainClassProperty property) {
+  private static Map genSchemaOneToMany(GrailsDomainClassProperty property) {
     return [type: 'array', associationType: "one-to-many", items:
             [type: 'object', required: 'id', properties: [
                 id: [ type: 'number' ]
@@ -156,8 +156,8 @@ class JsonSchemaUtil {
     return result
   }
 
-  static Object genSchemaProperty(GrailsDomainClass domainClass, GrailsDomainClassProperty property) {
-    def result = genSchemaTypeAndTitle(property)
+  static Map genSchemaProperty(GrailsDomainClass domainClass, GrailsDomainClassProperty property) {
+    Map result = genSchemaTypeAndTitle(property)
     def constrainedProperty = domainClass.constrainedProperties[property.name]
     constrainedProperty?.appliedConstraints?.each { constraint ->
       result += constraintsToSchema(constraint)
@@ -182,9 +182,9 @@ class JsonSchemaUtil {
     }
   }
 
-  static resolveProperties(GrailsDomainClass domainClass) {
-    def propNames = domainClass.properties*.name
-    def persistentPropNames = domainClass.persistentProperties*.name
+  static List resolveProperties(GrailsDomainClass domainClass) {
+    List propNames = domainClass.properties*.name
+    List persistentPropNames = domainClass.persistentProperties*.name
     if ('id' in propNames) {
       persistentPropNames << 'id'
     }
@@ -194,23 +194,23 @@ class JsonSchemaUtil {
     return domainClass.properties.findAll { persistentPropNames.contains(it.name) && !excludedProperties.contains(it.name) }
   }
 
-  static Object genSchema(GrailsDomainClass domainClass) {
-    def properties = resolveProperties(domainClass)
-    properties = reorderProperties(properties)
+  static Map genSchema(GrailsDomainClass domainClass) {
+    List propertyList = resolveProperties(domainClass)
+    propertyList = reorderProperties(propertyList)
 
-    def requiredProperties = properties.findAll { property ->
+    List requiredProperties = propertyList.findAll { property ->
       isNullable(domainClass, property)
     }
 
-    properties = properties.collectEntries { property ->
-      def value = genSchemaProperty(domainClass, property)
+    Map properties = propertyList.collectEntries { property ->
+      Map value = genSchemaProperty(domainClass, property)
       if (property.name == 'version') {
         value += ['default': 0] // version fields' default value is 0
       }
       return [(property.name): value]
     }
 
-    def result = [
+    Map result = [
       '$schema': 'http://json-schema.org/schema#',
       title: domainClass.getShortName(),
       type: 'object',

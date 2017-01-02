@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { Button } from 'react-bootstrap';
 import ModalForm from '../../components/ModalForm';
 import SchemaLinks from './SchemaLinks';
+import OneToMany from '../../forms/OneToMany';
 
 /**
  * Show Domain class on a modal dialog.
@@ -35,17 +36,13 @@ export default class ShowDialog extends Component {
 
     const StaticText = props => <div>{props.value}</div>;
 
-    const RelationValueText = (key, props) => {
-      console.log('key=',key,' props=',props);
-      const ids = props.schema;
-      if (ids.properties[key].associationType === 'many-to-many' ||
-          ids.properties[key].associationType === 'one-to-one') {
-        const index = ids.enum.findIndex(elem => elem === props.value);
-        return <div>{ids.enumNames[index]}</div>;
-      } else if (ids.properties[key].associationType === 'one-to-many') {
-        console.log(key);
-      }
-      return props;
+    const ManyToOneRelationValueText = (scm, props) => {
+      const index = scm.enum.findIndex(elem => elem === props.value);
+      return <div>{scm.enumNames[index]}</div>;
+    };
+
+    const OneToManyRelationValueText = (key, props) => {
+      return <div>hoge</div>;
     };
 
     return Object.keys(schema.properties)
@@ -57,10 +54,15 @@ export default class ShowDialog extends Component {
             return {
               ...map,
               [key]: {
-//                'ui:widget': StaticText,
-                'ui:widget': RelationValueText.bind(this, key),
+                //                'ui:widget': StaticText,
+                items: {
+                  id: {
+                    'ui:widget': ManyToOneRelationValueText.bind(this, key),
+                  },
+                },
+//                'ui:widget': RelationValueText.bind(this, key),
                 id: {
-                  'ui:widget': RelationValueText.bind(this, key),
+                  'ui:widget': OneToManyRelationValueText.bind(this, schema),
                 },
               },
             };
@@ -85,6 +87,8 @@ export default class ShowDialog extends Component {
       ...hiddenFields,
     };
 
+    const fields = { oneToMany: OneToMany };
+
     return (
       <ModalForm
         show={this.props.show}
@@ -93,6 +97,7 @@ export default class ShowDialog extends Component {
         schema={schema}
         uiSchema={uiSchema}
         liveValidate
+        fields={fields}
       >
         <span>
           {

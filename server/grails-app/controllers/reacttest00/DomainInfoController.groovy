@@ -23,14 +23,18 @@ class DomainInfoController {
         return result
     }
 
+    private Object domainInfo(domainClass) {
+        return [fullName: domainClass.fullName,
+                name: domainClass.name,
+                schema: getSchema(domainClass.fullName),
+                uiSchema: getUiSchema(domainClass.fullName),
+               ]
+    }
+
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
         render grailsApplication.getArtefacts("Domain").collect {
-            [fullName: it.fullName,
-             name: it.name,
-             schema: getSchema(it.fullName),
-             uiSchema: getUiSchema(it.fullName),
-            ]
+          domainInfo(it)
         } as JSON
     }
 
@@ -40,7 +44,7 @@ class DomainInfoController {
                 g1.toUpperCase() + g2
             }
             if (className == domainClass.name) {
-                render getSchema(domainClass.fullName) as JSON
+                render(domainInfo(domainClass) as JSON)
                 return
             }
         }

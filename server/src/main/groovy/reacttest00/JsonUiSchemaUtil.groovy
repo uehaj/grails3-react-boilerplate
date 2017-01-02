@@ -52,9 +52,9 @@ import grails.persistence.Event
 
 class JsonUiSchemaUtil {
 
-  static Object genUiSchemaProperty(GrailsDomainClass domainClass, GrailsDomainClassProperty property) {
-    def result = [:]
-    def constrainedProperties = domainClass.getConstrainedProperties()
+  private static Map genUiSchemaFromConstraints(GrailsDomainClass domainClass, GrailsDomainClassProperty property) {
+    Map result = [:]
+    Map constrainedProperties = domainClass.getConstrainedProperties()
     if (constrainedProperties.containsKey(property.name)) {
       if (constrainedProperties[property.name]?.editable == false) {
         result += ['ui:readonly':true]
@@ -67,7 +67,7 @@ class JsonUiSchemaUtil {
       }
       if (constrainedProperties[property.name]?.widget) {
         // widget overwrite password
-        result += ['ui:widget':constrainedProperties[property.name]?.widget]
+        result += ['ui:widget':constrainedProperties[property.name]?.widget] // widget is "textarea"" or something.
       }
       if (constrainedProperties[property.name]?.display == false) {
         // hidden overwrite password/widget
@@ -77,12 +77,22 @@ class JsonUiSchemaUtil {
     return result
   }
 
-  static Object genUiSchema(GrailsDomainClass domainClass) {
+  private static Map genUiSchemaFromAssociations(GrailsDomainClass domainClass, GrailsDomainClassProperty property) {
+    if (property.manyToOne || property.oneToOne) {
+      return ['ui:field':'manyToOne']
+    }
+    if (property.oneToMany) {
+      return ['ui:field':'oneToMany']
+    }
+    return [:]
+  }
+
+  static Map genUiSchema(GrailsDomainClass domainClass) {
     def properties = JsonSchemaUtil.reorderProperties(JsonSchemaUtil.resolveProperties(domainClass))
     def result = properties.collectEntries { property ->
-      def value = genUiSchemaProperty(domainClass, property)
-      def result = (value == [:] ? [:] : [(property.name): value])
-      return result
+      Map value = [*:genUiSchemaFromConstraints(domainClass, property),
+                   *:genUiSchemaFromAssociations(domainClass, property)]
+      return (value == [:] ? [:] : [(property.name): value])
     }
     return result
   }
