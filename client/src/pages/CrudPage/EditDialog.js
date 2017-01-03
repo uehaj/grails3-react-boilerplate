@@ -54,6 +54,7 @@ export default class EditDialog extends Component {
         onClose={this.props.onClose}
         schema={schema}
         uiSchema={uiSchema}
+        liveValidate
         onSubmit={this.handleSubmit.bind(this)}
       >
         <span>

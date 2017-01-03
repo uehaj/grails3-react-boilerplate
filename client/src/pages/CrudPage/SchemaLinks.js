@@ -4,16 +4,21 @@ import AlertBox from '../../components/AlertBox';
 
 export default class SchemaLinks extends Component {
 
-  static handleViewSchema(json, title) {
+  handleViewSchema(json, title) {
+    this.props.dialogClose();
     AlertBox.viewJson({ json, title });
   }
 
   render() {
-    const { schema, uiSchema } = this.props;
+    const { schema, uiSchema, formData } = this.props;
     return (
       <span>
-        <Button onClick={SchemaLinks.handleViewSchema.bind(null, schema, 'JSON Schema')} bsStyle="link" style={{ opacity: 0.2 }}>JSON Schema</Button>
-        <Button onClick={SchemaLinks.handleViewSchema.bind(null, uiSchema, 'UI Schema')} bsStyle="link" style={{ opacity: 0.2 }}>UI Schema</Button>
+        <Button onClick={this.handleViewSchema.bind(this, schema, 'Schema')} bsStyle="link" style={{ opacity: 0.2 }}>Schema</Button>
+        <Button onClick={this.handleViewSchema.bind(this, uiSchema, 'uiSchema')} bsStyle="link" style={{ opacity: 0.2 }}>uiSchema</Button>
+        {
+          formData &&
+            <Button onClick={this.handleViewSchema.bind(this, formData, 'formData')} bsStyle="link" style={{ opacity: 0.2 }}>formData</Button>
+        }
       </span>
     );
   }
@@ -22,4 +27,8 @@ export default class SchemaLinks extends Component {
 SchemaLinks.propTypes = {
   schema: PropTypes.shape({ title: PropTypes.string }),
   uiSchema: PropTypes.objectOf(PropTypes.object).isRequired,
+  formData: PropTypes.objectOf(
+    PropTypes.oneOfType([PropTypes.object, PropTypes.number, PropTypes.string, PropTypes.array]),
+  ),
+  dialogClose: PropTypes.func,
 };

@@ -26,7 +26,7 @@ export default class Table extends Component {
       const index = ids.enum.findIndex(elem => elem === cellValue.id);
       return ids.enumNames[index];
     } else if (schema.properties[name].associationType === 'one-to-many') {
-      return cellValue.reduce((acc, elem) => [...acc, elem.id], []).toString();
+      return cellValue.map(elem => elem.id).join(',');
     }
     return cellValue;
   }

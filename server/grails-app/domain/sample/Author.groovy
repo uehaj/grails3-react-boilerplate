@@ -4,6 +4,7 @@ class Author {
   String name
   Integer age
   String email
+  Schedule todaySchedule;
 
   static hasMany = [schedules: Schedule]
 
@@ -15,5 +16,6 @@ class Author {
     email email:true, widget:'textarea'
     name nullable: true
     age nullable: true
+    todaySchedule nullable: true
   }
 }

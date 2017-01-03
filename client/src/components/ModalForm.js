@@ -6,7 +6,6 @@ import Form from 'react-jsonschema-form';
 export default class ModalForm extends Component {
 
   render() {
-    console.log("0=",this.props);
     const CustomTitleField = ({ title }) =>
       <div style={{ marginTop: '-10pt', marginLeft: '-10pt', marginRight: '-10pt', marginBottom: '15pt' }}>
         <Modal.Header closeButton>
@@ -18,8 +17,6 @@ export default class ModalForm extends Component {
       ...this.props.fields,
       TitleField: CustomTitleField,
     };
-    console.log("1-1=",this.props.fields);
-    console.log("1-2=",fields);
 
     const { onClose, show, children, ...formProps } = this.props;
 
@@ -30,7 +27,6 @@ export default class ModalForm extends Component {
       marginRight: '-15px',
       paddingTop: '15px',
     };
-    console.log('2=',this.props.uiSchema);
 
     return (
       <Modal show={show} onHide={onClose}>

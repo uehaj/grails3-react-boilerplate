@@ -102,7 +102,7 @@ export default class ShowDialog extends Component {
         <span>
           {
             this.props.crudConfig.SHOW_SCHEMA_LINKS &&
-              <SchemaLinks schema={schema} uiSchema={uiSchema} />
+              <SchemaLinks schema={schema} uiSchema={uiSchema} formData={this.state.formData} dialogClose={this.props.onClose}/>
           }
           <Button bsStyle="danger" onClick={this.handleDeleteButtonClicked.bind(this)}>
             <i className="glyphicon glyphicon-trash" />Delete</Button>
