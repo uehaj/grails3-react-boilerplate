@@ -25,7 +25,8 @@ export default class Routes extends Component {
       const entitiesInfo = await resp.json();
       this.setState({ entitiesInfo });
     } catch (err) {
-      AlertBox.error(err.toString());
+      const json = await err.json();
+      AlertBox.error(`Error: ${json.message}`);
     }
   }
 

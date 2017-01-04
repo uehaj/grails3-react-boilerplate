@@ -57,10 +57,9 @@ export default class List extends Component {
         this.setState({ entityList: json });
       }
     } catch (err) {
-      console.log(err);
+      this.setState({ entityList: [] });
       const json = await err.json();
       AlertBox.error(`Error: ${json.message}`);
-      this.setState({ entityList: [] });
     }
   }
 
@@ -147,7 +146,8 @@ export default class List extends Component {
         });
       }
     } catch (err) {
-      AlertBox.error(err.toString());
+      const json = await err.json();
+      AlertBox.error(`Error: ${json.message}`);
     }
   }
 

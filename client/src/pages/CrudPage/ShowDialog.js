@@ -30,12 +30,10 @@ export default class ShowDialog extends Component {
     this.props.onClose();
   }
 
+
   /* replace input tag to normal text */
+  /*
   makeStatic() {
-    const { schema, crudConfig } = this.props;
-
-    const StaticText = props => <div>{props.value}</div>;
-
     const ManyToOneRelationValueText = (scm, props) => {
       const index = scm.enum.findIndex(elem => elem === props.value);
       return <div>{scm.enumNames[index]}</div>;
@@ -45,29 +43,38 @@ export default class ShowDialog extends Component {
       return <div>hoge</div>;
     };
 
+    const excludesHidden = k => crudConfig.HIDDEN_FORM_FIELDS.indexOf(k) === -1;
+
     return Object.keys(schema.properties)
-      .filter(k => crudConfig.HIDDEN_FORM_FIELDS.indexOf(k) === -1)
+      .filter(excludesHidden)
       .reduce(
         (map, key) => {
           if (schema.properties[key].associationType) {
-            console.log(schema.properties[key].associationType);
             return {
               ...map,
               [key]: {
-                //                'ui:widget': StaticText,
-                items: {
-                  id: {
-                    'ui:widget': ManyToOneRelationValueText.bind(this, key),
-                  },
-                },
-//                'ui:widget': RelationValueText.bind(this, key),
                 id: {
                   'ui:widget': OneToManyRelationValueText.bind(this, schema),
                 },
               },
             };
           }
-          return { ...map, [key]: { 'ui:widget': StaticText } };
+//          return { ...map, [key]: { 'ui:widget': StaticText } };
+        },
+        {});
+  }
+  */
+
+  makeReadOnly() {
+    const { schema, crudConfig } = this.props;
+
+    const excludesHidden = k => crudConfig.HIDDEN_FORM_FIELDS.indexOf(k) === -1;
+
+    return Object.keys(schema.properties)
+      .filter(excludesHidden)
+      .reduce(
+        (map, key) => {
+          return { ...map, [key]: { 'ui:readonly': true } };
         },
         {});
   }
@@ -82,12 +89,42 @@ export default class ShowDialog extends Component {
           .reduce((accum, elem) => ({ [elem]: { 'ui:widget': 'hidden' }, ...accum }), {});
 
     const uiSchema = {
-      ...this.makeStatic(),
+      ...this.makeReadOnly(),
       ...this.props.uiSchema,
       ...hiddenFields,
     };
 
+    console.log('hid', hiddenFields);
     const fields = { oneToMany: OneToMany };
+
+    const StaticWidget = (props) => {
+      console.log(props);
+      return <p className="form-control-static">{props.value}</p>;
+    };
+
+    const StaticPasswordWidget = (props) => {
+      return <p className="form-control-static">{props.value.replace(/./g, '*')}</p>;
+    };
+
+    const widgets = {
+      PasswordWidget: StaticPasswordWidget,
+      RadioWidget: StaticWidget, // TODO: Change
+      UpDownWidget: StaticWidget,
+      RangeWidget: StaticWidget,
+      SelectWidget: StaticWidget,
+      TextWidget: StaticWidget,
+      DateWidget: StaticWidget,
+      DateTimeWidget: StaticWidget,
+      AltDateWidget: StaticWidget,
+      AltDateTimeWidget: StaticWidget,
+      EmailWidget: StaticWidget,
+      URLWidget: StaticWidget,
+      TextareaWidget: StaticWidget,
+      ColorWidget: StaticWidget, // TODO: Change
+      FileWidget: StaticWidget, // TODO: Change
+      CheckboxWidget: StaticWidget, // TODO: Change
+      CheckboxesWidget: StaticWidget, // TODO: Change
+    };
 
     return (
       <ModalForm
@@ -98,6 +135,7 @@ export default class ShowDialog extends Component {
         uiSchema={uiSchema}
         liveValidate
         fields={fields}
+        widgets={widgets}
       >
         <span>
           {

@@ -34,8 +34,8 @@ class ConstraintTest {
     string_maxSize_20 maxSize: 20
     string_size_10_20 size: 10..20
     string_url url: true
-    string_display_false display: false
-    string_editable_false editable: false
+    string_display_false display: false, nullable: true
+    string_editable_false editable: false, nullable: true
     string_format_xxx format: 'xxx'
     string_password_true password: 'true'
     string_widget_textarea widget: 'textarea'

@@ -86,7 +86,6 @@ class JsonSchemaUtil {
     Class type = property.type;
     switch (type) {
     case java.lang.Byte:
-    case java.lang.Character:
     case java.lang.Short:
     case java.lang.Integer:
     case java.lang.Long:
@@ -97,6 +96,7 @@ class JsonSchemaUtil {
         return [type: 'boolean', *:result]
     case java.util.Date:
         return [type: 'string', format:'date-time', *:result]
+    case java.lang.Character:
     case java.lang.String:
         return [type: 'string', *:result]
     default:
