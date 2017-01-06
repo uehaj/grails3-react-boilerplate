@@ -53,7 +53,9 @@ export default class Routes extends Component {
         uiSchema={info.uiSchema}
         component={CrudPage}
         crudConfig={this.props.crudConfig}
-      />);
+                                                       />);
+
+    const entitiesPath = this.props.crudConfig.ENTITIES_PATH;
 
     return (
       <Router history={browserHistory}>
@@ -61,7 +63,7 @@ export default class Routes extends Component {
           {/* add top level items here.*/}
           <IndexRedirect from="*" to="entities" />
           {/* crud pages. */}
-          <Route path="entities" name="Entities" component={SecondLevel} crudConfig={this.props.crudConfig}>
+          <Route path={entitiesPath} name="Entities" component={SecondLevel} crudConfig={this.props.crudConfig}>
             {IndexRoute}
             {entitiesRoutes}
           </Route>
@@ -91,6 +93,7 @@ Routes.propTypes = {
     NAVBAR_SECOND_LEVEL_DIRECTION: PropTypes.number,
     SHOW_BREADCRUMBS: PropTypes.bool,
     SHOW_SCHEMA_LINKS: PropTypes.bool,
+    ENTITIES_PATH: PropTypes.string,
   }).isRequired,
 };
 

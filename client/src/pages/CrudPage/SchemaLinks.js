@@ -5,8 +5,10 @@ import AlertBox from '../../components/AlertBox';
 export default class SchemaLinks extends Component {
 
   handleViewSchema(json, title) {
-    this.props.dialogClose();
     AlertBox.viewJson({ json, title });
+    if (this.props.dialogClose) {
+      this.props.dialogClose();
+    }
   }
 
   render() {

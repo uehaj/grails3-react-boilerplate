@@ -153,6 +153,8 @@ export default class List extends Component {
 
   async handleRefreshButtonClicked() {
     this.setState({ loading: true });
+    // eslint-disable-next-line
+    this.refs.table.cleanSelected();
     try {
       await this.reloadData();
     } finally {
@@ -191,6 +193,8 @@ export default class List extends Component {
           schema={schema}
           api={api}
           crudConfig={this.props.crudConfig}
+          // eslint-disable-next-line
+          ref="table"
         />
         <CreateDialog
           show={this.state.createDialogVisible}

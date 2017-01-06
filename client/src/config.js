@@ -9,6 +9,7 @@ const SHOW_SCHEMA_LINKS = true;
 const MAX_TABLEDATA_SIZE = 1000;
 const HIDDEN_TABLE_FIELDS = ['version'];
 const HIDDEN_FORM_FIELDS = ['version', 'id'];
+const ENTITIES_PATH = 'entities';
 
 export default {
   SERVER_URL,
@@ -20,4 +21,5 @@ export default {
   MAX_TABLEDATA_SIZE,
   HIDDEN_FORM_FIELDS,
   HIDDEN_TABLE_FIELDS,
+  ENTITIES_PATH,
 };

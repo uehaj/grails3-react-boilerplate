@@ -94,16 +94,25 @@ export default class ShowDialog extends Component {
       ...hiddenFields,
     };
 
-    console.log('hid', hiddenFields);
-    const fields = { oneToMany: OneToMany };
+    const fields = {
+      oneToMany: OneToMany.bind(null, this.props.crudConfig),
+    };
 
     const StaticWidget = (props) => {
-      console.log(props);
       return <p className="form-control-static">{props.value}</p>;
     };
 
     const StaticPasswordWidget = (props) => {
       return <p className="form-control-static">{props.value.replace(/./g, '*')}</p>;
+    };
+
+    const DisabledCheckboxWidget = (props) => {
+      const checked = !!props.value;
+      return (
+        <p>
+          <input type="checkbox" id="checkon" disabled checked={checked} />
+          <label htmlFor="checkon">{props.label}</label>
+        </p>);
     };
 
     const widgets = {
@@ -122,7 +131,7 @@ export default class ShowDialog extends Component {
       TextareaWidget: StaticWidget,
       ColorWidget: StaticWidget, // TODO: Change
       FileWidget: StaticWidget, // TODO: Change
-      CheckboxWidget: StaticWidget, // TODO: Change
+      CheckboxWidget: DisabledCheckboxWidget,
       CheckboxesWidget: StaticWidget, // TODO: Change
     };
 

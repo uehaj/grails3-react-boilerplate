@@ -85,6 +85,12 @@ class JsonSchemaUtil {
     Map result = [title: property.name];
     Class type = property.type;
     switch (type) {
+    case byte.class:
+    case short.class:
+    case int.class:
+    case long.class:
+    case float.class:
+    case double.class:
     case java.lang.Byte:
     case java.lang.Short:
     case java.lang.Integer:
@@ -92,10 +98,12 @@ class JsonSchemaUtil {
     case java.lang.Float:
     case java.lang.Double:
         return [type: 'number', *:result]
+    case boolean.class:
     case java.lang.Boolean:
-        return [type: 'boolean', *:result]
+       return [type: 'boolean', *:result]
     case java.util.Date:
         return [type: 'string', format:'date-time', *:result]
+    case char.class:
     case java.lang.Character:
     case java.lang.String:
         return [type: 'string', *:result]
@@ -209,7 +217,9 @@ class JsonSchemaUtil {
     propertyList = reorderProperties(propertyList)
 
     List requiredProperties = propertyList.findAll { property ->
-      isNullable(domainClass, property)
+      isNullable(domainClass, property) &&
+      property.type != java.lang.Boolean &&
+      property.type != boolean.class
     }
 
     Map properties = propertyList.collectEntries { property ->

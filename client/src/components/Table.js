@@ -38,6 +38,12 @@ export default class Table extends Component {
     );
   }
 
+  cleanSelected() {
+    // eslint-disable-next-line
+    this.refs.table.cleanSelected();
+  }
+
+
   render() {
     const { tableData, onRowClicked, onCreateButtonClicked,
             onRefreshButtonClicked, schema, crudConfig } = this.props;
