@@ -16,7 +16,7 @@ class DataTypeTest {
   double doubleValuePrim
   float floatValuePrim
   short shortValuePrim
-  char characterValuePrim
+  char charValuePrim
   byte byteValuePrim
 
   static constraints = {
