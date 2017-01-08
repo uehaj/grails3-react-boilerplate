@@ -80,9 +80,13 @@ export default class ShowDialog extends Component {
   }
 
   render() {
+
+    const {schema:origSchema, uiSchema:origUiSchema, selectedId, crudConfig, show, onClose,
+           onEditButtonClicked } = this.props;
+
     const schema = {
-      ...this.props.schema,
-      title: `${this.props.schema.title}:${this.props.selectedId}`,
+      ...origSchema,
+      title: `${origSchema.title}:${selectedId}`,
     };
 
     const hiddenFields = this.props.crudConfig.HIDDEN_FORM_FIELDS
@@ -90,12 +94,12 @@ export default class ShowDialog extends Component {
 
     const uiSchema = {
       ...this.makeReadOnly(),
-      ...this.props.uiSchema,
+      ...origUiSchema,
       ...hiddenFields,
     };
 
     const fields = {
-      oneToMany: OneToMany.bind(null, this.props.crudConfig),
+      oneToMany: OneToMany.bind(null, crudConfig),
     };
 
     const StaticWidget = (props) => {
@@ -137,9 +141,9 @@ export default class ShowDialog extends Component {
 
     return (
       <ModalForm
-        show={this.props.show}
+        show={show}
         formData={this.state.formData}
-        onClose={this.props.onClose}
+        onClose={onClose}
         schema={schema}
         uiSchema={uiSchema}
         liveValidate
@@ -148,16 +152,16 @@ export default class ShowDialog extends Component {
       >
         <span>
           {
-            this.props.crudConfig.SHOW_SCHEMA_LINKS &&
-              <SchemaLinks schema={schema} uiSchema={uiSchema} formData={this.state.formData} dialogClose={this.props.onClose}/>
+            crudConfig.SHOW_SCHEMA_LINKS &&
+              <SchemaLinks schema={schema} uiSchema={uiSchema} formData={this.state.formData} dialogClose={onClose}/>
           }
           <Button bsStyle="danger" onClick={this.handleDeleteButtonClicked.bind(this)}>
             <i className="glyphicon glyphicon-trash" />Delete</Button>
           &nbsp;
-          <Button bsStyle="primary" onClick={this.props.onEditButtonClicked}>
+          <Button bsStyle="primary" onClick={onEditButtonClicked}>
             <i className="glyphicon glyphicon-pencil" />Edit</Button>
           &nbsp;
-          <Button onClick={this.props.onClose}>Close</Button>
+          <Button onClick={onClose}>Close</Button>
         </span>
       </ModalForm>
     );
