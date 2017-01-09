@@ -32,7 +32,7 @@ export default class AlertBox extends Component {
   static viewJson({ title, json }) {
     const replacer = (k, v) => {
       if (typeof v === 'function') {
-        return v.toString().replace(/{(.|\n)*/m, '').replace(/^function /, '');
+        return `function ${v.toString().replace(/{(.|\n)*/m, '').replace(/^function /, '')}{...}`;
       }
       return v;
     };
