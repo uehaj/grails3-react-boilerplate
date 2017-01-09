@@ -30,41 +30,6 @@ export default class ShowDialog extends Component {
     this.props.onClose();
   }
 
-
-  /* replace input tag to normal text */
-  /*
-  makeStatic() {
-    const ManyToOneRelationValueText = (scm, props) => {
-      const index = scm.enum.findIndex(elem => elem === props.value);
-      return <div>{scm.enumNames[index]}</div>;
-    };
-
-    const OneToManyRelationValueText = (key, props) => {
-      return <div>hoge</div>;
-    };
-
-    const excludesHidden = k => crudConfig.HIDDEN_FORM_FIELDS.indexOf(k) === -1;
-
-    return Object.keys(schema.properties)
-      .filter(excludesHidden)
-      .reduce(
-        (map, key) => {
-          if (schema.properties[key].associationType) {
-            return {
-              ...map,
-              [key]: {
-                id: {
-                  'ui:widget': OneToManyRelationValueText.bind(this, schema),
-                },
-              },
-            };
-          }
-//          return { ...map, [key]: { 'ui:widget': StaticText } };
-        },
-        {});
-  }
-  */
-
   makeReadOnly() {
     const { schema, crudConfig } = this.props;
 
