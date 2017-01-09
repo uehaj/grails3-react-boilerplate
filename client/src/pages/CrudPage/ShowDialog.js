@@ -73,16 +73,13 @@ export default class ShowDialog extends Component {
     return Object.keys(schema.properties)
       .filter(excludesHidden)
       .reduce(
-        (map, key) => {
-          return { ...map, [key]: { 'ui:readonly': true } };
-        },
+        (map, key) => ({ ...map, [key]: { 'ui:readonly': true } }),
         {});
   }
 
   render() {
-
-    const {schema:origSchema, uiSchema:origUiSchema, selectedId, crudConfig, show, onClose,
-           onEditButtonClicked } = this.props;
+    const { schema: origSchema, uiSchema: origUiSchema, selectedId, crudConfig, show, onClose,
+            onEditButtonClicked } = this.props;
 
     const schema = {
       ...origSchema,
@@ -102,13 +99,11 @@ export default class ShowDialog extends Component {
       oneToMany: OneToMany.bind(null, crudConfig),
     };
 
-    const StaticWidget = (props) => {
-      return <p className="form-control-static">{props.value}</p>;
-    };
+    const StaticWidget = props =>
+      <p className="form-control-static">{props.value}</p>;
 
-    const StaticPasswordWidget = (props) => {
-      return <p className="form-control-static">{props.value.replace(/./g, '*')}</p>;
-    };
+    const StaticPasswordWidget = props =>
+      <p className="form-control-static">{props.value.replace(/./g, '*')}</p>;
 
     const DisabledCheckboxWidget = (props) => {
       const checked = !!props.value;
@@ -153,7 +148,12 @@ export default class ShowDialog extends Component {
         <span>
           {
             crudConfig.SHOW_SCHEMA_LINKS &&
-              <SchemaLinks schema={schema} uiSchema={uiSchema} formData={this.state.formData} dialogClose={onClose}/>
+              <SchemaLinks
+                schema={schema}
+                uiSchema={uiSchema}
+                formData={this.state.formData}
+                dialogClose={onClose}
+              />
           }
           <Button bsStyle="danger" onClick={this.handleDeleteButtonClicked.bind(this)}>
             <i className="glyphicon glyphicon-trash" />Delete</Button>
