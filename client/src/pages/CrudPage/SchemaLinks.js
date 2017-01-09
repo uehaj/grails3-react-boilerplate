@@ -30,7 +30,6 @@ SchemaLinks.propTypes = {
   schema: PropTypes.shape({ title: PropTypes.string }),
   uiSchema: PropTypes.objectOf(PropTypes.object).isRequired,
   formData: PropTypes.objectOf(
-    PropTypes.oneOfType([PropTypes.object, PropTypes.number, PropTypes.string, PropTypes.array]),
-  ),
+    PropTypes.oneOfType([PropTypes.object, PropTypes.number, PropTypes.string, PropTypes.array])),
   dialogClose: PropTypes.func,
 };

@@ -69,6 +69,7 @@ export default class Table extends Component {
 
     const headerProperties = (scm) => {
       const result = Object.entries(scm.properties)
+      // eslint-disable-next-line
             .filter(([k, _]) => crudConfig.HIDDEN_TABLE_FIELDS.indexOf(k) === -1)
             .reduce((acc, [kk, vv]) => ({ ...acc, [kk]: vv }), {});
       return result;

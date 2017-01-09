@@ -17,7 +17,7 @@ export default class ShowDialog extends Component {
   }
 
   async componentWillReceiveProps(nextProps) {
-    if (nextProps.selectedId) {
+    if (nextProps.selectedId || (this.props.show === false && nextProps.show === true)) {
       const { api } = this.props;
       const resp = await api.getEntity(nextProps.selectedId);
       const json = await resp.json();
@@ -44,7 +44,7 @@ export default class ShowDialog extends Component {
 
   render() {
     const { schema: origSchema, uiSchema: origUiSchema, selectedId, crudConfig, show, onClose,
-            onEditButtonClicked } = this.props;
+            onEditButtonClicked, api } = this.props;
 
     const schema = {
       ...origSchema,
@@ -61,14 +61,14 @@ export default class ShowDialog extends Component {
     };
 
     const fields = {
-      oneToMany: OneToMany.bind(null, crudConfig),
+      oneToMany: OneToMany.bind(null, crudConfig, api),
     };
 
     const StaticWidget = props =>
       <p className="form-control-static">{props.value}</p>;
 
     const StaticPasswordWidget = props =>
-      <p className="form-control-static">{props.value.replace(/./g, '*')}</p>;
+      <p className="form-control-static">{props.value.replace(/./g, '')}</p>;
 
     const DisabledCheckboxWidget = (props) => {
       const checked = !!props.value;

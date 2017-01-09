@@ -6,7 +6,7 @@ import crudConfig from './config';
 const rootEl = document.getElementById('root');
 
 ReactDOM.render(
-  <Routes crudConfig={crudConfig}/>,
+  <Routes crudConfig={crudConfig} />,
   rootEl);
 
 if (module.hot) {
@@ -14,7 +14,7 @@ if (module.hot) {
     // eslint-disable-next-line
     const NextRoutes = require('./Routes').default;
     ReactDOM.render(
-      <NextRoutes crudConfig={crudConfig}/>,
+      <NextRoutes crudConfig={crudConfig} />,
       rootEl,
     );
   });

@@ -39,7 +39,8 @@ export default class Routes extends Component {
 
     const firstEntity = entitiesInfo.slice(entitiesInfo.length - 1, entitiesInfo.length);
 
-    const IndexRoute = firstEntity.map(item => <IndexRedirect key="first" from="*" to={item.name} />);
+    const IndexRoute = firstEntity.map(
+      item => <IndexRedirect key="first" from="*" to={item.name} />);
 
     const urlBase = this.props.crudConfig.SERVER_URL;
 
@@ -53,7 +54,7 @@ export default class Routes extends Component {
         uiSchema={info.uiSchema}
         component={CrudPage}
         crudConfig={this.props.crudConfig}
-                                                       />);
+      />);
 
     const entitiesPath = this.props.crudConfig.ENTITIES_PATH;
 
@@ -63,7 +64,12 @@ export default class Routes extends Component {
           {/* add top level items here.*/}
           <IndexRedirect from="*" to="entities" />
           {/* crud pages. */}
-          <Route path={entitiesPath} name="Entities" component={SecondLevel} crudConfig={this.props.crudConfig}>
+          <Route
+            path={entitiesPath}
+            name="Entities"
+            component={SecondLevel}
+            crudConfig={this.props.crudConfig}
+          >
             {IndexRoute}
             {entitiesRoutes}
           </Route>

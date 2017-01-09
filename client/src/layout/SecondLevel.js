@@ -4,7 +4,6 @@ import { LinkContainer } from 'react-router-bootstrap';
 
 function removeOptionalPartFromPath(s) {
   return s.replace(/[(:].*/, '');
-
 }
 
 /**
@@ -62,7 +61,7 @@ function SecondLevelNavbarVertical(props) {
             </Nav>
           </div>
         </Col>
-      <Col sm={10} style={{ paddingTop: '10pt' }}>
+        <Col sm={10} style={{ paddingTop: '10pt' }}>
           {props.children}
         </Col>
       </Row>
@@ -105,5 +104,4 @@ SecondLevel.propTypes = {
     PropTypes.array,
     PropTypes.func,
   ])).isRequired,
-  children: PropTypes.element,
 };

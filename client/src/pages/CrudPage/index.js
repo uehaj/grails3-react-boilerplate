@@ -34,7 +34,7 @@ function CrudPage(props) {
               schema={schema}
               uiSchema={uiSchema}
               api={api}
-              selectedId={props.params.selectedId}
+              selectedId={parseInt(props.params.selectedId, 10)}
               crudConfig={props.route.crudConfig}
             />
           </Col>
@@ -47,7 +47,7 @@ function CrudPage(props) {
 CrudPage.propTypes = {
   routes: PropTypes.arrayOf(PropTypes.object).isRequired,
   params: PropTypes.shape({
-    selectedId: PropTypes.number,
+    selectedId: PropTypes.string,
   }),
   // eslint-disable-next-line
   route: PropTypes.object,

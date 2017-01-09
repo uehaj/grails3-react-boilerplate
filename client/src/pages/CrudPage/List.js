@@ -16,7 +16,6 @@ export default class List extends Component {
 
   constructor(props) {
     super(props);
-
     this.state = {
       entityList: [],
       selectedId: props.selectedId,
@@ -31,6 +30,12 @@ export default class List extends Component {
   componentDidMount() {
     this.ignoreLastFetch = false;
     this.reloadData();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.selectedId !== this.props.selectedId) {
+      this.setState({ selectedId: nextProps.selectedId });
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -162,12 +167,8 @@ export default class List extends Component {
     }
   }
 
-  handleViewSchema(json, title) {
-    AlertBox.viewJson({ json, title });
-  }
-
   render() {
-    const { api, schema, uiSchema } = this.props;
+    const { api, schema, uiSchema, crudConfig } = this.props;
     const { title } = schema;
 
     const loadingAnimation = this.state.loading
@@ -180,7 +181,7 @@ export default class List extends Component {
           {title}
           {loadingAnimation}
           {
-            this.props.crudConfig.SHOW_SCHEMA_LINKS &&
+            crudConfig.SHOW_SCHEMA_LINKS &&
               <SchemaLinks schema={schema} uiSchema={uiSchema} />
           }
         </h1>
@@ -192,7 +193,7 @@ export default class List extends Component {
           onRefreshButtonClicked={this.handleRefreshButtonClicked.bind(this)}
           schema={schema}
           api={api}
-          crudConfig={this.props.crudConfig}
+          crudConfig={crudConfig}
           // eslint-disable-next-line
           ref="table"
         />
@@ -203,7 +204,7 @@ export default class List extends Component {
           schema={{ title: `Create ${title}`, ...schema }}
           uiSchema={uiSchema}
           api={api}
-          crudConfig={this.props.crudConfig}
+          crudConfig={crudConfig}
         />
         <ShowDialog
           show={this.state.showDialogVisible}
@@ -214,7 +215,7 @@ export default class List extends Component {
           schema={schema}
           uiSchema={uiSchema}
           api={api}
-          crudConfig={this.props.crudConfig}
+          crudConfig={crudConfig}
         />
         <EditDialog
           show={this.state.editDialogVisible}
@@ -224,7 +225,7 @@ export default class List extends Component {
           schema={{ title: `Edit ${title}`, ...schema }}
           uiSchema={uiSchema}
           api={api}
-          crudConfig={this.props.crudConfig}
+          crudConfig={crudConfig}
         />
       </div>
     );
@@ -235,7 +236,7 @@ List.propTypes = {
   schema: PropTypes.shape({}).isRequired,
   uiSchema: PropTypes.objectOf(PropTypes.object).isRequired,
   api: PropTypes.objectOf(PropTypes.func).isRequired,
-  selectedId: PropTypes.string,
+  selectedId: PropTypes.number,
   crudConfig: PropTypes.objectOf(PropTypes.oneOfType([
     PropTypes.number,
     PropTypes.string,
