@@ -69,10 +69,19 @@ class JsonSchemaUtil {
   }
 
   private static Map genSchemaOneToMany(GrailsDomainClassProperty property) {
+    Class type = property.type;
+    def cls = property.referencedDomainClass?.clazz
+    if(cls == null) {
+      if(property.type instanceof Collection) {
+        cls = org.springframework.core.GenericCollectionTypeResolver.getCollectionType(property.type)
+      }
+    }
+
     return [ type: 'array',
              associationType: "one-to-many",
              items:
              [ type: 'object',
+               'domainClassName': cls, // not in json schema specificication.
                required: 'id',
                properties: [
                  id: [ type: 'number' ]
