@@ -19,19 +19,21 @@ export default class CreateDialog extends Component {
   }
 
   render() {
-    const required = this.props.schema.required.filter(name => name !== 'id');
+    const { schema: origSchema, uiSchema: origUiSchema, show, onClose, crudConfig } = this.props;
 
-    const schema = { ...this.props.schema, required };
+    const required = origSchema.required.filter(name => name !== 'id');
+
+    const schema = { ...origSchema, required };
 
     const uiSchema = {
-      ...this.props.uiSchema,
+      ...origUiSchema,
       id: { 'ui:widget': 'hidden' },
     };
 
     return (
       <ModalForm
-        show={this.props.show}
-        onClose={this.props.onClose}
+        show={show}
+        onClose={onClose}
         schema={schema}
         uiSchema={uiSchema}
         onSubmit={this.handleSubmit.bind(this)}
@@ -39,13 +41,13 @@ export default class CreateDialog extends Component {
       >
         <span>
           {
-            this.props.crudConfig.SHOW_SCHEMA_LINKS &&
+            crudConfig.SHOW_SCHEMA_LINKS &&
               <SchemaLinks schema={schema} uiSchema={uiSchema} />
           }
           &nbsp;
           <Button bsStyle="primary" type="submit">Create</Button>
           &nbsp;
-          <Button onClick={this.props.onClose}>Cancel</Button>
+          <Button onClick={onClose}>Cancel</Button>
         </span>
       </ModalForm>
     );
