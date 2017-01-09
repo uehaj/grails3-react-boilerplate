@@ -68,7 +68,7 @@ export default class ShowDialog extends Component {
       <p className="form-control-static">{props.value}</p>;
 
     const StaticPasswordWidget = props =>
-      <p className="form-control-static">{props.value.replace(/./g, '')}</p>;
+      <p className="form-control-static">{props.value.replace(/./g, '*')}</p>;
 
     const DisabledCheckboxWidget = (props) => {
       const checked = !!props.value;
