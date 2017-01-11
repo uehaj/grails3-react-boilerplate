@@ -6,7 +6,7 @@ function getEntityName(domainClassName) {
   return domainClassName.substring(domainClassName.lastIndexOf('.') + 1, domainClassName.length);
 }
 
-export default function OneToMany(crudConfig, api, props) {
+export default function OneToManyField(crudConfig, api, props) {
   const { name, schema, idSchema, formData } = props;
 
   const entityName = getEntityName(schema.items.domainClassName);
@@ -28,7 +28,7 @@ export default function OneToMany(crudConfig, api, props) {
   );
 }
 
-OneToMany.propTypes = {
+OneToManyField.propTypes = {
   name: PropTypes.string,
   schema: PropTypes.shape({}).isRequired,
   idSchema: PropTypes.objectOf(PropTypes.string),

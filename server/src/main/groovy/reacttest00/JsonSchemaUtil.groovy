@@ -58,12 +58,11 @@ class JsonSchemaUtil {
     return [ type: 'object',
              associationType: "many-to-one",
              required: 'id',
-             properties:
-             [ id:
-               [ type: 'number',
-                 enum: property.type.list().id,
-                 enumNames: property.type.list().collect{ it.toString() }
-               ] // return Custom labels for enum fields
+             properties: [
+             id: [ type: 'number',
+                   enum: property.type.list().id,
+                   enumNames: property.type.list().collect{ it.toString() }
+                 ] // return Custom labels for enum fields
              ]
            ];
   }
