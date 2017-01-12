@@ -13,7 +13,7 @@ class JsonSchemaUtilSpec extends Specification {
     @Unroll
     def "mapType(#type) is #result"() {
         expect:
-        JsonSchemaUtil.mapType(Byte) == "number"
+        JsonSchemaUtil.genSchemaTypeAndTitle(type) == "number"
         where:
         type|result
         Byte|"number"
