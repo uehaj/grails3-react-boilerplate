@@ -37,11 +37,43 @@ async function createEntity(urlBase, entityName, entity) {
 }
 
 async function deleteEntity(urlBase, entityName, id) {
-  const url = `${urlBase}${entityName}/${id}.json`;
+  const url = `${urlBase}${entityName}/${id}`;
   const resp = await fetch(url, {
     method: 'DELETE',
   });
   return resp.ok ? Promise.resolve(resp) : Promise.reject(resp);
+}
+
+function encodeQueryData(data) {
+  Object.entries(data).reduce((accum, [k, v]) => `${accum}&${encodeURIComponent(k)}=${encodeURIComponent(v)}`, '');
+}
+
+/**
+ * Search API.
+ *
+ * API Params:
+ *  - domainClass
+ *  - searchTargetField
+ *  - query
+ *  - results (opt)
+ *  - associationString (opt)
+ *  - sort (opt)
+ *  - order (opt)
+ *  - max (opt)
+ *  - offset (opt)
+ *  - distinct (opt)
+ *
+ */
+async function search(urlBase, domainClass, searchTargetField, query, options = {}) {
+  const url = `${urlBase}search?domainClass=${domainClass}&searchTargetField=${searchTargetField}&query=${query}`;
+  const resp = await fetch(url + encodeQueryData(options), {
+    method: 'GET',
+  });
+  return resp.ok ? Promise.resolve(resp) : Promise.reject(resp);
+}
+
+function searchById(urlBase, domainClass, ids, options) {
+  return search(urlBase, domainClass, 'id', ids.join(','), options);
 }
 
 export default function createRestApi(urlBase, entityName) {
@@ -51,5 +83,7 @@ export default function createRestApi(urlBase, entityName) {
     updateEntity: updateEntity.bind(null, urlBase, entityName),
     createEntity: createEntity.bind(null, urlBase, entityName),
     deleteEntity: deleteEntity.bind(null, urlBase, entityName),
+    search: search.bind(null, urlBase),
+    searchById: searchById.bind(null, urlBase),
   };
 }
