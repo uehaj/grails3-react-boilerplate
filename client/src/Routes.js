@@ -7,7 +7,7 @@ import TopLevel from './layout/TopLevel';
 import SecondLevel from './layout/SecondLevel';
 import NotFound from './layout/NotFound';
 import CrudPage from './pages/CrudPage';
-import Page1 from './pages/Page1';
+//import Page1 from './pages/Page1';
 import createRestApi from './util/api';
 
 export default class Routes extends Component {
@@ -74,7 +74,7 @@ export default class Routes extends Component {
             {entitiesRoutes}
           </Route>
 
-          {/**/}
+          {/*
           <Route path="m1" name="MenuItem1" component={SecondLevel}>
             <IndexRedirect from="*" to="p1" />
           </Route>
@@ -82,7 +82,7 @@ export default class Routes extends Component {
             <IndexRedirect from="*" to="p4" />
           </Route>
           <Route path="p1" name="page1" component={Page1} />
-          {/**/}
+          */}
 
         </Route>
         <Route path="*" component={NotFound} />
