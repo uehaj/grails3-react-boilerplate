@@ -45,23 +45,24 @@ async function deleteEntity(urlBase, entityName, id) {
 }
 
 function encodeQueryData(data) {
-  Object.entries(data).reduce((accum, [k, v]) => `${accum}&${encodeURIComponent(k)}=${encodeURIComponent(v)}`, '');
+  return Object.entries(data).reduce((accum, [k, v]) => `${accum}&${encodeURIComponent(k)}=${encodeURIComponent(v)}`, '');
 }
 
 /**
  * Search API.
  *
- * API Params:
- *  - domainClass
- *  - searchTargetField
- *  - query
- *  - results (opt)
- *  - associationString (opt)
- *  - sort (opt)
- *  - order (opt)
- *  - max (opt)
- *  - offset (opt)
- *  - distinct (opt)
+ * @param:
+ *  - domainClass:
+ *  - searchTargetField:
+ *  - query:
+ *  - options:
+ *    - results (opt)
+ *    - associationString (opt)
+ *    - sort (opt)
+ *    - order (opt)
+ *    - max (opt)
+ *    - offset (opt)
+ *    - distinct (opt)
  *
  */
 async function search(urlBase, domainClass, searchTargetField, query, options = {}) {

@@ -6,9 +6,9 @@ import grails.converters.JSON
 
 class SearchController {
 
-    static final SEARCH_PARAMS_KEYS = [ 'sort', 'order', 'max', 'offset', 'distinct' ]
-
     GrailsApplication grailsApplication
+
+    static final SEARCH_PARAMS_KEYS = [ 'sort', 'order', 'max', 'offset', 'distinct' ]
 
     def quickSearchService
 
@@ -42,12 +42,14 @@ class SearchController {
     def index() {
         def requiredButNotSupplied = REQUIRED_PARAMS.find {it -> params[it] == null}
         if (requiredButNotSupplied != null) {
-          render(["message":"Required api params are not supplied: "+requiredButNotSupplied, "error":404] as JSON)
+          response.status = 404
+          render(["message":"Required api params are not supplied: "+requiredButNotSupplied, "error":response.status] as JSON)
           return
         }
         def domainClass = grailsApplication.getDomainClass(params.domainClass)
         if (domainClass == null) {
-          render(["message":"Domain class not found: "+params.domainClass, "error":404] as JSON)
+          response.status = 404
+          render(["message":"Domain class not found: "+params.domainClass, "error":response.status] as JSON)
           return
         }
         def associationString  = (params.associationString) ?: params.searchTargetField
@@ -63,6 +65,9 @@ class SearchController {
           def fields = params.results.split(',')
           respond result.collect { elem ->
             fields.collectEntries{ field ->
+              if (field == '#toString') {
+                return [field, elem.toString()]
+              }
               return [field, elem[field]]
             }
           }

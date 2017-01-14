@@ -1,36 +1,102 @@
-import React, { PropTypes } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 
-
-function getEntityName(domainClassName) {
-  return domainClassName.substring(domainClassName.lastIndexOf('.') + 1, domainClassName.length);
+function getDomainUrlPath(domainClass) {
+  return domainClass.substring(domainClass.lastIndexOf('.') + 1, domainClass.length);
 }
 
-export default function OneToManyField(crudConfig, api, props) {
-  const { name, schema, idSchema, formData } = props;
-
-  const entityName = getEntityName(schema.items.domainClassName);
+function AssociationLinks(props) {
+  const { crudConfig, domainClass, elements } = props;
+  if (!elements) {
+    return null;
+  }
+  const domainUrlPath = getDomainUrlPath(domainClass);
 
   return (
-    <div>
-      <label className="control-label" htmlFor={idSchema.$id}>
-        {name}
-      </label>
-      <div id={idSchema.$id}>
-        <ul>
-          {
-            formData &&
-              formData.map(elem => <li key={elem.id}><Link to={`/${crudConfig.ENTITIES_PATH}/${entityName}/${elem.id}`}>{elem.id}</Link></li>)
-          }
-        </ul>
+    <ul>
+      {
+        elements.map(elem =>
+          <li key={elem.id}>
+            <Link to={`/${crudConfig.ENTITIES_PATH}/${domainUrlPath}/${elem.id}`}>{elem['#toString']}
+            </Link>
+          </li>)
+      }
+    </ul>);
+}
+
+AssociationLinks.propTypes = {
+  crudConfig: PropTypes.objectOf(PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string,
+    PropTypes.bool,
+    PropTypes.arrayOf(PropTypes.string),
+  ])).isRequired,
+  domainClass: PropTypes.string,
+  elements: PropTypes.arrayOf(PropTypes.object),
+};
+
+class OneToManyField extends Component {
+  constructor() {
+    super();
+    this.state = {
+      elements: [],
+    };
+  }
+
+  async componentDidMount() {
+    const { schema, formData } = this.props;
+    if (!formData) {
+      return;
+    }
+    const domainClass = schema.items.domainClass;
+    const ids = this.props.formData.map(elem => elem.id);
+    const resp = await this.props.api.searchById(domainClass, ids, { results: 'id,#toString' });
+    const json = await resp.json();
+    // eslint-disable-next-line
+    this.setState(
+      { elements: json },
+    );
+  }
+
+  render() {
+    const { crudConfig, name, schema, idSchema } = this.props;
+
+    return (
+      <div>
+        <label className="control-label" htmlFor={idSchema.$id}>
+          {name}
+        </label>
+        <div id={idSchema.$id}>
+          <AssociationLinks
+            crudConfig={crudConfig}
+            domainClass={schema.items.domainClass}
+            elements={this.state.elements}
+          />
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 OneToManyField.propTypes = {
+  crudConfig: PropTypes.objectOf(PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string,
+    PropTypes.bool,
+    PropTypes.arrayOf(PropTypes.string),
+  ])).isRequired,
+  api: PropTypes.objectOf(PropTypes.func).isRequired,
   name: PropTypes.string,
   schema: PropTypes.shape({}).isRequired,
   idSchema: PropTypes.objectOf(PropTypes.string),
-  formData: PropTypes.shape({}),
 };
+
+export default function oneToManyField(crudConfig, api, name) {
+  return class extends Component {
+    render() {
+      const additionalProps = { crudConfig, api, name };
+      return <OneToManyField {...additionalProps} {...this.props} />;
+    }
+  };
+}
+

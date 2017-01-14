@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { Button } from 'react-bootstrap';
 import ModalForm from '../../components/ModalForm';
 import SchemaLinks from './SchemaLinks';
-import OneToManyField from '../../forms/OneToManyField';
+import oneToManyField from '../../forms/OneToManyField';
 
 /**
  * Show Domain class on a modal dialog.
@@ -61,7 +61,7 @@ export default class ShowDialog extends Component {
     };
 
     const fields = {
-      oneToMany: OneToManyField.bind(null, crudConfig, api),
+      oneToMany: oneToManyField(crudConfig, api),
     };
 
     const StaticWidget = props =>

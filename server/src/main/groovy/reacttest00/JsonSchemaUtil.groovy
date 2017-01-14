@@ -80,7 +80,7 @@ class JsonSchemaUtil {
              associationType: "one-to-many",
              items:
              [ type: 'object',
-               'domainClassName': cls, // not in json schema specificication.
+               'domainClass': cls, // not in json schema specificication.
                required: 'id',
                properties: [
                  id: [ type: 'number' ]
