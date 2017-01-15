@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import AssociationLink from './AssociationLink';
 
-class ManyToOneField extends Component {
+export default class ManyToOneField extends Component {
   constructor() {
     super();
     this.state = {
@@ -10,16 +10,14 @@ class ManyToOneField extends Component {
   }
 
   async componentDidMount() {
-    console.log('manytoonefield.componentdidmount', this.props)
-    const { schema, formData } = this.props;
+    const { api, schema, formData } = this.props;
     if (!formData) {
       return;
     }
     const domainClass = schema.domainClass;
     const ids = [this.props.formData.id];
-    const resp = await this.props.api.searchById(domainClass, ids, { results: 'id,#toString' });
+    const resp = await api.searchById(domainClass, ids, { results: 'id,#toString' });
     const json = await resp.json();
-    console.log('json=',json)
     // eslint-disable-next-line
     this.setState(
       { element: json[0] },
@@ -27,12 +25,8 @@ class ManyToOneField extends Component {
   }
 
   render() {
-    console.log('manytoonefield.render', this.props)
     const { crudConfig, name, schema, uiSchema, idSchema } = this.props;
 
-    console.log('uiSchema=', uiSchema)
-    console.log('domainClass=', schema.domainClass)
-    console.log('element=', this.state.element)
     return (
       <div>
         <label className="control-label" htmlFor={idSchema.$id}>
@@ -61,12 +55,5 @@ ManyToOneField.propTypes = {
   name: PropTypes.string,
   schema: PropTypes.shape({}).isRequired,
   idSchema: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.object, PropTypes.string])),
-};
-
-// eslint-disable-next-line
-export default (crudConfig, api, name) => class extends Component {
-  render() {
-    const additionalProps = { crudConfig, api, name };
-    return <ManyToOneField {...additionalProps} {...this.props} />;
-  }
+  formData: PropTypes.objectOf(PropTypes.object),
 };

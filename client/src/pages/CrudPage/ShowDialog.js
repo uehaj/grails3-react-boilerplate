@@ -2,8 +2,16 @@ import React, { Component, PropTypes } from 'react';
 import { Button } from 'react-bootstrap';
 import ModalForm from '../../components/ModalForm';
 import SchemaLinks from './SchemaLinks';
-import manyToOneField from '../../forms/ManyToOneField';
-import oneToManyField from '../../forms/OneToManyField';
+import ManyToOneField from '../../forms/ManyToOneField';
+import OneToManyField from '../../forms/OneToManyField';
+
+
+function bindAdditionalProps(crudConfig, api, Field) {
+  return (props) => {
+    const additionalProps = { crudConfig, api };
+    return <Field {...additionalProps} {...props} />;
+  };
+}
 
 /**
  * Show Domain class on a modal dialog.
@@ -62,8 +70,8 @@ export default class ShowDialog extends Component {
     };
 
     const fields = {
-      manyToOne: manyToOneField(crudConfig, api),
-      oneToMany: oneToManyField(crudConfig, api),
+      manyToOne: bindAdditionalProps(crudConfig, api, ManyToOneField),
+      oneToMany: bindAdditionalProps(crudConfig, api, OneToManyField),
     };
 
     const StaticWidget = props =>

@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import AssociationLinks from './AssociationLinks';
 
-class OneToManyField extends Component {
+export default class OneToManyField extends Component {
   constructor() {
     super();
     this.state = {
@@ -10,13 +10,13 @@ class OneToManyField extends Component {
   }
 
   async componentDidMount() {
-    const { schema, formData } = this.props;
+    const { api, schema, formData } = this.props;
     if (!formData) {
       return;
     }
     const domainClass = schema.items.domainClass;
     const ids = this.props.formData.map(elem => elem.id);
-    const resp = await this.props.api.searchById(domainClass, ids, { results: 'id,#toString' });
+    const resp = await api.searchById(domainClass, ids, { results: 'id,#toString' });
     const json = await resp.json();
     // eslint-disable-next-line
     this.setState(
@@ -55,12 +55,5 @@ OneToManyField.propTypes = {
   name: PropTypes.string,
   schema: PropTypes.shape({}).isRequired,
   idSchema: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.object, PropTypes.string])),
-};
-
-// eslint-disable-next-line
-export default (crudConfig, api, name) => class extends Component {
-  render() {
-    const additionalProps = { crudConfig, api, name };
-    return <OneToManyField {...additionalProps} {...this.props} />;
-  }
+  formData: PropTypes.objectOf(PropTypes.object),
 };
