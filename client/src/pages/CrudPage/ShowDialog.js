@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { Button } from 'react-bootstrap';
 import ModalForm from '../../components/ModalForm';
 import SchemaLinks from './SchemaLinks';
+import manyToOneField from '../../forms/ManyToOneField';
 import oneToManyField from '../../forms/OneToManyField';
 
 /**
@@ -61,6 +62,7 @@ export default class ShowDialog extends Component {
     };
 
     const fields = {
+      manyToOne: manyToOneField(crudConfig, api),
       oneToMany: oneToManyField(crudConfig, api),
     };
 

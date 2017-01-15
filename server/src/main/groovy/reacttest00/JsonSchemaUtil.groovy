@@ -54,9 +54,20 @@ class JsonSchemaUtil {
 
   private static List<String> excludedProperties = Event.allEvents.toList() << 'dateCreated' << 'lastUpdated'
 
+  private static Class domainClassOf(GrailsDomainClassProperty property) {
+    Class result = property.referencedDomainClass?.clazz
+    if (result == null) {
+      if(property.type instanceof Collection) {
+        result = org.springframework.core.GenericCollectionTypeResolver.getCollectionType(property.type)
+      }
+    }
+    return result
+  }
+
   private static Map genSchemaManyToOne(GrailsDomainClassProperty property) {
     return [ type: 'object',
-             associationType: "many-to-one",
+             'domainClass': domainClassOf(property), // not part of json schema specificication.
+             associationType: "many-to-one", // not part of json schema specificication.
              required: 'id',
              properties: [
              id: [ type: 'number',
@@ -68,19 +79,11 @@ class JsonSchemaUtil {
   }
 
   private static Map genSchemaOneToMany(GrailsDomainClassProperty property) {
-    Class type = property.type;
-    def cls = property.referencedDomainClass?.clazz
-    if(cls == null) {
-      if(property.type instanceof Collection) {
-        cls = org.springframework.core.GenericCollectionTypeResolver.getCollectionType(property.type)
-      }
-    }
-
     return [ type: 'array',
              associationType: "one-to-many",
              items:
              [ type: 'object',
-               'domainClass': cls, // not in json schema specificication.
+               'domainClass': domainClassOf(property), // not part of json schema specificication.
                required: 'id',
                properties: [
                  id: [ type: 'number' ]

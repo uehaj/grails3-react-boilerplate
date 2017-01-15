@@ -50,7 +50,7 @@ import grails.core.GrailsDomainClassProperty
 import grails.persistence.Event
 
 
-class JsonUiSchemaUtil {
+class UiSchemaUtil {
 
   private static Map genUiSchemaFromConstraints(GrailsDomainClass domainClass, GrailsDomainClassProperty property) {
     Map result = [:]

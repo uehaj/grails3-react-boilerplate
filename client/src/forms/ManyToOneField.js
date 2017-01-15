@@ -1,42 +1,48 @@
 import React, { Component, PropTypes } from 'react';
-import AssociationLinks from './AssociationLinks';
+import AssociationLink from './AssociationLink';
 
-class OneToManyField extends Component {
+class ManyToOneField extends Component {
   constructor() {
     super();
     this.state = {
-      elements: [],
+      element: null,
     };
   }
 
   async componentDidMount() {
+    console.log('manytoonefield.componentdidmount', this.props)
     const { schema, formData } = this.props;
     if (!formData) {
       return;
     }
-    const domainClass = schema.items.domainClass;
-    const ids = this.props.formData.map(elem => elem.id);
+    const domainClass = schema.domainClass;
+    const ids = [this.props.formData.id];
     const resp = await this.props.api.searchById(domainClass, ids, { results: 'id,#toString' });
     const json = await resp.json();
+    console.log('json=',json)
     // eslint-disable-next-line
     this.setState(
-      { elements: json },
+      { element: json[0] },
     );
   }
 
   render() {
-    const { crudConfig, name, schema, idSchema } = this.props;
+    console.log('manytoonefield.render', this.props)
+    const { crudConfig, name, schema, uiSchema, idSchema } = this.props;
 
+    console.log('uiSchema=', uiSchema)
+    console.log('domainClass=', schema.domainClass)
+    console.log('element=', this.state.element)
     return (
       <div>
         <label className="control-label" htmlFor={idSchema.$id}>
           {name}
         </label>
         <div id={idSchema.$id}>
-          <AssociationLinks
+          <AssociationLink
             crudConfig={crudConfig}
-            domainClass={schema.items.domainClass}
-            elements={this.state.elements}
+            domainClass={schema.domainClass}
+            element={this.state.element}
           />
         </div>
       </div>
@@ -44,7 +50,7 @@ class OneToManyField extends Component {
   }
 }
 
-OneToManyField.propTypes = {
+ManyToOneField.propTypes = {
   crudConfig: PropTypes.objectOf(PropTypes.oneOfType([
     PropTypes.number,
     PropTypes.string,
@@ -61,6 +67,6 @@ OneToManyField.propTypes = {
 export default (crudConfig, api, name) => class extends Component {
   render() {
     const additionalProps = { crudConfig, api, name };
-    return <OneToManyField {...additionalProps} {...this.props} />;
+    return <ManyToOneField {...additionalProps} {...this.props} />;
   }
 };

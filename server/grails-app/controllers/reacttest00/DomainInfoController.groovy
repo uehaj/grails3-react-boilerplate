@@ -6,7 +6,6 @@ import static org.springframework.http.HttpStatus.*
 import grails.converters.JSON
 
 class DomainInfoController {
-
     GrailsApplication grailsApplication
 
     static responseFormats = ['json']
@@ -19,7 +18,7 @@ class DomainInfoController {
 
     private Object getUiSchema(String domainClassName) {
         def domainClass = grailsApplication.getDomainClass(domainClassName)
-        def result = JsonUiSchemaUtil.genUiSchema(domainClass)
+        def result = UiSchemaUtil.genUiSchema(domainClass)
         return result
     }
 
