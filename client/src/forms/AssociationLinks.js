@@ -1,25 +1,21 @@
 import React, { PropTypes } from 'react';
-import { Link } from 'react-router';
-
-function getDomainUrlPath(domainClass) {
-  return domainClass.substring(domainClass.lastIndexOf('.') + 1, domainClass.length);
-}
+import AssociationLink from './AssociationLink';
 
 export default function AssociationLinks(props) {
   const { crudConfig, domainClass, elements } = props;
   if (!elements) {
     return null;
   }
-  const domainUrlPath = getDomainUrlPath(domainClass);
-
   return (
     <ul>
       {
         elements.map(elem =>
           <li key={elem.id}>
-            <Link to={`/${crudConfig.ENTITIES_PATH}/${domainUrlPath}/${elem.id}`}>
-              {elem['#toString']}
-            </Link>
+            <AssociationLink
+              crudConfig={crudConfig}
+              domainClass={domainClass}
+              element={elem}
+            />
           </li>)
       }
     </ul>);
