@@ -23,7 +23,7 @@ class DomainInfoController {
     }
 
     private Object domainInfo(domainClass) {
-        return [fullName: domainClass.fullName,
+        return [domainClass: domainClass.fullName,
                 name: domainClass.name,
                 schema: getSchema(domainClass.fullName),
                 uiSchema: getUiSchema(domainClass.fullName),

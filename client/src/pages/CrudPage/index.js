@@ -4,7 +4,7 @@ import Breadcrumbs from 'react-breadcrumbs';
 import List from './List';
 
 function CrudPage(props) {
-  const { api, schema, uiSchema } = props.route;
+  const { schema, uiSchema } = props.route;
 
   const style = (props.route.crudConfig.NAVBAR_SECOND_LEVEL_DIRECTION !== 0)
         ? { paddingTop: 40 } // vertical
@@ -33,9 +33,9 @@ function CrudPage(props) {
             <List
               schema={schema}
               uiSchema={uiSchema}
-              api={api}
               selectedId={parseInt(props.params.selectedId, 10)}
               crudConfig={props.route.crudConfig}
+              domainClass={props.route.domainClass}
             />
           </Col>
         </Row>

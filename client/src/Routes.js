@@ -8,7 +8,7 @@ import SecondLevel from './layout/SecondLevel';
 import NotFound from './layout/NotFound';
 import CrudPage from './pages/CrudPage';
 //import Page1 from './pages/Page1';
-import createRestApi from './util/api';
+import api from './util/api';
 
 export default class Routes extends Component {
 
@@ -19,9 +19,9 @@ export default class Routes extends Component {
 
   async componentWillMount() {
     const urlBase = this.props.crudConfig.SERVER_URL;
-    const entityApi = createRestApi(urlBase, 'domainInfo');
+    const restApi = api.createRestApi(urlBase, 'domainInfo');
     try {
-      const resp = await entityApi.getEntities();
+      const resp = await restApi.getEntities();
       const entitiesInfo = await resp.json();
       this.setState({ entitiesInfo });
     } catch (err) {
@@ -42,18 +42,16 @@ export default class Routes extends Component {
     const IndexRoute = firstEntity.map(
       item => <IndexRedirect key="first" from="*" to={item.name} />);
 
-    const urlBase = this.props.crudConfig.SERVER_URL;
-
     const entitiesRoutes = this.state.entitiesInfo.map(info =>
       <Route
         path={`${info.name}(/:selectedId)`}
         name={info.name}
         key={info.name}
-        api={createRestApi(urlBase, info.name)}
         schema={info.schema}
         uiSchema={info.uiSchema}
         component={CrudPage}
         crudConfig={this.props.crudConfig}
+        domainClass={info.domainClass}
       />);
 
     const entitiesPath = this.props.crudConfig.ENTITIES_PATH;

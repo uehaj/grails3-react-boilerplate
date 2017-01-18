@@ -1,11 +1,12 @@
 import React, { Component, PropTypes } from 'react';
+import { FormControl } from 'react-bootstrap';
 import api from '../util/api';
 
-export default class OneToManyField extends Component {
+export default class AssociationSelect extends Component {
   constructor() {
     super();
     this.state = {
-      elements: [],
+      allOptions: [],
     };
   }
 
@@ -26,36 +27,25 @@ export default class OneToManyField extends Component {
   }
 
   render() {
-    const { crudConfig, AssocComponent, name, schema, idSchema } = this.props;
-
+    const { element } = this.props;
+    if (!element) {
+      return null;
+    }
     return (
-      <div>
-        <label className="control-label" htmlFor={idSchema.$id}>
-          {name}
-        </label>
-        <div id={idSchema.$id}>
-          <AssocComponent
-            crudConfig={crudConfig}
-            domainClass={schema.items.domainClass}
-            elements={this.state.elements}
-          />
-        </div>
-      </div>
+      <FormControl componentClass="select">
+        <option value={element.id}>{element['#toString'].toString()}</option>
+      </FormControl>
     );
   }
 }
 
-OneToManyField.propTypes = {
+AssociationSelect.propTypes = {
   crudConfig: PropTypes.objectOf(PropTypes.oneOfType([
     PropTypes.number,
     PropTypes.string,
     PropTypes.bool,
     PropTypes.arrayOf(PropTypes.string),
   ])).isRequired,
-  AssocComponent: PropTypes.element,
-  domainClass: PropTypes.string.isRequired,
-  name: PropTypes.string,
-  schema: PropTypes.shape({}).isRequired,
-  idSchema: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.object, PropTypes.string])),
-  formData: PropTypes.objectOf(PropTypes.object),
+  domainClass: PropTypes.string,
+  element: PropTypes.arrayOf(PropTypes.object),
 };

@@ -77,14 +77,20 @@ function searchById(urlBase, domainClass, ids, options) {
   return search(urlBase, domainClass, 'id', ids.join(','), options);
 }
 
-export default function createRestApi(urlBase, entityName) {
+function createRestApi(urlBase, domainClass) {
+  const entityName = domainClass.substring(domainClass.lastIndexOf('.') + 1, domainClass.length); // TODO: to be aware of resoruce mappng.
+
   return {
     getEntities: getEntities.bind(null, urlBase, entityName),
     getEntity: getEntity.bind(null, urlBase, entityName),
     updateEntity: updateEntity.bind(null, urlBase, entityName),
     createEntity: createEntity.bind(null, urlBase, entityName),
     deleteEntity: deleteEntity.bind(null, urlBase, entityName),
-    search: search.bind(null, urlBase),
-    searchById: searchById.bind(null, urlBase),
+    search: search.bind(null, urlBase, domainClass),
+    searchById: searchById.bind(null, urlBase, domainClass),
   };
 }
+
+export default {
+  createRestApi,
+};

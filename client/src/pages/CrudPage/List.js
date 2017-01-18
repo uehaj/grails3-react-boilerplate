@@ -8,6 +8,7 @@ import ShowDialog from './ShowDialog';
 import EditDialog from './EditDialog';
 import loadingIcon from '../../images/loading.svg';
 import SchemaLinks from './SchemaLinks';
+import api from '../../util/api';
 
 /**
  * List Domain class instances.
@@ -40,8 +41,8 @@ export default class List extends Component {
 
   componentDidUpdate(prevProps) {
     // see https://github.com/ReactTraining/react-router/blob/master/docs/guides/ComponentLifecycle.md#fetching-data
-    const prev = prevProps.api;
-    const curr = this.props.api;
+    const prev = prevProps.domainClass;
+    const curr = this.props.domainClass;
     if (prev !== curr) {
       this.reloadData();
     }
@@ -53,10 +54,11 @@ export default class List extends Component {
   }
 
   async reloadData() {
-    const { api, crudConfig } = this.props;
+    const { domainClass, crudConfig } = this.props;
     try {
+      const restApi = api.createRestApi(crudConfig.SERVER_URL, domainClass);
       const max = crudConfig.MAX_TABLEDATA_SIZE;
-      const resp = await api.getEntities(max);
+      const resp = await restApi.getEntities(max);
       const json = await resp.json();
       if (!this.ignoreLastFetch) {
         this.setState({ entityList: json });
@@ -84,10 +86,11 @@ export default class List extends Component {
 
   async createEntity(creatingEntity) {
     this.setState({ createDialogVisible: false });
-    const { api } = this.props;
+    const { crudConfig, domainClass } = this.props;
+    const restApi = api.createRestApi(crudConfig.SERVER_URL, domainClass);
 
     try {
-      const resp = await api.createEntity(creatingEntity);
+      const resp = await restApi.createEntity(creatingEntity);
       const json = await resp.json();
       this.reloadData();
       await AlertBox.askYesNo({
@@ -111,9 +114,10 @@ export default class List extends Component {
       return entity;
     }
 
-    const { api } = this.props;
+    const { crudConfig, domainClass } = this.props;
+    const restApi = api.createRestApi(crudConfig.SERVER_URL, domainClass);
     try {
-      await api.updateEntity(updatedEntity);
+      await restApi.updateEntity(updatedEntity);
       // Locally update data.
       this.setState({
         entityList: this.state.entityList.map(updateSelectedEntity.bind(this)),
@@ -134,8 +138,7 @@ export default class List extends Component {
       return;
     }
 
-    const { api } = this.props;
-
+    const { crudConfig, domainClass } = this.props;
     try {
       const result = await AlertBox.askYesNo({
         title: 'Delete',
@@ -144,8 +147,10 @@ export default class List extends Component {
         no: 'Cancel',
       });
       if (result === 'Delete') {
+        const restApi = api.createRestApi(crudConfig.SERVER_URL, domainClass);
+
         rowKeys.forEach(async (entityId) => {
-          await api.deleteEntity(entityId);
+          await restApi.deleteEntity(entityId);
           this.setState({ selectedId: null });
           this.reloadData();
         });
@@ -168,7 +173,7 @@ export default class List extends Component {
   }
 
   render() {
-    const { api, schema, uiSchema, crudConfig } = this.props;
+    const { schema, uiSchema, crudConfig, domainClass } = this.props;
     const { title } = schema;
 
     const loadingAnimation = this.state.loading
@@ -192,7 +197,7 @@ export default class List extends Component {
           onDeleteButtonClicked={this.handleDeleteButtonClicked.bind(this)}
           onRefreshButtonClicked={this.handleRefreshButtonClicked.bind(this)}
           schema={schema}
-          api={api}
+          domainClass={domainClass}
           crudConfig={crudConfig}
           // eslint-disable-next-line
           ref="table"
@@ -203,7 +208,7 @@ export default class List extends Component {
           onSubmit={this.createEntity.bind(this)}
           schema={{ title: `Create ${title}`, ...schema }}
           uiSchema={uiSchema}
-          api={api}
+          domainClass={domainClass}
           crudConfig={crudConfig}
         />
         <ShowDialog
@@ -214,7 +219,7 @@ export default class List extends Component {
           onDeleteButtonClicked={this.handleDeleteButtonClicked.bind(this)}
           schema={schema}
           uiSchema={uiSchema}
-          api={api}
+          domainClass={domainClass}
           crudConfig={crudConfig}
         />
         <EditDialog
@@ -224,7 +229,7 @@ export default class List extends Component {
           onSubmit={this.updateEntity.bind(this)}
           schema={{ title: `Edit ${title}`, ...schema }}
           uiSchema={uiSchema}
-          api={api}
+          domainClass={domainClass}
           crudConfig={crudConfig}
         />
       </div>
@@ -235,7 +240,7 @@ export default class List extends Component {
 List.propTypes = {
   schema: PropTypes.shape({}).isRequired,
   uiSchema: PropTypes.objectOf(PropTypes.object).isRequired,
-  api: PropTypes.objectOf(PropTypes.func).isRequired,
+  domainClass: PropTypes.string.isRequired,
   selectedId: PropTypes.number,
   crudConfig: PropTypes.objectOf(PropTypes.oneOfType([
     PropTypes.number,

@@ -4,11 +4,13 @@ import ModalForm from '../../components/ModalForm';
 import SchemaLinks from './SchemaLinks';
 import ManyToOneField from '../../forms/ManyToOneField';
 import OneToManyField from '../../forms/OneToManyField';
+import AssociationLink from '../../forms/AssociationLink';
+import AssociationLinks from '../../forms/AssociationLinks';
+import api from '../../util/api';
 
-
-function bindAdditionalProps(crudConfig, api, Field) {
+function bindAdditionalProps(crudConfig, AssocComponent, Field) {
   return (props) => {
-    const additionalProps = { crudConfig, api };
+    const additionalProps = { crudConfig, AssocComponent };
     return <Field {...additionalProps} {...props} />;
   };
 }
@@ -25,13 +27,18 @@ export default class ShowDialog extends Component {
     };
   }
 
-  async componentWillReceiveProps(nextProps) {
-    if (nextProps.selectedId || (this.props.show === false && nextProps.show === true)) {
-      const { api } = this.props;
-      const resp = await api.getEntity(nextProps.selectedId);
-      const json = await resp.json();
-      this.setState({ formData: json });
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.selectedId
+        || (this.props.show === false && nextProps.show === true)) {
+      this.reloadData(nextProps);
     }
+  }
+
+  async reloadData(nextProps) {
+    const restApi = api.createRestApi(this.props.crudConfig.SERVER_URL, this.props.domainClass);
+    const resp = await restApi.getEntity(nextProps.selectedId);
+    const json = await resp.json();
+    this.setState({ formData: json });
   }
 
   handleDeleteButtonClicked() {
@@ -39,7 +46,7 @@ export default class ShowDialog extends Component {
     this.props.onClose();
   }
 
-  makeReadOnly() {
+  makeUiReadonly() {
     const { schema, crudConfig } = this.props;
 
     const excludesHidden = k => crudConfig.HIDDEN_FORM_FIELDS.indexOf(k) === -1;
@@ -52,26 +59,30 @@ export default class ShowDialog extends Component {
   }
 
   render() {
+    if (this.state.formData == null) {
+      return null;
+    }
+
     const { schema: origSchema, uiSchema: origUiSchema, selectedId, crudConfig, show, onClose,
-            onEditButtonClicked, api } = this.props;
+            onEditButtonClicked } = this.props;
 
     const schema = {
       ...origSchema,
       title: `${origSchema.title}:${selectedId}`,
     };
 
-    const hiddenFields = this.props.crudConfig.HIDDEN_FORM_FIELDS
+    const hiddenFields = crudConfig.HIDDEN_FORM_FIELDS
           .reduce((accum, elem) => ({ [elem]: { 'ui:widget': 'hidden' }, ...accum }), {});
 
     const uiSchema = {
-      ...this.makeReadOnly(),
+      ...this.makeUiReadonly(),
       ...origUiSchema,
       ...hiddenFields,
     };
 
     const fields = {
-      manyToOne: bindAdditionalProps(crudConfig, api, ManyToOneField),
-      oneToMany: bindAdditionalProps(crudConfig, api, OneToManyField),
+      manyToOne: bindAdditionalProps(crudConfig, AssociationLink, ManyToOneField),
+      oneToMany: bindAdditionalProps(crudConfig, AssociationLinks, OneToManyField),
     };
 
     const StaticWidget = props =>
@@ -154,7 +165,7 @@ ShowDialog.propTypes = {
     properties: PropTypes.object,
   }),
   uiSchema: PropTypes.objectOf(PropTypes.object).isRequired,
-  api: PropTypes.objectOf(PropTypes.func).isRequired,
+  domainClass: PropTypes.string.isRequired,
   crudConfig: PropTypes.objectOf(PropTypes.oneOfType([
     PropTypes.number,
     PropTypes.string,

@@ -2,6 +2,18 @@ import React, { Component, PropTypes } from 'react';
 import { Button } from 'react-bootstrap';
 import ModalForm from '../../components/ModalForm';
 import SchemaLinks from './SchemaLinks';
+import ManyToOneField from '../../forms/ManyToOneField';
+import OneToManyField from '../../forms/OneToManyField';
+import AssociationSelect from '../../forms/AssociationSelect';
+import AssociationMultiSelect from '../../forms/AssociationMultiSelect';
+import api from '../../util/api';
+
+function bindAdditionalProps(crudConfig, AssocComponent, Field) {
+  return (props) => {
+    const additionalProps = { crudConfig, AssocComponent };
+    return <Field {...additionalProps} {...props} />;
+  };
+}
 
 /**
  * Form for edit existing Domain class on a modal dialog.
@@ -17,8 +29,8 @@ export default class EditDialog extends Component {
 
   async componentWillReceiveProps(nextProps) {
     if (nextProps.selectedId) {
-      const { api } = this.props;
-      const resp = await api.getEntity(nextProps.selectedId);
+      const restApi = api.createRestApi(this.props.crudConfig.SERVER_URL, this.props.domainClass);
+      const resp = await restApi.getEntity(nextProps.selectedId);
       const json = await resp.json();
       this.setState({ formData: json });
     }
@@ -34,37 +46,45 @@ export default class EditDialog extends Component {
   }
 
   render() {
+    const { schema: origSchema, uiSchema: origUiSchema, selectedId, crudConfig, show, onClose } = this.props;
+
     const schema = {
-      ...this.props.schema,
-      title: `${this.props.schema.title}:${this.props.selectedId}`,
+      ...origSchema,
+      title: `${origSchema.title}:${selectedId}`,
     };
 
-    const hiddenFields = this.props.crudConfig.HIDDEN_FORM_FIELDS
+    const hiddenFields = crudConfig.HIDDEN_FORM_FIELDS
           .reduce((accum, elem) => ({ [elem]: { 'ui:widget': 'hidden' }, ...accum }), {});
 
     const uiSchema = {
-      ...this.props.uiSchema,
+      ...origUiSchema,
       ...hiddenFields,
+    };
+
+    const fields = {
+      manyToOne: bindAdditionalProps(crudConfig, AssociationSelect, ManyToOneField),
+      oneToMany: bindAdditionalProps(crudConfig, AssociationMultiSelect, OneToManyField),
     };
 
     return (
       <ModalForm
-        show={this.props.show}
+        show={show}
         formData={this.state.formData}
-        onClose={this.props.onClose}
+        onClose={onClose}
         schema={schema}
         uiSchema={uiSchema}
         liveValidate
+        fields={fields}
         onSubmit={this.handleSubmit.bind(this)}
       >
         <span>
           {
-            this.props.crudConfig.SHOW_SCHEMA_LINKS &&
+            crudConfig.SHOW_SCHEMA_LINKS &&
               <SchemaLinks schema={schema} uiSchema={uiSchema} />
           }
           <Button bsStyle="primary" type="submit">Update</Button>
           &nbsp;
-          <Button onClick={this.props.onClose}>Cancel</Button>
+          <Button onClick={onClose}>Cancel</Button>
         </span>
       </ModalForm>
     );
@@ -78,7 +98,7 @@ EditDialog.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   schema: PropTypes.shape({ title: PropTypes.string }),
   uiSchema: PropTypes.objectOf(PropTypes.object).isRequired,
-  api: PropTypes.objectOf(PropTypes.func).isRequired,
+  domainClass: PropTypes.string.isRequired,
   crudConfig: PropTypes.objectOf(PropTypes.oneOfType([
     PropTypes.number,
     PropTypes.string,

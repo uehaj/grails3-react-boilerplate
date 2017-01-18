@@ -7,6 +7,7 @@ function getDomainUrlPath(domainClass) {
 
 export default function AssociationLink(props) {
   const { crudConfig, domainClass, element } = props;
+
   if (!element) {
     return null;
   }

@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import AssociationLink from './AssociationLink';
+import api from '../util/api';
 
 export default class ManyToOneField extends Component {
   constructor() {
@@ -10,14 +10,17 @@ export default class ManyToOneField extends Component {
   }
 
   async componentDidMount() {
-    const { api, schema, formData } = this.props;
+    const { crudConfig, schema, formData } = this.props;
     if (!formData) {
       return;
     }
     const domainClass = schema.domainClass;
     const ids = [this.props.formData.id];
-    const resp = await api.searchById(domainClass, ids, { results: 'id,#toString' });
+    const restApi = api.createRestApi(crudConfig.SERVER_URL, domainClass);
+    const resp = await restApi.searchById(domainClass, ids, { results: 'id,#toString' });
     const json = await resp.json();
+
+    /// ここを★かんがえる。elementは何か？
     // eslint-disable-next-line
     this.setState(
       { element: json[0] },
@@ -25,7 +28,7 @@ export default class ManyToOneField extends Component {
   }
 
   render() {
-    const { crudConfig, name, schema, uiSchema, idSchema } = this.props;
+    const { crudConfig, AssocComponent, name, schema, idSchema } = this.props;
 
     return (
       <div>
@@ -33,7 +36,7 @@ export default class ManyToOneField extends Component {
           {name}
         </label>
         <div id={idSchema.$id}>
-          <AssociationLink
+          <AssocComponent
             crudConfig={crudConfig}
             domainClass={schema.domainClass}
             element={this.state.element}
@@ -51,7 +54,7 @@ ManyToOneField.propTypes = {
     PropTypes.bool,
     PropTypes.arrayOf(PropTypes.string),
   ])).isRequired,
-  api: PropTypes.objectOf(PropTypes.func).isRequired,
+  AssocComponent: PropTypes.element,
   name: PropTypes.string,
   schema: PropTypes.shape({}).isRequired,
   idSchema: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.object, PropTypes.string])),
