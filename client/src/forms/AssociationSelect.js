@@ -18,7 +18,7 @@ export default class AssociationSelect extends Component {
     const domainClass = schema.items.domainClass;
     const ids = this.props.formData.map(elem => elem.id);
     const restApi = api.createRestApi(crudConfig.SERVER_URL, domainClass);
-    const resp = await restApi.searchById(domainClass, ids, { results: 'id,#toString' });
+    const resp = await restApi.searchByIds(ids, { results: 'id,#toString' });
     const json = await resp.json();
     // eslint-disable-next-line
     this.setState(

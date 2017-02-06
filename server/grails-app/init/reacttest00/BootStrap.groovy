@@ -11,7 +11,7 @@ class BootStrap {
         }
       }
       if (d.save() == null) {
-        println "save failed:"+d
+        println "save failed: "+d
       }
     }
 
@@ -44,10 +44,32 @@ class BootStrap {
                                       charValuePrim: "c",
                                       byteValuePrim: 12-it,
                                      )
+             def c = new ConstraintTest(
+                 string_blank_true: "aaa",
+                 string_blank_false: "aaa",
+                 string_email: "hoge@a.b.c.jp",
+                 string_inList: "a",
+                 number_inList: 3,
+                 string_matches: "Aa",
+                 number_min_10: 10,
+                 number_max_20: 20,
+                 number_range_10_20: 10,
+                 string_minSize_10: "aaaaaaaaaa",
+                 string_maxSize_20: "aaaaaaaaaa",
+                 string_size_10_20: "aaaaaaaaaa",
+                 string_url: "http://hoge.a.b.c.jp/",
+                 string_display_false: "aaa",
+                 string_editable_false: "aaa",
+                 date_format_xxx: new Date("2017/01/01 00:00:00"),
+                 string_password_true: "aaa",
+                 string_widget_textarea: "aaa",
+             );
+
              validateAndSave(b)
              validateAndSave(a)
              validateAndSave(s)
              validateAndSave(d)
+             validateAndSave(c)
         }
     }
     def destroy = {

@@ -16,7 +16,7 @@ class ConstraintTest {
   String string_url
   String string_display_false
   String string_editable_false
-  String string_format_xxx
+  Date date_format_xxx
   String string_password_true
   String string_widget_textarea
 
@@ -36,7 +36,7 @@ class ConstraintTest {
     string_url url: true
     string_display_false display: false, nullable: true
     string_editable_false editable: false, nullable: true
-    string_format_xxx format: 'xxx'
+    date_format_xxx format: 'yyyy-MM-dd'
     string_password_true password: 'true'
     string_widget_textarea widget: 'textarea'
   }

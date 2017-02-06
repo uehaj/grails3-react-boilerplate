@@ -17,7 +17,7 @@ export default class OneToManyField extends Component {
     const domainClass = schema.items.domainClass;
     const ids = this.props.formData.map(elem => elem.id);
     const restApi = api.createRestApi(crudConfig.SERVER_URL, domainClass);
-    const resp = await restApi.searchById(domainClass, ids, { results: 'id,#toString' });
+    const resp = await restApi.searchById(ids, { results: 'id,#toString' });
     const json = await resp.json();
     // eslint-disable-next-line
     this.setState(
@@ -52,10 +52,9 @@ OneToManyField.propTypes = {
     PropTypes.bool,
     PropTypes.arrayOf(PropTypes.string),
   ])).isRequired,
-  AssocComponent: PropTypes.element,
-  domainClass: PropTypes.string.isRequired,
+  AssocComponent: PropTypes.func,
   name: PropTypes.string,
   schema: PropTypes.shape({}).isRequired,
   idSchema: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.object, PropTypes.string])),
-  formData: PropTypes.objectOf(PropTypes.object),
+  formData: PropTypes.arrayOf(PropTypes.object),
 };

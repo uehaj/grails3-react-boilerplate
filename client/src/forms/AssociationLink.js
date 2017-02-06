@@ -28,5 +28,5 @@ AssociationLink.propTypes = {
     PropTypes.arrayOf(PropTypes.string),
   ])).isRequired,
   domainClass: PropTypes.string,
-  element: PropTypes.objectOf(PropTypes.object),
+  element: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.number, PropTypes.string])),
 };

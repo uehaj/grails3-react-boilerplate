@@ -73,7 +73,11 @@ async function search(urlBase, domainClass, searchTargetField, query, options = 
   return resp.ok ? Promise.resolve(resp) : Promise.reject(resp);
 }
 
-function searchById(urlBase, domainClass, ids, options) {
+function searchById(urlBase, domainClass, id, options) {
+  return search(urlBase, domainClass, 'id', id, options);
+}
+
+function searchByIds(urlBase, domainClass, ids, options) {
   return search(urlBase, domainClass, 'id', ids.join(','), options);
 }
 
@@ -88,6 +92,7 @@ function createRestApi(urlBase, domainClass) {
     deleteEntity: deleteEntity.bind(null, urlBase, entityName),
     search: search.bind(null, urlBase, domainClass),
     searchById: searchById.bind(null, urlBase, domainClass),
+    searchByIds: searchByIds.bind(null, urlBase, domainClass),
   };
 }
 

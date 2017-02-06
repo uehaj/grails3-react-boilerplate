@@ -9,7 +9,7 @@ const SHOW_SCHEMA_LINKS = true;
 const MAX_TABLEDATA_SIZE = 1000;
 const HIDDEN_TABLE_FIELDS = ['version'];
 const HIDDEN_FORM_FIELDS = ['version', 'id'];
-const ENTITIES_PATH = 'entities';
+const ENTITIES_PATH = 'entities'; // for react router path
 
 export default {
   SERVER_URL,

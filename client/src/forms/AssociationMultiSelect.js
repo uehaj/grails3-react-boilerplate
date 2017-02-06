@@ -7,15 +7,12 @@ export default function AssociationMultiSelect(props) {
     return null;
   }
   return (
-    <div>mhello</div>
-    /*
     <FormControl componentClass="select">
       {
         elements.map(element =>
           <option value={element.id}>{element['#toString']}</option>)
       }
     </FormControl>
-*/
   );
 }
 
